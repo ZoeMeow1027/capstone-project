@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PhoneStoreManager.Model;
+using PhoneStoreManager.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,14 +14,36 @@ var builder = WebApplication.CreateBuilder(args);
 //var data7 = dbContext.ProductManufacturers;
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+
+// Add scopes
+builder.Services.AddScoped<IProductManufacturerService, ProductManufacturerService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add MSSQL
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+
+// CORS
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddCors(o =>
+    o.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.WithOrigins("http://localhost:4200")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+        builder.WithOrigins("https://localhost:4200")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    }
+        )
+    );
+
+
 
 var app = builder.Build();
 

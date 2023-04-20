@@ -8,7 +8,10 @@ namespace PhoneStoreManager.Model
         public int ID { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
+
+        [Required]
+        public bool ShowInPage { get; set; } = true;
 
         #region Entity
         public List<Product> Products { get; set; }

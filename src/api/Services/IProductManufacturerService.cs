@@ -4,15 +4,15 @@ namespace PhoneStoreManager.Services
 {
     public interface IProductManufacturerService
     {
-        List<ProductManufacturer> GetAllProductManufacturers();
+        List<ProductManufacturer> GetAllProductManufacturers(bool includeHidden);
 
-        List<ProductManufacturer> FindAllProductManufacturersByName(string name);
+        List<ProductManufacturer> FindAllProductManufacturersByName(string name, bool includeHidden);
 
-        ProductManufacturer GetProductManufacturerById(int id);
+        ProductManufacturer? GetProductManufacturerById(int id);
 
         bool AddProductManufacturer(ProductManufacturer item);
 
-        bool EditProductManufacturer(ProductManufacturer item);
+        bool UpdateProductManufacturer(ProductManufacturer item);
 
         bool HideProductManufacturerById(int id);
 
