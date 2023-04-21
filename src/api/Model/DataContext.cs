@@ -52,6 +52,12 @@ namespace PhoneStoreManager.Model
                 .WithMany(c => c.UserSessions)
                 .HasForeignKey(p => p.UserID);
 
+            // Token unique in UserSession
+            modelBuilder.Entity<UserSession>(p =>
+            {
+                p.HasIndex(e => e.Token).IsUnique();
+            });
+
             // Foreign key CategoryID in Product and ProductCategory
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
