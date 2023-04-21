@@ -4,18 +4,20 @@ namespace PhoneStoreManager.Services
 {
     public interface IUserService
     {
-        List<User> GetAllUsers();
+        List<User> GetAllUsers(bool includeDisabled);
 
-        List<User> FindAllUsersByName(string name);
+        List<User> FindAllUsersByUsernameAndName(string name, bool includeDisabled);
 
-        User GetUserById(int id);
+        User? GetUserById(int id);
 
-        bool AddUser(User item);
+        void AddUser(User item);
 
-        bool EditUser(User item);
+        void UpdateUser(User item);
 
-        bool HideUserById(int id);
+        void DisableUser(User item);
 
-        bool HideUser(User item);
+        void EnableUser(User item);
+
+        void ChangeUserType(User item, UserType type);
     }
 }

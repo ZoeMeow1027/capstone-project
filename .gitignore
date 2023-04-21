@@ -1,2 +1,8 @@
 [Draw.io]
 docs/*.bkp
+
+[Visual Studio]
+.vs/
+
+[Visual Studio Code]
+.vscode/

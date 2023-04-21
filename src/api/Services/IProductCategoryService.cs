@@ -4,18 +4,18 @@ namespace PhoneStoreManager.Services
 {
     public interface IProductCategoryService
     {
-        List<ProductCategory> GetAllProductCategories();
+        List<ProductCategory> GetAllProductCategories(bool includeHidden);
 
-        List<ProductCategory> FindAllProductCategoriesByName(string name);
+        List<ProductCategory> FindAllProductCategoriesByName(string name, bool includeHidden);
 
-        ProductCategory GetProductCategoryById(int id);
+        ProductCategory? GetProductCategoryById(int id);
 
-        bool AddProductCategory(ProductCategory item);
+        void AddProductCategory(ProductCategory item);
 
-        bool EditProductCategory(ProductCategory item);
+        void UpdateProductCategory(ProductCategory item);
 
-        bool HideProductCategoryById(int id);
+        void HideProductCategoryById(int id);
 
-        bool HideProductCategory(ProductCategory item);
+        void HideProductCategory(ProductCategory item);
     }
 }
