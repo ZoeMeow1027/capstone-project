@@ -11,43 +11,34 @@ namespace PhoneStoreManager.Services
             this._context = context;
         }
 
-        public bool AddProductManufacturer(ProductManufacturer item)
+        public void AddProductManufacturer(ProductManufacturer item)
         {
-            try
+            _context.ProductManufacturers.Add(item);
+            int _rowAffected = _context.SaveChanges();
+            if (_rowAffected != 1)
             {
-                _context.ProductManufacturers.Add(item);
-                return _context.SaveChanges() == 1;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return false;
+                throw new Exception(string.Format("Affected rows: {0}!", _rowAffected));
             }
         }
 
-        public bool UpdateProductManufacturer(ProductManufacturer item)
+        public void UpdateProductManufacturer(ProductManufacturer item)
         {
-            try
+            var data = _context.ProductManufacturers.Where(p => p.ID == item.ID).FirstOrDefault();
+            if (data != null)
             {
-                var data = _context.ProductManufacturers.Where(p => p.ID == item.ID).FirstOrDefault();
-                if (data != null)
-                {
-                    data.Name = item.Name;
-                    data.ShowInPage = item.ShowInPage;
+                data.Name = item.Name;
+                data.ShowInPage = item.ShowInPage;
 
-                    _context.ProductManufacturers.Update(data);
-                    int numAffected = _context.SaveChanges();
-                    return numAffected == 1;
-                }
-                else
+                _context.ProductManufacturers.Update(data);
+                int _rowAffected = _context.SaveChanges();
+                if (_rowAffected != 1)
                 {
-                    throw new Exception(string.Format("ProductManufacturer with ID {0} is not exist!", item.ID));
+                    throw new Exception(string.Format("Affected rows: {0}!", _rowAffected));
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex);
-                return false;
+                throw new Exception(string.Format("ProductManufacturer with ID {0} is not exist!", item.ID));
             }
         }
 
@@ -72,34 +63,36 @@ namespace PhoneStoreManager.Services
             return _context.ProductManufacturers.FirstOrDefault(p => p.ID == id);
         }
 
-        public bool HideProductManufacturer(ProductManufacturer item)
+        public void HideProductManufacturer(ProductManufacturer item)
         {
-            try
+            var data = _context.ProductManufacturers.Where(p => p.ID == item.ID).FirstOrDefault();
+            if (data != null)
             {
-                var data = _context.ProductManufacturers.Where(p => p.ID == item.ID).FirstOrDefault();
-                if (data != null)
+                data.ShowInPage = false;
+                _context.ProductManufacturers.Update(data);
+                int _rowAffected = _context.SaveChanges();
+                if (_rowAffected != 1)
                 {
-                    data.ShowInPage = false;
-                    _context.ProductManufacturers.Update(data);
-                    int numAffected = _context.SaveChanges();
-                    return numAffected == 1;
-                }
-                else
-                {
-                    throw new Exception(string.Format("ProductManufacturer with ID {0} is not exist!", item.ID));
+                    throw new Exception(string.Format("Affected rows: {0}!", _rowAffected));
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex);
-                return false;
+                throw new Exception(string.Format("ProductManufacturer with ID {0} is not exist!", item.ID));
             }
         }
 
-        public bool HideProductManufacturerById(int id)
+        public void HideProductManufacturerById(int id)
         {
             var data = _context.ProductManufacturers.Where(p => p.ID == id).FirstOrDefault();
-            return data == null ? false : HideProductManufacturer(data);
+            if (data != null)
+            {
+                HideProductManufacturer(data);
+            }
+            else
+            {
+                throw new Exception(string.Format("ProductManufacturer with ID {0} is not exist!", id));
+            }
         }
     }
 }

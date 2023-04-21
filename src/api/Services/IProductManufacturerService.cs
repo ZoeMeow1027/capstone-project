@@ -10,12 +10,12 @@ namespace PhoneStoreManager.Services
 
         ProductManufacturer? GetProductManufacturerById(int id);
 
-        bool AddProductManufacturer(ProductManufacturer item);
+        void AddProductManufacturer(ProductManufacturer item);
 
-        bool UpdateProductManufacturer(ProductManufacturer item);
+        void UpdateProductManufacturer(ProductManufacturer item);
 
-        bool HideProductManufacturerById(int id);
+        void HideProductManufacturerById(int id);
 
-        bool HideProductManufacturer(ProductManufacturer item);
+        void HideProductManufacturer(ProductManufacturer item);
     }
 }
