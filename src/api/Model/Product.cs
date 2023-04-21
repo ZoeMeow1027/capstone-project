@@ -8,7 +8,7 @@ namespace PhoneStoreManager.Model
         public int ID { get; set; }
         
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Required]
         public int CategoryID { get; set; }
@@ -29,11 +29,13 @@ namespace PhoneStoreManager.Model
         public bool ShowInPage { get; set; } = true;
 
         #region Entity
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public ProductCategory Category { get; set; }
 
         public ProductManufacturer Manufacturer { get; set; }
 
         public List<BillDetails> BillDetails { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         #endregion
     }
 }

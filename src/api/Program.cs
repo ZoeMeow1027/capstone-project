@@ -4,20 +4,15 @@ using PhoneStoreManager.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//var dbContext = new DataContext(builder.Configuration.GetConnectionString("Default"));
-//var data1 = dbContext.BillDetails;
-//var data2 = dbContext.BillSummaries;
-//var data3 = dbContext.Users;
-//var data4 = dbContext.UserAddresses;
-//var data5 = dbContext.ProductCategories;
-//var data6 = dbContext.Products;
-//var data7 = dbContext.ProductManufacturers;
-
 // Add services to the container.
 builder.Services.AddControllers();
 
 // Add scopes
 builder.Services.AddScoped<IProductManufacturerService, ProductManufacturerService>();
+builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IUserAddressService, UserAddressService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -26,8 +21,8 @@ builder.Services.AddSwaggerGen();
 // Add MSSQL
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-
-// CORS
+// TODO: Temporary ignore CORS. Remember to delete below line in release
+#region Ignore CORS
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddCors(o =>
@@ -42,8 +37,7 @@ builder.Services.AddCors(o =>
     }
         )
     );
-
-
+#endregion
 
 var app = builder.Build();
 

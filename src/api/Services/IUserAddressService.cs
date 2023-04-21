@@ -8,14 +8,14 @@ namespace PhoneStoreManager.Services
 
         List<UserAddress> FindAllUserAddressesByAddress(string address);
 
-        UserAddress GetUserAddressById(int id);
+        UserAddress? GetUserAddressById(int id);
 
-        bool AddUserAddress(UserAddress item);
+        void AddUserAddress(UserAddress item);
 
-        bool EditUserAddress(UserAddress item);
+        void UpdateUserAddress(UserAddress item);
 
-        bool HideUserAddressById(int id);
+        void DeleteUserAddressById(int id);
 
-        bool HideUserAddress(UserAddress item);
+        void DeleteUserAddress(UserAddress item);
     }
 }

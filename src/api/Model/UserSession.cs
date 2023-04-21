@@ -2,7 +2,7 @@
 
 namespace PhoneStoreManager.Model
 {
-    public class UserAddress
+    public class UserSession
     {
         [Key]
         public int ID { get; set; }
@@ -10,11 +10,14 @@ namespace PhoneStoreManager.Model
         [Required]
         public int UserID { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+        [Required]
+        public string Token { get; set; } = string.Empty;
 
-        public string Address { get; set; } = string.Empty;
+        [Required]
+        public DateTime DateCreated { get; set; } = DateTime.Now;
 
-        public string Phone { get; set; } = string.Empty;
+        [Required]
+        public DateTime DateExpired { get; set; } = DateTime.Now;
 
         #region Entity
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
