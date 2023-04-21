@@ -9,16 +9,16 @@ namespace PhoneStoreManager.Model
 
         [Required]
         [MaxLength(64)]
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         [Required]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
-        public string Phone { get; set; }
+        public string Phone { get; set; } = string.Empty;
 
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
@@ -29,9 +29,13 @@ namespace PhoneStoreManager.Model
         public UserType UserType { get; set; } = UserType.Normal;
 
         #region Entity
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public List<UserAddress> UserAddresses { get; set; }
 
         public List<BillSummary> BillSummaries { get; set; }
+
+        public List<UserSession> UserSessions { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         #endregion
     }
 }

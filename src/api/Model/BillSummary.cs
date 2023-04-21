@@ -11,10 +11,10 @@ namespace PhoneStoreManager.Model
         public int? UserID { get; set; } = null;
 
         [Required]
-        public string Recipient { get; set; }
+        public string Recipient { get; set; } = string.Empty;
 
         [Required]
-        public string RecipientAddress { get; set; }
+        public string RecipientAddress { get; set; } = string.Empty;
 
         [Required]
         public DateTime DateCreated { get; set; } = DateTime.Now;
@@ -40,9 +40,11 @@ namespace PhoneStoreManager.Model
         public bool PaymentCompleted { get; set; } = false;
 
         #region Entity
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public User? User { get; set; } = null;
 
         public List<BillDetails> BillDetails { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         #endregion
     }
 }

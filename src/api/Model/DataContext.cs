@@ -21,6 +21,7 @@ namespace PhoneStoreManager.Model
         public DbSet<Product> Products { get; set; }
         public DbSet<BillSummary> BillSummaries { get; set; }
         public DbSet<BillDetails> BillDetails { get; set; }
+        public DbSet<UserSession> UserSessions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -37,6 +38,18 @@ namespace PhoneStoreManager.Model
             modelBuilder.Entity<UserAddress>()
                 .HasOne(p => p.User)
                 .WithMany(c => c.UserAddresses)
+                .HasForeignKey(p => p.UserID);
+
+            // Username unique in User table.
+            modelBuilder.Entity<User>(p =>
+            {
+                p.HasIndex(e => e.Username).IsUnique();
+            });
+
+            // Foreign key UserID in User and UserSession
+            modelBuilder.Entity<UserSession>()
+                .HasOne(p => p.User)
+                .WithMany(c => c.UserSessions)
                 .HasForeignKey(p => p.UserID);
 
             // Foreign key CategoryID in Product and ProductCategory
