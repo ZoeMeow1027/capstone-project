@@ -48,7 +48,7 @@ namespace PhoneStoreManager.Services
             }
             else
             {
-                throw new Exception(string.Format("UserAddress with ID {0} is not exist!", item.ID));
+                throw new Exception(string.Format("UserAddress with ID {0} is not exist!", id));
             }
         }
 
