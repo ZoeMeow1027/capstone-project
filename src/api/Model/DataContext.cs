@@ -22,6 +22,7 @@ namespace PhoneStoreManager.Model
         public DbSet<BillSummary> BillSummaries { get; set; }
         public DbSet<BillDetails> BillDetails { get; set; }
         public DbSet<UserSession> UserSessions { get; set; }
+        public DbSet<Warranty> Warranties { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -82,11 +83,23 @@ namespace PhoneStoreManager.Model
                 .WithMany(c => c.BillDetails)
                 .HasForeignKey(p => p.BillID);
 
-            // Foreign key ProductID in BillDetails and Product
+            // Foreign key ProductID in BillDetails and Products
             modelBuilder.Entity<BillDetails>()
                 .HasOne(p => p.Product)
                 .WithMany(c => c.BillDetails)
                 .HasForeignKey(p => p.ProductID);
+
+            // Foreign key ProductID in Warranty and Products
+            modelBuilder.Entity<Warranty>()
+                .HasOne(p => p.Product)
+                .WithMany(c => c.Warranties)
+                .HasForeignKey(p => p.ProductID);
+
+            // Foreign key BillID in Warranty and BillSummary
+            modelBuilder.Entity<Warranty>()
+                .HasOne(p => p.Bill)
+                .WithMany(c => c.Warranties)
+                .HasForeignKey(p => p.BillID);
 
             base.OnModelCreating(modelBuilder);
         }

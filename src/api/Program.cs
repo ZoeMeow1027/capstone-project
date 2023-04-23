@@ -19,6 +19,8 @@ namespace PhoneStoreManager
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IUserAddressService, UserAddressService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IUserSessionService, UserSessionService>();
+            builder.Services.AddScoped<IWarrantyService, WarrantyService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

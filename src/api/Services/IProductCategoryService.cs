@@ -4,9 +4,9 @@ namespace PhoneStoreManager.Services
 {
     public interface IProductCategoryService
     {
-        List<ProductCategory> GetAllProductCategories(bool includeHidden);
+        List<ProductCategory> GetAllProductCategories();
 
-        List<ProductCategory> FindAllProductCategoriesByName(string name, bool includeHidden);
+        List<ProductCategory> FindAllProductCategoriesByName(string name);
 
         ProductCategory? GetProductCategoryById(int id);
 
@@ -14,8 +14,8 @@ namespace PhoneStoreManager.Services
 
         void UpdateProductCategory(ProductCategory item);
 
-        void HideProductCategoryById(int id);
+        void DeleteProductCategoryById(int id);
 
-        void HideProductCategory(ProductCategory item);
+        void DeleteProductCategory(ProductCategory item);
     }
 }
