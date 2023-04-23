@@ -27,7 +27,6 @@ namespace PhoneStoreManager.Services
             if (data != null)
             {
                 data.Name = item.Name;
-                data.ShowInPage = item.ShowInPage;
 
                 _context.ProductManufacturers.Update(data);
                 int _rowAffected = _context.SaveChanges();
@@ -42,20 +41,18 @@ namespace PhoneStoreManager.Services
             }
         }
 
-        public List<ProductManufacturer> FindAllProductManufacturersByName(string name, bool includeHidden = false)
+        public List<ProductManufacturer> FindAllProductManufacturersByName(string name)
         {
             return _context.ProductManufacturers.Where(p =>
-                // Include hidden. This is ignored by default.
-                (includeHidden ? true : p.ShowInPage == true) &&
                 // Filter by name
                 p.Name.ToLower().Contains(name.ToLower())
             ).ToList();
         }
 
-        public List<ProductManufacturer> GetAllProductManufacturers(bool includeHidden = false)
+        public List<ProductManufacturer> GetAllProductManufacturers()
         {
             // Include hidden. This is ignored by default.
-            return _context.ProductManufacturers.Where(p => (includeHidden ? true : p.ShowInPage == true)).ToList();
+            return _context.ProductManufacturers.ToList();
         }
 
         public ProductManufacturer? GetProductManufacturerById(int id)
@@ -63,13 +60,18 @@ namespace PhoneStoreManager.Services
             return _context.ProductManufacturers.FirstOrDefault(p => p.ID == id);
         }
 
-        public void HideProductManufacturer(ProductManufacturer item)
+        public void DeleteProductManufacturer(ProductManufacturer item)
         {
             var data = _context.ProductManufacturers.Where(p => p.ID == item.ID).FirstOrDefault();
             if (data != null)
             {
-                data.ShowInPage = false;
-                _context.ProductManufacturers.Update(data);
+                int _productCheck = _context.Products.Where(p => p.ManufacturerID == item.ID).ToList().Count;
+                if (_productCheck > 0)
+                {
+                    throw new Exception(string.Format("ProductManufacturer with ID {0} has been used in Products table with {1} record(s)!", item.ID, _productCheck));
+                }
+
+                _context.ProductManufacturers.Remove(data);
                 int _rowAffected = _context.SaveChanges();
                 if (_rowAffected != 1)
                 {
@@ -82,12 +84,12 @@ namespace PhoneStoreManager.Services
             }
         }
 
-        public void HideProductManufacturerById(int id)
+        public void DeleteProductManufacturerById(int id)
         {
             var data = _context.ProductManufacturers.Where(p => p.ID == id).FirstOrDefault();
             if (data != null)
             {
-                HideProductManufacturer(data);
+                DeleteProductManufacturer(data);
             }
             else
             {

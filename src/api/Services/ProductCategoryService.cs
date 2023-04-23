@@ -27,7 +27,6 @@ namespace PhoneStoreManager.Services
             if (data != null)
             {
                 data.Name = item.Name;
-                data.ShowInPage = item.ShowInPage;
 
                 _context.ProductCategories.Update(data);
                 int _rowAffected = _context.SaveChanges();
@@ -42,20 +41,18 @@ namespace PhoneStoreManager.Services
             }
         }
 
-        public List<ProductCategory> FindAllProductCategoriesByName(string name, bool includeHidden)
+        public List<ProductCategory> FindAllProductCategoriesByName(string name)
         {
             return _context.ProductCategories.Where(p =>
-                // Include hidden. This is ignored by default.
-                (includeHidden ? true : p.ShowInPage == true) &&
                 // Filter by name
                 p.Name.ToLower().Contains(name.ToLower())
             ).ToList();
         }
 
-        public List<ProductCategory> GetAllProductCategories(bool includeHidden)
+        public List<ProductCategory> GetAllProductCategories()
         {
             // Include hidden. This is ignored by default.
-            return _context.ProductCategories.Where(p => (includeHidden ? true : p.ShowInPage == true)).ToList();
+            return _context.ProductCategories.ToList();
         }
 
         public ProductCategory? GetProductCategoryById(int id)
@@ -63,13 +60,18 @@ namespace PhoneStoreManager.Services
             return _context.ProductCategories.Where(p => p.ID == id).FirstOrDefault();
         }
 
-        public void HideProductCategory(ProductCategory item)
+        public void DeleteProductCategory(ProductCategory item)
         {
             var data = _context.ProductCategories.Where(p => p.ID == item.ID).FirstOrDefault();
             if (data != null)
             {
-                data.ShowInPage = false;
-                _context.ProductCategories.Update(data);
+                int _productCheck = _context.Products.Where(p => p.CategoryID == item.ID).ToList().Count;
+                if (_productCheck > 0)
+                {
+                    throw new Exception(string.Format("ProductCategory with ID {0} has been used in Products table with {1} record(s)!", item.ID, _productCheck));
+                }
+
+                _context.ProductCategories.Remove(data);
                 int _rowAffected = _context.SaveChanges();
                 if (_rowAffected != 1)
                 {
@@ -82,12 +84,12 @@ namespace PhoneStoreManager.Services
             }
         }
 
-        public void HideProductCategoryById(int id)
+        public void DeleteProductCategoryById(int id)
         {
             var data = _context.ProductCategories.Where(p => p.ID == id).FirstOrDefault();
             if (data != null)
             {
-                HideProductCategory(data);
+                DeleteProductCategory(data);
             }
             else
             {

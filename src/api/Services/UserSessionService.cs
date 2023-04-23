@@ -13,40 +13,6 @@ namespace PhoneStoreManager.Services
             _context = context;
         }
 
-        //public static String sha256_hash(String value)
-        //{
-        //    StringBuilder Sb = new StringBuilder();
-
-        //    using (SHA256 hash = SHA256Managed.Create())
-        //    {
-        //        Encoding enc = Encoding.UTF8;
-        //        Byte[] result = hash.ComputeHash(enc.GetBytes(value));
-
-        //        foreach (Byte b in result)
-        //            Sb.Append(b.ToString("x2"));
-        //    }
-
-        //    return Sb.ToString();
-        //}
-
-        // Note: this is available only with .NET 5 or higher.
-        // Source: https://stackoverflow.com/a/17001289
-        private static string sha256_hash(string value)
-        {
-            StringBuilder Sb = new StringBuilder();
-
-            using (var hash = SHA256.Create())
-            {
-                Encoding enc = Encoding.UTF8;
-                byte[] result = hash.ComputeHash(enc.GetBytes(value));
-
-                foreach (byte b in result)
-                    Sb.Append(b.ToString("x2"));
-            }
-
-            return Sb.ToString();
-        }
-
         public string CreateAndStoreAccountToken(int userId, long expiresInDay = 7)
         {
             if (expiresInDay < 0)
@@ -62,7 +28,7 @@ namespace PhoneStoreManager.Services
                 do
                 {
                     var tokenPre = string.Format("{0}|{1}|{2}|{3}|{4}", user.Username, user.Email, user.Phone, user.Password, DateTime.Now.ToString("yyyy/MM/dd-hh:mm:ss-tt"));
-                    token = sha256_hash(tokenPre);
+                    token = Utils.EncryptSHA256(tokenPre);
                 }
                 // If is exist in any session, will create new token instead.
                 while (_context.UserSessions.FirstOrDefault(p => p.Token == token) != null);
