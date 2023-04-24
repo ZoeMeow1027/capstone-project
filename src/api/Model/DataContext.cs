@@ -39,7 +39,8 @@ namespace PhoneStoreManager.Model
             modelBuilder.Entity<UserAddress>()
                 .HasOne(p => p.User)
                 .WithMany(c => c.UserAddresses)
-                .HasForeignKey(p => p.UserID);
+                .HasForeignKey(p => p.UserID)
+                .HasPrincipalKey(c => c.ID);
 
             // Username unique in User table.
             modelBuilder.Entity<User>(p =>
@@ -51,7 +52,8 @@ namespace PhoneStoreManager.Model
             modelBuilder.Entity<UserSession>()
                 .HasOne(p => p.User)
                 .WithMany(c => c.UserSessions)
-                .HasForeignKey(p => p.UserID);
+                .HasForeignKey(p => p.UserID)
+                .HasPrincipalKey(c => c.ID);
 
             // Token unique in UserSession
             modelBuilder.Entity<UserSession>(p =>
@@ -63,43 +65,50 @@ namespace PhoneStoreManager.Model
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
-                .HasForeignKey(p => p.CategoryID);
+                .HasForeignKey(p => p.CategoryID)
+                .HasPrincipalKey(c => c.ID);
 
             // Foreign key ManufacturerID in Product and ProductManufacturer
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Manufacturer)
                 .WithMany(c => c.Products)
-                .HasForeignKey(p => p.ManufacturerID);
+                .HasForeignKey(p => p.ManufacturerID)
+                .HasPrincipalKey(c => c.ID);
 
             // Foreign key UserID in User and BillSummary
             modelBuilder.Entity<BillSummary>()
                 .HasOne(p => p.User)
                 .WithMany(c => c.BillSummaries)
-                .HasForeignKey(p => p.UserID);
+                .HasForeignKey(p => p.UserID)
+                .HasPrincipalKey(c => c.ID);
 
             // Foreign key BillID in BillSummary and BillDetails
             modelBuilder.Entity<BillDetails>()
                 .HasOne(p => p.BillSummary)
                 .WithMany(c => c.BillDetails)
-                .HasForeignKey(p => p.BillID);
+                .HasForeignKey(p => p.BillID)
+                .HasPrincipalKey(c => c.ID);
 
             // Foreign key ProductID in BillDetails and Products
             modelBuilder.Entity<BillDetails>()
                 .HasOne(p => p.Product)
                 .WithMany(c => c.BillDetails)
-                .HasForeignKey(p => p.ProductID);
+                .HasForeignKey(p => p.ProductID)
+                .HasPrincipalKey(c => c.ID);
 
             // Foreign key ProductID in Warranty and Products
             modelBuilder.Entity<Warranty>()
                 .HasOne(p => p.Product)
                 .WithMany(c => c.Warranties)
-                .HasForeignKey(p => p.ProductID);
+                .HasForeignKey(p => p.ProductID)
+                .HasPrincipalKey(c => c.ID);
 
             // Foreign key BillID in Warranty and BillSummary
             modelBuilder.Entity<Warranty>()
                 .HasOne(p => p.Bill)
                 .WithMany(c => c.Warranties)
-                .HasForeignKey(p => p.BillID);
+                .HasForeignKey(p => p.BillID)
+                .HasPrincipalKey(c => c.ID);
 
             base.OnModelCreating(modelBuilder);
         }

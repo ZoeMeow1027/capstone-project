@@ -1,4 +1,5 @@
-﻿using PhoneStoreManager.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using PhoneStoreManager.Model;
 
 namespace PhoneStoreManager.Services
 {
@@ -23,7 +24,7 @@ namespace PhoneStoreManager.Services
 
         public List<Product> FindAllProductsByName(string name, bool includeHidden)
         {
-            return _context.Products.Where(p =>
+            return _context.Products.Include(p => p.Category).Include(p => p.Manufacturer).Include(p => p.Warranties).Where(p =>
                 // Include hidden. This is ignored by default.
                 (includeHidden ? true : p.ShowInPage == true) &&
                 // Filter by name
@@ -33,17 +34,17 @@ namespace PhoneStoreManager.Services
 
         public List<Product> GetAllProducts(bool includeHidden)
         {
-            return _context.Products.Where(p => (includeHidden ? true : p.ShowInPage == true)).ToList();
+            return _context.Products.Include(p => p.Category).Include(p => p.Manufacturer).Include(p => p.Warranties).Where(p => (includeHidden ? true : p.ShowInPage == true)).ToList();
         }
 
         public Product? GetProductById(int id)
         {
-            return _context.Products.Where(p => p.ID == id).FirstOrDefault();
+            return _context.Products.Include(p => p.Category).Include(p => p.Manufacturer).Include(p => p.Warranties).Where(p => p.ID == id).FirstOrDefault();
         }
 
         public void HideProduct(Product item)
         {
-            var data = _context.Products.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = GetProductById(item.ID);
             if (data != null)
             {
                 data.ShowInPage = false;
@@ -62,7 +63,7 @@ namespace PhoneStoreManager.Services
 
         public void HideProductById(int id)
         {
-            var data = _context.Products.Where(p => p.ID == id).FirstOrDefault();
+            var data = GetProductById(id);
             if (data != null)
             {
                 HideProduct(data);
@@ -75,7 +76,7 @@ namespace PhoneStoreManager.Services
 
         public void UpdateProduct(Product item)
         {
-            var data = _context.Products.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = GetProductById(item.ID);
             if (data != null)
             {
                 data.Name = item.Name;

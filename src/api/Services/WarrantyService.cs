@@ -1,4 +1,5 @@
-﻿using PhoneStoreManager.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using PhoneStoreManager.Model;
 
 namespace PhoneStoreManager.Services
 {
@@ -80,17 +81,17 @@ namespace PhoneStoreManager.Services
 
         public List<Warranty> FindAllWarrantiesByBillId(int billId, bool includeExpired = true)
         {
-            return _context.Warranties.Where(p => (p.BillID == billId) && (includeExpired ? true : p.DateEnd > DateTime.Now)).ToList();
+            return _context.Warranties.Include(p => p.Product).Include(p => p.Bill).Where(p => (p.BillID == billId) && (includeExpired ? true : p.DateEnd > DateTime.Now)).ToList();
         }
 
         public List<Warranty> GetAllWarranties(bool includeExpired = true)
         {
-            return _context.Warranties.Where(p => (includeExpired ? true : p.DateEnd > DateTime.Now)).ToList();
+            return _context.Warranties.Include(p => p.Product).Include(p => p.Bill).Where(p => (includeExpired ? true : p.DateEnd > DateTime.Now)).ToList();
         }
 
         public Warranty? GetWarrantyById(int id)
         {
-            return _context.Warranties.Where(p => p.ID == id).FirstOrDefault();
+            return _context.Warranties.Include(p => p.Product).Include(p => p.Bill).Where(p => p.ID == id).FirstOrDefault();
         }
 
         public void UpdateWarranty(Warranty warranty)

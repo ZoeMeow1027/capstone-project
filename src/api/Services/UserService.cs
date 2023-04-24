@@ -1,4 +1,5 @@
-﻿using PhoneStoreManager.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using PhoneStoreManager.Model;
 
 namespace PhoneStoreManager.Services
 {
@@ -23,7 +24,7 @@ namespace PhoneStoreManager.Services
 
         public void ChangeUserType(User item, UserType type)
         {
-            var data = _context.Users.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = GetUserById(item.ID);
             if (data != null)
             {
                 data.UserType = type;
@@ -44,7 +45,7 @@ namespace PhoneStoreManager.Services
 
         public List<User> FindAllUsersByUsernameAndName(string name, bool includeDisabled)
         {
-            return _context.Users.Where(p =>
+            return _context.Users.Include(p => p.UserSessions).Include(p => p.BillSummaries).Include(p => p.UserAddresses).Where(p =>
                 // Include hidden. This is ignored by default.
                 (includeDisabled ? true : p.IsEnabled == true) &&
                 // Filter by name and username
@@ -54,17 +55,17 @@ namespace PhoneStoreManager.Services
 
         public List<User> GetAllUsers(bool includeDisabled = false)
         {
-            return _context.Users.Where(p => includeDisabled ? true : p.IsEnabled == true).ToList();
+            return _context.Users.Include(p => p.UserSessions).Include(p => p.BillSummaries).Include(p => p.UserAddresses).Where(p => includeDisabled ? true : p.IsEnabled == true).ToList();
         }
 
         public User? GetUserById(int id)
         {
-            return _context.Users.Where(p => p.ID == id).FirstOrDefault();
+            return _context.Users.Include(p => p.UserSessions).Include(p => p.BillSummaries).Include(p => p.UserAddresses).Where(p => p.ID == id).FirstOrDefault();
         }
 
         public void EnableUser(User item)
         {
-            var data = _context.Users.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = GetUserById(item.ID);
             if (data != null)
             {
                 data.IsEnabled = true;
@@ -83,7 +84,7 @@ namespace PhoneStoreManager.Services
 
         public void DisableUser(User item)
         {
-            var data = _context.Users.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = GetUserById(item.ID);
             if (data != null)
             {
                 data.IsEnabled = false;
@@ -102,7 +103,7 @@ namespace PhoneStoreManager.Services
 
         public void UpdateUser(User item)
         {
-            var data = _context.Users.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = GetUserById(item.ID);
             if (data != null)
             {
                 data.Username = item.Username;
