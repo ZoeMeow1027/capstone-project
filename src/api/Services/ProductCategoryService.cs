@@ -1,4 +1,5 @@
-﻿using PhoneStoreManager.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using PhoneStoreManager.Model;
 
 namespace PhoneStoreManager.Services
 {
@@ -23,7 +24,7 @@ namespace PhoneStoreManager.Services
 
         public void UpdateProductCategory(ProductCategory item)
         {
-            var data = _context.ProductCategories.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = GetProductCategoryById(item.ID);
             if (data != null)
             {
                 data.Name = item.Name;
@@ -43,7 +44,7 @@ namespace PhoneStoreManager.Services
 
         public List<ProductCategory> FindAllProductCategoriesByName(string name)
         {
-            return _context.ProductCategories.Where(p =>
+            return _context.ProductCategories.Include(p => p.Products).Where(p =>
                 // Filter by name
                 p.Name.ToLower().Contains(name.ToLower())
             ).ToList();
@@ -52,17 +53,17 @@ namespace PhoneStoreManager.Services
         public List<ProductCategory> GetAllProductCategories()
         {
             // Include hidden. This is ignored by default.
-            return _context.ProductCategories.ToList();
+            return _context.ProductCategories.Include(p => p.Products).ToList();
         }
 
         public ProductCategory? GetProductCategoryById(int id)
         {
-            return _context.ProductCategories.Where(p => p.ID == id).FirstOrDefault();
+            return _context.ProductCategories.Include(p => p.Products).Where(p => p.ID == id).FirstOrDefault();
         }
 
         public void DeleteProductCategory(ProductCategory item)
         {
-            var data = _context.ProductCategories.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = GetProductCategoryById(item.ID);
             if (data != null)
             {
                 int _productCheck = _context.Products.Where(p => p.CategoryID == item.ID).ToList().Count;
@@ -86,7 +87,7 @@ namespace PhoneStoreManager.Services
 
         public void DeleteProductCategoryById(int id)
         {
-            var data = _context.ProductCategories.Where(p => p.ID == id).FirstOrDefault();
+            var data = GetProductCategoryById(id);
             if (data != null)
             {
                 DeleteProductCategory(data);

@@ -29,6 +29,11 @@ namespace PhoneStoreManager
             // Add MSSQL
             builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
+            builder.Services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
             // TODO: Temporary ignore CORS. Remember to delete below line in release
             #region Ignore CORS
             builder.Services.AddHttpContextAccessor();

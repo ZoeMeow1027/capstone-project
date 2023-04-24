@@ -1,4 +1,5 @@
-﻿using PhoneStoreManager.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using PhoneStoreManager.Model;
 
 namespace PhoneStoreManager.Services
 {
@@ -23,7 +24,7 @@ namespace PhoneStoreManager.Services
 
         public void UpdateProductManufacturer(ProductManufacturer item)
         {
-            var data = _context.ProductManufacturers.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = GetProductManufacturerById(item.ID);
             if (data != null)
             {
                 data.Name = item.Name;
@@ -43,7 +44,7 @@ namespace PhoneStoreManager.Services
 
         public List<ProductManufacturer> FindAllProductManufacturersByName(string name)
         {
-            return _context.ProductManufacturers.Where(p =>
+            return _context.ProductManufacturers.Include(p => p.Products).Where(p =>
                 // Filter by name
                 p.Name.ToLower().Contains(name.ToLower())
             ).ToList();
@@ -52,17 +53,17 @@ namespace PhoneStoreManager.Services
         public List<ProductManufacturer> GetAllProductManufacturers()
         {
             // Include hidden. This is ignored by default.
-            return _context.ProductManufacturers.ToList();
+            return _context.ProductManufacturers.Include(p => p.Products).ToList();
         }
 
         public ProductManufacturer? GetProductManufacturerById(int id)
         {
-            return _context.ProductManufacturers.FirstOrDefault(p => p.ID == id);
+            return _context.ProductManufacturers.Include(p => p.Products).FirstOrDefault(p => p.ID == id);
         }
 
         public void DeleteProductManufacturer(ProductManufacturer item)
         {
-            var data = _context.ProductManufacturers.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = GetProductManufacturerById(item.ID);
             if (data != null)
             {
                 int _productCheck = _context.Products.Where(p => p.ManufacturerID == item.ID).ToList().Count;
@@ -86,7 +87,7 @@ namespace PhoneStoreManager.Services
 
         public void DeleteProductManufacturerById(int id)
         {
-            var data = _context.ProductManufacturers.Where(p => p.ID == id).FirstOrDefault();
+            var data = GetProductManufacturerById(id);
             if (data != null)
             {
                 DeleteProductManufacturer(data);

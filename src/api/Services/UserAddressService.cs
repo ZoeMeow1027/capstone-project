@@ -1,4 +1,5 @@
-﻿using PhoneStoreManager.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using PhoneStoreManager.Model;
 
 namespace PhoneStoreManager.Services
 {
@@ -23,7 +24,7 @@ namespace PhoneStoreManager.Services
 
         public void DeleteUserAddress(UserAddress item)
         {
-            var data = _context.UserAddresses.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = GetUserAddressById(item.ID);
             if (data != null)
             {
                 _context.UserAddresses.Remove(data);
@@ -41,7 +42,7 @@ namespace PhoneStoreManager.Services
 
         public void DeleteUserAddressById(int id)
         {
-            var data = _context.UserAddresses.Where(p => p.ID == id).FirstOrDefault();
+            var data = GetUserAddressById(id);
             if (data != null)
             {
                 DeleteUserAddress(data);
@@ -54,22 +55,22 @@ namespace PhoneStoreManager.Services
 
         public List<UserAddress> FindAllUserAddressesByAddress(string address)
         {
-            return _context.UserAddresses.Where(p => p.Address.ToLower().Contains(address)).ToList();
+            return _context.UserAddresses.Include(p => p.User).Where(p => p.Address.ToLower().Contains(address)).ToList();
         }
 
         public List<UserAddress> GetAllUserAddresses()
         {
-            return _context.UserAddresses.ToList();
+            return _context.UserAddresses.Include(p => p.User).ToList();
         }
 
         public UserAddress? GetUserAddressById(int id)
         {
-            return _context.UserAddresses.Where(p => p.ID == id).FirstOrDefault();
+            return _context.UserAddresses.Include(p => p.User).Where(p => p.ID == id).FirstOrDefault();
         }
 
         public void UpdateUserAddress(UserAddress item)
         {
-            var data = _context.UserAddresses.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = GetUserAddressById(item.ID);
             if (data != null)
             {
                 data.Address = item.Address;

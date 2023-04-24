@@ -1,4 +1,5 @@
-﻿using PhoneStoreManager.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using PhoneStoreManager.Model;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -68,7 +69,7 @@ namespace PhoneStoreManager.Services
 
         public UserSession? GetUserSessionByToken(string token)
         {
-            return _context.UserSessions.Where(p => p.Token == token).FirstOrDefault();
+            return _context.UserSessions.Include(p => p.User).Where(p => p.Token == token).FirstOrDefault();
         }
 
         public bool IsAccountLocked(string token)

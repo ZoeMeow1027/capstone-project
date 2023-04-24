@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace PhoneStoreManager.Model
 {
@@ -29,6 +30,7 @@ namespace PhoneStoreManager.Model
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Product Product { get; set; }
 
+        [JsonIgnore]
         public BillSummary Bill { get; set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         #endregion
