@@ -16,10 +16,11 @@
 
 ## API
 
+### Services
+
 - Start date: 2023/04/18
 - Updated: 2023/04/23
 
-### Services
 | Group						| Description														| Updated		| Task (tick means completed)	|
 | -							| -																	| -				| -								|
 | Product Manuafaceturers	| Manage phone manufacturer.										| 2023/04/23	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li></ul> |
@@ -31,9 +32,13 @@
 | Warranty					| Manage all bill warranties.										| 2023/04/23	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li><li>[x] Check is expired</li></ul> |
 
 ### Controllers
+
+- Start date: 2023/04/24
+- Updated: 2023/04/24
+
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
-| Products					| Manage phone categories, phone manufacturers and phone in intentory.	| 2023/04/24	| <ul><li>[x] Get</li><li>[ ] Add (`**`)</li><li>[ ] Modify (`**`)</li><li>Delete or hide (`**`)</li></ul> |
+| Products					| Manage phone categories, phone manufacturers and phone in intentory.	| 2023/04/24	| <ul><li>[x] Get</li><li>[x] Add (`**`)</li><li>[ ] Modify (`**`)</li><li>Delete or hide (`**`)</li></ul> |
 | Accounts					| Manage all accounts.													| ----/--/--	| <ul><li>[ ] Get (`*`)</li><li>[ ] Add (`**`)</li><li>[ ] Modify (`**`)</li><li>Delete or hide (`**`)</li><li>[ ] Enable/disable user (`**`)</li><li>[ ] Change user type (`**`)</li><li>Change password (`*`)</li></ul> |
 
 (`*`): Owner account or administrator only
