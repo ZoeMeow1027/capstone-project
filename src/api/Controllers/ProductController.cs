@@ -72,75 +72,80 @@ namespace PhoneStoreManager.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(JToken data)
+        public ActionResult Post(JToken args)
         {
             ReturnResultTemplate result = new ReturnResultTemplate();
             result.StatusCode = 200;
 
             try
             {
-                string? action = (string?)data["action"];
-                string? type = (string?)data["type"];
-                dynamic? data1 = data["data"];
+                string? action = (string?)args["action"];
+                string? type = (string?)args["type"];
+                dynamic? data = args["data"];
 
-                if (action == null || type == null || data1 == null)
+                if (action == null || type == null || data == null)
                 {
-                    result.StatusCode = 400;
-                    result.Message = "Invalid requests!";
+                    throw new ArgumentException("Invalid requests!");
                 }
-                else
-                {
-                    switch (type)
-                    {
-                        case "manufacturer":
-                            switch (action)
-                            {
-                                case "add":
-                                    AddProductManufacturer(data1);
-                                    break;
-                                case "update":
-                                    UpdateProductManufacturer(data1);
-                                    break;
-                                case "delete":
-                                    DeleteProductManufacturerById(data1);
-                                    break;
-                            }
-                            break;
-                        case "category":
-                            switch (action)
-                            {
-                                case "add":
-                                    AddProductCategory(data1);
-                                    break;
-                                case "update":
-                                    UpdateProductCategory(data1);
-                                    break;
-                                case "delete":
-                                    DeleteProductCategoryById(data1);
-                                    break;
-                            }
-                            break;
-                        case "product":
-                            switch (action)
-                            {
-                                case "add":
-                                    AddProduct(data1);
-                                    break;
-                                case "update":
-                                    UpdateProduct(data1);
-                                    break;
-                                case "delete":
-                                    HideProductById(data1);
-                                    break;
-                            }
-                            break;
-                        default:
-                            throw new ArgumentException("Invalid \"type\" value!", "type");
-                    }
 
-                    result.StatusCode = 200;
-                    result.Message = "Successful!";
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                switch (type.ToLower())
+                {
+                    case "manufacturer":
+                        switch (action.ToLower())
+                        {
+                            case "add":
+                                AddProductManufacturer(data);
+                                break;
+                            case "update":
+                                UpdateProductManufacturer(data);
+                                break;
+                            case "delete":
+                                DeleteProductManufacturerById(data);
+                                break;
+                            default:
+                                throw new ArgumentException("Invalid \"action\" value!", "action");
+                        }
+                        break;
+                    case "category":
+                        switch (action.ToLower())
+                        {
+                            case "add":
+                                AddProductCategory(data);
+                                break;
+                            case "update":
+                                UpdateProductCategory(data);
+                                break;
+                            case "delete":
+                                DeleteProductCategoryById(data);
+                                break;
+                            default:
+                                throw new ArgumentException("Invalid \"action\" value!", "action");
+                        }
+                        break;
+                    case "product":
+                        switch (action.ToLower())
+                        {
+                            case "add":
+                                AddProduct(data);
+                                break;
+                            case "update":
+                                UpdateProduct(data);
+                                break;
+                            case "delete":
+                                HideProductById(data);
+                                break;
+                            default:
+                                throw new ArgumentException("Invalid \"action\" value!", "action");
+                        }
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid \"type\" value!", "type");
                 }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+                result.StatusCode = 200;
+                result.Message = "Successful!";
             }
             catch (ArgumentNullException argNullEx)
             {
