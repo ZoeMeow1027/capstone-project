@@ -18,7 +18,7 @@ namespace PhoneStoreManager.Controllers
             IProductService productService,
             IProductCategoryService productCategoryService,
             IProductManufacturerService productManufacturerService
-            )
+            ) : base()
         {
             this.productService = productService;
             this.productCategoryService = productCategoryService;
@@ -29,9 +29,11 @@ namespace PhoneStoreManager.Controllers
         public ActionResult Get(string? type = null, int? id = null, string? nameQuery = null, bool includeHidden = false)
         {
             ReturnResultTemplate result = new ReturnResultTemplate();
+            result.StatusCode = 200;
 
             if (type == null)
             {
+                result.StatusCode = 200;
                 result.Data = productService.GetAllProducts(includeHidden);
             }
             else
@@ -72,6 +74,9 @@ namespace PhoneStoreManager.Controllers
         [HttpPost]
         public ActionResult Post(JToken data)
         {
+            ReturnResultTemplate result = new ReturnResultTemplate();
+            result.StatusCode = 200;
+
             try
             {
                 string? action = (string?)data["action"];
@@ -80,69 +85,80 @@ namespace PhoneStoreManager.Controllers
 
                 if (action == null || type == null || data1 == null)
                 {
-                    return StatusCode(400, "Invalid requests!");
+                    result.StatusCode = 400;
+                    result.Message = "Invalid requests!";
                 }
-
-                switch (type)
+                else
                 {
-                    case "manufacturer":
-                        switch (action)
-                        {
-                            case "add":
-                                AddProductManufacturer(data1);
-                                break;
-                            case "update":
-                                UpdateProductManufacturer(data1);
-                                break;
-                            case "delete":
-                                DeleteProductManufacturerById(data1);
-                                break;
-                        }
-                        break;
-                    case "category":
-                        switch (action)
-                        {
-                            case "add":
-                                AddProductCategory(data1);
-                                break;
-                            case "update":
-                                UpdateProductCategory(data1);
-                                break;
-                            case "delete":
-                                DeleteProductCategoryById(data1);
-                                break;
-                        }
-                        break;
-                    case "product":
-                        switch (action)
-                        {
-                            case "add":
-                                AddProduct(data1);
-                                break;
-                            case "update":
-                                UpdateProduct(data1);
-                                break;
-                            case "delete":
-                                HideProductById(data1);
-                                break;
-                        }
-                        break;
-                }
+                    switch (type)
+                    {
+                        case "manufacturer":
+                            switch (action)
+                            {
+                                case "add":
+                                    AddProductManufacturer(data1);
+                                    break;
+                                case "update":
+                                    UpdateProductManufacturer(data1);
+                                    break;
+                                case "delete":
+                                    DeleteProductManufacturerById(data1);
+                                    break;
+                            }
+                            break;
+                        case "category":
+                            switch (action)
+                            {
+                                case "add":
+                                    AddProductCategory(data1);
+                                    break;
+                                case "update":
+                                    UpdateProductCategory(data1);
+                                    break;
+                                case "delete":
+                                    DeleteProductCategoryById(data1);
+                                    break;
+                            }
+                            break;
+                        case "product":
+                            switch (action)
+                            {
+                                case "add":
+                                    AddProduct(data1);
+                                    break;
+                                case "update":
+                                    UpdateProduct(data1);
+                                    break;
+                                case "delete":
+                                    HideProductById(data1);
+                                    break;
+                            }
+                            break;
+                        default:
+                            throw new ArgumentException("Invalid \"type\" value!", "type");
+                    }
 
-                return StatusCode(200, JsonConvert.DeserializeObject<JToken>(data.ToString()));
+                    result.StatusCode = 200;
+                    result.Message = "Successful!";
+                }
             }
             catch (ArgumentNullException argNullEx)
             {
-                return StatusCode(500, new ReturnResultTemplate(500, argNullEx.Message));
+                result.StatusCode = 400;
+                result.Message = argNullEx.Message;
             }
             catch (ArgumentException argEx)
             {
-                return StatusCode(500, new ReturnResultTemplate(500, argEx.Message));
+                result.StatusCode = 400;
+                result.Message = argEx.Message;
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ReturnResultTemplate(500, ex.Message));
+                result.StatusCode = 500;
+                result.Message = ex.Message;
             }
+
+            return StatusCode(result.StatusCode, result.ToDynamicObject());
         }
 
         #region Product Manufacturer area
