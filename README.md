@@ -34,12 +34,12 @@
 ### Controllers
 
 - Start date: 2023/04/24
-- Updated: 2023/04/28
+- Updated: 2023/05/03
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
-| Products					| Manage phone categories, phone manufacturers and phone in intentory.	| 2023/04/28	| <ul><li>[x] Get</li><li>[x] Add (`**`)</li><li>[x] Modify (`**`)</li><li>[x] Delete or hide (`**`)</li></ul> |
-| Accounts					| Manage all accounts.													| ----/--/--	| <ul><li>[ ] Get (`*`)</li><li>[ ] Add (`**`)</li><li>[ ] Modify (`**`)</li><li>Delete or hide (`**`)</li><li>[ ] Enable/disable user (`**`)</li><li>[ ] Change user type (`**`)</li><li>Change password (`*`)</li></ul> |
+| Products					| Manage phone categories, phone manufacturers and phone in intentory.	| 2023/05/03	| <ul><li>[x] Get</li><li>[x] Add (`**`)</li><li>[x] Modify (`**`)</li><li>[x] Delete or hide (`**`)</li></ul> |
+| Users and user addresses	| Manage all users and user addresses.									| 2023/05/03	| <ul><li>[x] Get (`*`)</li><li>[ ] Add (`**`)</li><li>[ ] Modify (`**`)</li><li>Delete or hide (`**`)</li><li>[ ] Enable/disable user (`**`)</li><li>[ ] Change user type (`**`)</li><li>Change password (`*`)</li></ul> |
 
 (`*`): Owner account or administrator only
 
