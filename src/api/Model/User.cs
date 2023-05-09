@@ -21,23 +21,27 @@ namespace PhoneStoreManager.Model
 
         public string? Phone { get; set; } = null;
 
-        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+
+        public DateTime DateModified { get; set; } = DateTime.UtcNow;
 
         [Required]
         public bool IsEnabled { get; set; } = true;
+
+        public string? DisabledReason { get; set; } = null;
 
         [Required]
         public UserType UserType { get; set; } = UserType.Normal;
 
         #region Entity
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        [JsonIgnore] 
+        [JsonIgnore]
         public List<UserAddress> UserAddresses { get; set; }
 
-        [JsonIgnore] 
+        [JsonIgnore]
         public List<BillSummary> BillSummaries { get; set; }
 
-        [JsonIgnore] 
+        [JsonIgnore]
         public List<UserSession> UserSessions { get; set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         #endregion

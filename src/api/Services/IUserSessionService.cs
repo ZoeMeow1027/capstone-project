@@ -10,6 +10,8 @@ namespace PhoneStoreManager.Services
 
         void DeleteSessionByToken(string token);
 
+        bool HasTokenAuthorizated(string? token, List<UserType> allowedType);
+
         void LogOutAllByUserID(int userId);
 
         bool IsExpired(string token);

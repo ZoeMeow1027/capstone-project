@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace PhoneStoreManager.Model
 {
@@ -7,7 +7,7 @@ namespace PhoneStoreManager.Model
     {
         [Key]
         public int ID { get; set; }
-        
+
         [Required]
         public string Name { get; set; } = string.Empty;
 
@@ -29,16 +29,22 @@ namespace PhoneStoreManager.Model
         [Required]
         public bool ShowInPage { get; set; } = true;
 
+        [Required]
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+
+        [Required]
+        public DateTime DateModified { get; set; } = DateTime.UtcNow;
+
         #region Entity
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public ProductCategory Category { get; set; }
 
         public ProductManufacturer Manufacturer { get; set; }
 
-        [JsonIgnore] 
+        [JsonIgnore]
         public List<BillDetails> BillDetails { get; set; }
 
-        [JsonIgnore] 
+        [JsonIgnore]
         public List<Warranty> Warranties { get; set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         #endregion
