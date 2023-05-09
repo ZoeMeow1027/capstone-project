@@ -27,7 +27,7 @@ namespace PhoneStoreManager.Services
             var data = _context.Warranties.Where(p => p.ID == warranty.ID).FirstOrDefault();
             if (data != null)
             {
-                return (warranty.DateEnd < DateTime.Now);
+                return (warranty.DateEnd < DateTime.UtcNow);
             }
             else
             {
@@ -81,12 +81,12 @@ namespace PhoneStoreManager.Services
 
         public List<Warranty> FindAllWarrantiesByBillId(int billId, bool includeExpired = true)
         {
-            return _context.Warranties.Include(p => p.Product).Include(p => p.Bill).Where(p => (p.BillID == billId) && (includeExpired ? true : p.DateEnd > DateTime.Now)).ToList();
+            return _context.Warranties.Include(p => p.Product).Include(p => p.Bill).Where(p => (p.BillID == billId) && (includeExpired ? true : p.DateEnd > DateTime.UtcNow)).ToList();
         }
 
         public List<Warranty> GetAllWarranties(bool includeExpired = true)
         {
-            return _context.Warranties.Include(p => p.Product).Include(p => p.Bill).Where(p => (includeExpired ? true : p.DateEnd > DateTime.Now)).ToList();
+            return _context.Warranties.Include(p => p.Product).Include(p => p.Bill).Where(p => (includeExpired ? true : p.DateEnd > DateTime.UtcNow)).ToList();
         }
 
         public Warranty? GetWarrantyById(int id)

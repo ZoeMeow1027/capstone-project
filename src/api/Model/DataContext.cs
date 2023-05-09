@@ -1,19 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace PhoneStoreManager.Model
 {
-    public class DataContext: DbContext
+    public class DataContext : DbContext
     {
         private string? _connectionString = null;
 
-        public DataContext(string cString): base()
+        public DataContext(string cString) : base()
         {
             _connectionString = cString;
         }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
-        
+
         public DbSet<User> Users { get; set; }
         public DbSet<UserAddress> UserAddresses { get; set; }
         public DbSet<ProductManufacturer> ProductManufacturers { get; set; }

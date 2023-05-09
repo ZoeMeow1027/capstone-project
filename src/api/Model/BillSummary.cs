@@ -17,7 +17,7 @@ namespace PhoneStoreManager.Model
         public string RecipientAddress { get; set; } = string.Empty;
 
         [Required]
-        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
         public long VAT { get; set; } = 0;
 

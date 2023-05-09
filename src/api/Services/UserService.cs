@@ -43,13 +43,13 @@ namespace PhoneStoreManager.Services
             }
         }
 
-        public List<User> FindAllUsersByUsernameAndName(string name, bool includeDisabled)
+        public List<User> FindAllUsersByUsername(string name, bool includeDisabled)
         {
             return _context.Users.Include(p => p.UserSessions).Include(p => p.BillSummaries).Include(p => p.UserAddresses).Where(p =>
                 // Include hidden. This is ignored by default.
                 (includeDisabled ? true : p.IsEnabled == true) &&
                 // Filter by name and username
-                (p.Name.ToLower().Contains(name.ToLower()) || p.Username.ToLower().Contains(name.ToLower()))
+                p.Username.ToLower().Contains(name.ToLower())
             ).ToList();
         }
 

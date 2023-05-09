@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace PhoneStoreManager.Model
 {
@@ -18,10 +18,10 @@ namespace PhoneStoreManager.Model
         public int WarrantyMonth { get; set; } = 12;
 
         [Required]
-        public DateTime DateStart { get; set; } = DateTime.Now;
+        public DateTime DateStart { get; set; } = DateTime.UtcNow;
 
         [Required]
-        public DateTime DateEnd { get; set; } = DateTime.Now;
+        public DateTime DateEnd { get; set; } = DateTime.UtcNow;
 
         [Required]
         public string SerialNumberOrIMEI { get; set; } = string.Empty;

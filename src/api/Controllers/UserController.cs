@@ -11,14 +11,17 @@ namespace PhoneStoreManager.Controllers
     {
         private readonly IUserService userService;
         private readonly IUserAddressService userAddressService;
+        private readonly IUserSessionService userSessionService;
 
         public UserController(
             IUserService userService,
-            IUserAddressService userAddressService
-            ): base()
+            IUserAddressService userAddressService,
+            IUserSessionService userSessionService
+            ) : base()
         {
             this.userService = userService;
             this.userAddressService = userAddressService;
+            this.userSessionService = userSessionService;
         }
 
         [HttpGet]
@@ -38,7 +41,7 @@ namespace PhoneStoreManager.Controllers
                 {
                     case "user":
                         result.Data = nameQuery != null
-                            ? userService.FindAllUsersByUsernameAndName(nameQuery, includeDisabled)
+                            ? userService.FindAllUsersByUsername(nameQuery, includeDisabled)
                             : id == null
                                 ? userService.GetAllUsers(includeDisabled)
                                 : userService.GetUserById(id.Value);
@@ -68,6 +71,12 @@ namespace PhoneStoreManager.Controllers
 
             try
             {
+                if (!userSessionService.HasTokenAuthorizated(
+                    Request.Cookies["token"],
+                    new List<UserType>() { UserType.Administrator }
+                    ))
+                    throw new UnauthorizedAccessException("Unauthorizated!");
+
                 string? action = (string?)args["action"];
                 string? type = (string?)args["type"];
                 dynamic? data = args["data"];
@@ -87,10 +96,7 @@ namespace PhoneStoreManager.Controllers
                                 AddUser(data);
                                 break;
                             case "update":
-                                // TODO: User - Update
-                                break;
-                            case "delete":
-                                // TODO: User - Delete
+                                UpdateUser(data);
                                 break;
                             case "enable":
                             case "disable":
@@ -113,10 +119,10 @@ namespace PhoneStoreManager.Controllers
                                 AddUserAddress(data);
                                 break;
                             case "update":
-                                // TODO: User Address - Update
+                                UpdateUserAddress(data);
                                 break;
                             case "delete":
-                                // TODO: User Address - Delete
+                                DeleteUserAddress(data);
                                 break;
                             default:
                                 throw new ArgumentException("Invalid \"action\" value!", "action");
@@ -126,6 +132,11 @@ namespace PhoneStoreManager.Controllers
                         throw new ArgumentException("Invalid \"type\" value!", "type");
                 }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
+            }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                result.StatusCode = 401;
+                result.Message = uaEx.Message;
             }
             catch (ArgumentNullException argNullEx)
             {
@@ -149,50 +160,97 @@ namespace PhoneStoreManager.Controllers
         #region User area
         private void AddUser(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "username", "password", "name" };
+            List<string> reqArgList = new List<string>() { "username", "password", "name" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
-            foreach(string reqParamItem in reqParamList)
+            // TODO: User [Add] - Check if username is valid or not exist.
+            // TODO: User [Add] - Check if password is valid.
+
+            // User [Add] - Check if email and phone are valid.
+            if ((string?)data["phone"] != null)
             {
-                if (data[reqParamItem] == null)
+                if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))
                 {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
+                    throw new ArgumentException("Failed while validating 'phone' parameter!", "phone");
+                }
+            }
+            if ((string?)data["email"] != null)
+            {
+                if (!Utils.DataValidate.IsValidEmail((string?)data["email"]))
+                {
+                    throw new ArgumentException("Failed while validating 'email' parameter!", "email");
                 }
             }
 
-            // TODO: Add User - Check if user is exist!
-            // TODO: Add User - Check if username is valid!
-            // TODO: Add User - Check if password is valid!
-            // TODO: Add User - CHeck if email and phone are valid!
-            userService.AddUser(new Model.User()
+            // User [Add] - Begin adding
+            userService.AddUser(new User()
             {
-                Username = (string)data[reqParamList[0]],
-                // TODO: Add User - Encrypt password here!
-                Password = (string)data[reqParamList[1]],
-                Name = (string)data[reqParamList[2]],
+                Username = (string)data["username"],
+                // TODO: User [Add] - Encrypt password here!
+                Password = (string)data["password"],
+                Name = (string)data["name"],
                 Email = (string?)data["email"],
                 Phone = (string?)data["phone"]
             });
         }
 
-        private void ToggleUserEnabled(dynamic data)
+        private void UpdateUser(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "userid", "enabled" };
+            List<string> reqArgList = new List<string>() { "id" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
-            foreach (string reqParamItem in reqParamList)
+            // TODO: User [Update] - Check if username is valid or not exist.
+            // TODO: User [Update] - Check if password is valid.
+            // User [Update] - Check if email and phone are valid!
+            if ((string?)data["phone"] != null)
             {
-                if (data[reqParamItem] == null)
+                if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))
                 {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
+                    throw new ArgumentException("Failed while validating 'phone' parameter!", "phone");
+                }
+            }
+            if ((string?)data["email"] != null)
+            {
+                if (!Utils.DataValidate.IsValidEmail((string?)data["email"]))
+                {
+                    throw new ArgumentException("Failed while validating 'email' parameter!", "email");
                 }
             }
 
-            // Check if user is exist.
+            // User [Update] - Check if exist
+            var dataTemp = userService.GetUserById((int)data["id"]);
+            if (dataTemp == null)
+            {
+                throw new ArgumentException("User ID isn't exist!");
+            }
+
+            dataTemp.Username = (string?)data["username"] ?? dataTemp.Username;
+            // TODO: User [Update] - Encrypt password here!
+            dataTemp.Password = (string?)data["password"] ?? dataTemp.Password;
+            dataTemp.Name = (string?)data["name"] ?? dataTemp.Name;
+            dataTemp.Email = (string?)data["email"] ?? dataTemp.Email;
+            dataTemp.Phone = (string?)data["phone"] ?? dataTemp.Phone;
+            dataTemp.IsEnabled = (bool?)data["isenabled"] ?? dataTemp.IsEnabled;
+            dataTemp.DisabledReason = (string?)data["disabledreason"] ?? dataTemp.DisabledReason;
+            dataTemp.UserType = (UserType?)data["usertype"] ?? dataTemp.UserType;
+            dataTemp.DateModified = DateTime.UtcNow;
+            // User [Update] - Begin updating
+            userService.UpdateUser(dataTemp);
+        }
+
+        private void ToggleUserEnabled(dynamic data)
+        {
+            List<string> reqArgList = new List<string>() { "userid", "enabled" };
+            Utils.CheckRequiredArguments(data, reqArgList);
+
+            // User [Toggle User] - Check if user exist
             var dataTemp = userService.GetUserById((int)data["userid"]);
             if (dataTemp == null)
             {
                 throw new ArgumentException("User ID isn't exist!");
             }
 
+            // User [Toggle User] - Begin toggling
             switch ((bool)data["enabled"])
             {
                 case true:
@@ -206,52 +264,42 @@ namespace PhoneStoreManager.Controllers
 
         private void ChangeUserType(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "userid", "usertype" };
+            List<string> reqArgList = new List<string>() { "userid", "usertype" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
-            foreach (string reqParamItem in reqParamList)
-            {
-                if (data[reqParamItem] == null)
-                {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
-                }
-            }
-
-            // Check if "usertype" value is valid!
+            // User [Change User Type] - Check if "usertype" value is valid
             if ((int)data["type"] < 0 || (int)data["usertype"] > 2)
             {
                 throw new ArgumentException("Invalid \"usertype\" value!", "usertype");
             }
 
-            // Check if user is exist!
+            // User [Change User Type] - Check if user is exist
             var dataTemp = userService.GetUserById((int)data["userid"]);
             if (dataTemp == null)
             {
                 throw new ArgumentException("User ID isn't exist!");
             }
 
+            // User [Change User Type] - Begin changing
             userService.ChangeUserType(dataTemp, (UserType)data["usertype"]);
         }
 
         private void ChangePassword(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "userid", "newpassword" };
+            List<string> reqArgList = new List<string>() { "userid", "newpassword" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
-            foreach (string reqParamItem in reqParamList)
-            {
-                if (data[reqParamItem] == null)
-                {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
-                }
-            }
-
+            // User [Change Password] - Check if user exist
             var dataTemp = userService.GetUserById((int)data["userid"]);
             if (dataTemp == null)
             {
                 throw new ArgumentException("User ID isn't exist!");
             }
 
-            // TODO: Change User Password - Encrypt password here! Make sure equals to Add user.
+            // TODO: User [Change Password] - Encrypt password here! Make sure equals to Add user.
             dataTemp.Password = data["newpassword"];
+
+            // User [Change Password] - Begin changing
             userService.UpdateUser(dataTemp);
         }
         #endregion
@@ -259,25 +307,72 @@ namespace PhoneStoreManager.Controllers
         #region User Address area
         private void AddUserAddress(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "userid", "name", "address", "phone" };
+            List<string> reqArgList = new List<string>() { "userid", "name", "address", "phone" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
-            foreach (string reqParamItem in reqParamList)
+            // TODO: User Address [Add] - Check if user is exist!
+            // User Address [Add] - CHeck if phone are valid!
+            if ((string?)data["phone"] != null)
             {
-                if (data[reqParamItem] == null)
+                if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))
                 {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
+                    throw new ArgumentException("Failed while validating 'phone' parameter!", "phone");
                 }
             }
 
-            // TODO: Add User Address - Check if user id is valid!
-            // TODO: Add User Address - CHeck if phone are valid!
+            // User Address [Add] - Begin adding
             userAddressService.AddUserAddress(new UserAddress()
             {
-                UserID = (int)data[reqParamList[0]],
-                Name = (string)data[reqParamList[1]],
-                Address = (string)data[reqParamList[2]],
-                Phone = (string)data.Get(reqParamList[3])
+                UserID = (int)data["userid"],
+                Name = (string)data["name"],
+                Address = (string)data["address"],
+                Phone = (string)data["phone"]
             });
+        }
+
+        private void UpdateUserAddress(dynamic data)
+        {
+            List<string> reqArgList = new List<string>() { "id" };
+            Utils.CheckRequiredArguments(data, reqArgList);
+
+            // User Address [Update] - Check if address exist
+            var dataTemp = userAddressService.GetUserAddressById((int)data["id"]);
+            if (dataTemp == null)
+            {
+                throw new ArgumentException("UserAddress with ID is not exist!", "id");
+            }
+
+            // User Address [Update] - Check if user exist
+            if (userService.GetUserById((int)data["userid"]) == null)
+            {
+                throw new ArgumentException("User with ID is not exist!", "userid");
+            }
+
+            // User Address [Update] - Check if phone is valid.
+            if ((string?)data["phone"] != null)
+            {
+                if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))
+                {
+                    throw new ArgumentException("Failed while validating 'phone' parameter!", "phone");
+                }
+            }
+
+            // User Address [Update] - Begin updating
+            dataTemp.UserID = (int?)data["userid"] ?? dataTemp.UserID;
+            dataTemp.Name = (string?)data["name"] ?? dataTemp.Name;
+            dataTemp.Address = (string?)data["address"] ?? dataTemp.Address;
+            dataTemp.Phone = (string?)data["phone"] ?? dataTemp.Phone;
+            userAddressService.UpdateUserAddress(dataTemp);
+
+        }
+
+        private void DeleteUserAddress(dynamic data)
+        {
+            List<string> reqArgList = new List<string>() { "id" };
+            Utils.CheckRequiredArguments(data, reqArgList);
+
+            // User Address [Delete] - Begin deleting
+            userAddressService.DeleteUserAddressById((int)data["id"]);
         }
         #endregion
     }

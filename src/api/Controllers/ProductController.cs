@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PhoneStoreManager.Model;
 using PhoneStoreManager.Services;
@@ -13,16 +12,19 @@ namespace PhoneStoreManager.Controllers
         private readonly IProductService productService;
         private readonly IProductCategoryService productCategoryService;
         private readonly IProductManufacturerService productManufacturerService;
+        private readonly IUserSessionService userSessionService;
 
         public ProductController(
             IProductService productService,
             IProductCategoryService productCategoryService,
-            IProductManufacturerService productManufacturerService
+            IProductManufacturerService productManufacturerService,
+            IUserSessionService userSessionService
             ) : base()
         {
             this.productService = productService;
             this.productCategoryService = productCategoryService;
             this.productManufacturerService = productManufacturerService;
+            this.userSessionService = userSessionService;
         }
 
         [HttpGet]
@@ -79,6 +81,12 @@ namespace PhoneStoreManager.Controllers
 
             try
             {
+                if (!userSessionService.HasTokenAuthorizated(
+                    Request.Cookies["token"],
+                    new List<UserType>() { UserType.Administrator, UserType.Staff }
+                    ))
+                    throw new UnauthorizedAccessException("Unauthorizated!");
+
                 string? action = (string?)args["action"];
                 string? type = (string?)args["type"];
                 dynamic? data = args["data"];
@@ -147,6 +155,11 @@ namespace PhoneStoreManager.Controllers
                 result.StatusCode = 200;
                 result.Message = "Successful!";
             }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                result.StatusCode = 401;
+                result.Message = uaEx.Message;
+            }
             catch (ArgumentNullException argNullEx)
             {
                 result.StatusCode = 400;
@@ -169,210 +182,185 @@ namespace PhoneStoreManager.Controllers
         #region Product Manufacturer area
         private void AddProductManufacturer(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "name" };
-
-            foreach (string reqParamItem in reqParamList)
-            {
-                if (data[reqParamItem] == null)
-                {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
-                }
-            }
+            List<string> reqArgList = new List<string>() { "name" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
             productManufacturerService.AddProductManufacturer(new ProductManufacturer()
             {
-                Name = (string)data[reqParamList[0]]
+                Name = (string)data["name"]
             });
         }
 
         private void UpdateProductManufacturer(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "id", "name" };
+            List<string> reqArgList = new List<string>() { "id", "name" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
-            foreach (string reqParamItem in reqParamList)
+            // Product Category [Update] - Check if product category exist
+            var dataTemp = productManufacturerService.GetProductManufacturerById((int)data["id"]);
+            if (dataTemp == null)
             {
-                if (data[reqParamItem] == null)
-                {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
-                }
+                throw new ArgumentException("ProductManufacturer with ID is not exist!", "id");
             }
 
-            productManufacturerService.UpdateProductManufacturer(new ProductManufacturer()
-            {
-                ID = (int)data[reqParamList[0]],
-                Name = (string)data[reqParamList[1]]
-            });
+            dataTemp.Name = (string)data["name"];
+            productManufacturerService.UpdateProductManufacturer(dataTemp);
         }
 
         private void DeleteProductManufacturerById(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "id" };
+            List<string> reqArgList = new List<string>() { "id" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
-            foreach (string reqParamItem in reqParamList)
-            {
-                if (data[reqParamItem] == null)
-                {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
-                }
-            }
-
-            productManufacturerService.DeleteProductManufacturerById(data[reqParamList[0]]);
+            productManufacturerService.DeleteProductManufacturerById(data["id"]);
         }
         #endregion
 
         #region Product Category area
         private void AddProductCategory(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "name" };
-
-            foreach (string reqParamItem in reqParamList)
-            {
-                if (data[reqParamItem] == null)
-                {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
-                }
-            }
+            List<string> reqArgList = new List<string>() { "name" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
             productCategoryService.AddProductCategory(new ProductCategory()
             {
-                Name = (string)data[reqParamList[0]]
+                Name = (string)data["name"]
             });
         }
 
         private void UpdateProductCategory(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "id", "name" };
+            List<string> reqArgList = new List<string>() { "id", "name" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
-            foreach (string reqParamItem in reqParamList)
+            // Product Category [Update] - Check if product category exist
+            var dataTemp = productCategoryService.GetProductCategoryById((int)data["id"]);
+            if (dataTemp == null)
             {
-                if (data[reqParamItem] == null)
-                {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
-                }
+                throw new ArgumentException("ProductCategory with ID is not exist!", "id");
             }
 
-            productCategoryService.UpdateProductCategory(new ProductCategory()
-            {
-                ID = (int)data[reqParamList[0]],
-                Name = (string)data[reqParamList[1]]
-            });
+            dataTemp.Name = (string)data["name"];
+            productCategoryService.UpdateProductCategory(dataTemp);
         }
 
         private void DeleteProductCategoryById(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "id" };
+            List<string> reqArgList = new List<string>() { "id" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
-            foreach (string reqParamItem in reqParamList)
-            {
-                if (data[reqParamItem] == null)
-                {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
-                }
-            }
-
-            productCategoryService.DeleteProductCategoryById(data[reqParamList[0]]);
+            productCategoryService.DeleteProductCategoryById(data["id"]);
         }
         #endregion
 
         #region Product area
         private void AddProduct(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "name", "categoryid", "manufacturerid", "inventorycount", "warrantymonth", "price", "showinpage" };
+            List<string> reqArgList = new List<string>() { "name", "categoryid", "manufacturerid", "inventorycount", "warrantymonth", "price", "showinpage" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
-            foreach (string reqParamItem in reqParamList)
+            // Product [Add] - Check if invalid 'inventorycount' value
+            if ((long)data[reqArgList[3]] < 0)
             {
-                if (data[reqParamItem] == null)
-                {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
-                }
+                throw new ArgumentException("Invalid 'inventorycount' value!", "inventorycount");
             }
 
-            // Check if invalid inventorycount value
-            if ((long)data[reqParamList[3]] < 0)
+            // Product [Add] - Check if invalid 'warrantymonth' value
+            if ((long)data[reqArgList[4]] < 0)
             {
-                throw new ArgumentException("Invalid 'inventorycount' value!", reqParamList[3]);
+                throw new ArgumentException("Invalid 'warrantymonth' value!", "warrantymonth");
             }
 
-            // Check if invalid inventorycount value
-            if ((long)data[reqParamList[4]] < 0)
+            // Product [Add] - Check if invalid 'price' value
+            if ((long)data[reqArgList[5]] < 0)
             {
-                throw new ArgumentException("Invalid 'warrantymonth' value!", reqParamList[4]);
+                throw new ArgumentException("Invalid 'price' value!", "price");
             }
 
-            // Check if invalid price value
-            if ((long)data[reqParamList[5]] < 0)
+            // Product [Add] - Check if product category by id is exist
+            if (productCategoryService.GetProductCategoryById((int)data["categoryid"]) == null)
             {
-                throw new ArgumentException("Invalid 'price' value!", reqParamList[5]);
+                throw new ArgumentException("Product Category with ID is not exist!", "categoryid");
+            }
+
+            // Product [Add] - Check if product manufacturer by id is exist
+            if (productManufacturerService.GetProductManufacturerById((int)data["manufacturerid"]) == null)
+            {
+                throw new ArgumentException("Product Manufacturer with ID is not exist!", "manufacturerid");
             }
 
             productService.AddProduct(new Product()
             {
-                Name = (string)data[reqParamList[0]],
-                CategoryID = (int)data[reqParamList[1]],
-                ManufacturerID = (int)data[reqParamList[2]],
-                InventoryCount = (int?)data[reqParamList[3]] ?? 0,
-                WarrantyMonth = (int?)data[reqParamList[4]] ?? 12,
-                Price = (long)data[reqParamList[5]],
-                ShowInPage = (bool?)data[reqParamList[6]] ?? true
+                Name = (string)data["name"],
+                CategoryID = (int)data["categoryid"],
+                ManufacturerID = (int)data["manufacturerid"],
+                InventoryCount = (int?)data["inventorycount"] ?? 0,
+                WarrantyMonth = (int?)data["warrantymonth"] ?? 12,
+                Price = (long)data["price"],
+                ShowInPage = (bool?)data["showinpage"] ?? true
             });
         }
 
         private void UpdateProduct(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "id", "name", "categoryid", "manufacturerid", "inventorycount", "warrantymonth", "price", "showinpage" };
+            List<string> reqArgList = new List<string>() { "id" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
-            foreach (string reqParamItem in reqParamList)
+            // Product [Update] - Check if invalid 'inventorycount' value
+            if ((long)data[reqArgList[3]] < 0)
             {
-                if (data[reqParamItem] == null)
-                {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
-                }
+                throw new ArgumentException("Invalid 'inventorycount' value!", "inventorycount");
             }
 
-            // Check if invalid inventorycount value
-            if ((long)data[reqParamList[3]] < 0)
+            // Product [Update] - Check if invalid 'warrantymonth' value
+            if ((long)data[reqArgList[4]] < 0)
             {
-                throw new ArgumentException("Invalid 'inventorycount' value!", reqParamList[3]);
+                throw new ArgumentException("Invalid 'warrantymonth' value!", "warrantymonth");
             }
 
-            // Check if invalid inventorycount value
-            if ((long)data[reqParamList[4]] < 0)
+            // Product [Update] - Check if invalid 'price' value
+            if ((long)data[reqArgList[5]] < 0)
             {
-                throw new ArgumentException("Invalid 'warrantymonth' value!", reqParamList[4]);
+                throw new ArgumentException("Invalid 'price' value!", "price");
             }
 
-            // Check if invalid price value
-            if ((long)data[reqParamList[5]] < 0)
+            // Product [Update] - Check if product category by id is exist
+            if (productCategoryService.GetProductCategoryById((int)data["categoryid"]) == null)
             {
-                throw new ArgumentException("Invalid 'price' value!", reqParamList[5]);
+                throw new ArgumentException("Product Category with ID is not exist!", "categoryid");
             }
 
-            productService.UpdateProduct(new Product()
+            // Product [Update] - Check if product manufacturer by id is exist
+            if (productManufacturerService.GetProductManufacturerById((int)data["manufacturerid"]) == null)
             {
-                ID = (int)data[reqParamList[0]],
-                Name = (string)data[reqParamList[1]],
-                CategoryID = (int)data[reqParamList[2]],
-                ManufacturerID = (int)data[reqParamList[3]],
-                InventoryCount = (int?)data[reqParamList[4]] ?? 0,
-                WarrantyMonth = (int?)data[reqParamList[5]] ?? 12,
-                Price = (long)data[reqParamList[6]],
-                ShowInPage = (bool?)data[reqParamList[7]] ?? true
-            });
+                throw new ArgumentException("Product Manufacturer with ID is not exist!", "manufacturerid");
+            }
+
+            // Product [Update] - Check if product exist
+            var productTemp = productService.GetProductById((int)data["id"]);
+            if (productTemp == null)
+            {
+                throw new ArgumentException("Product with ID is not exist!", "id");
+            }
+
+            productTemp.Name = (string?)data["name"] ?? productTemp.Name;
+            productTemp.CategoryID = (int?)data["categoryid"] ?? productTemp.CategoryID;
+            productTemp.ManufacturerID = (int?)data["manufacturerid"] ?? productTemp.ManufacturerID;
+            productTemp.InventoryCount = (int?)data["inventorycount"] ?? productTemp.InventoryCount;
+            productTemp.WarrantyMonth = (int?)data["warrantymonth"] ?? productTemp.WarrantyMonth;
+            productTemp.Price = (long?)data["price"] ?? productTemp.Price;
+            productTemp.ShowInPage = (bool?)data["showinpage"] ?? productTemp.ShowInPage;
+            productTemp.DateModified = DateTime.UtcNow;
+            // Product [Update] - Begin updating
+            productService.UpdateProduct(productTemp);
         }
 
         private void HideProductById(dynamic data)
         {
-            List<string> reqParamList = new List<string>() { "id" };
+            List<string> reqArgList = new List<string>() { "id" };
+            Utils.CheckRequiredArguments(data, reqArgList);
 
-            foreach (string reqParamItem in reqParamList)
-            {
-                if (data[reqParamItem] == null)
-                {
-                    throw new ArgumentNullException(reqParamItem, string.Format("Missing some data! (Required: {0})", string.Join(", ", reqParamList)));
-                }
-            }
-
-            productService.HideProductById(data[reqParamList[0]]);
+            productService.HideProductById(data["id"]);
         }
         #endregion
     }

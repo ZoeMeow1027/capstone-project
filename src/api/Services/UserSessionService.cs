@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PhoneStoreManager.Model;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace PhoneStoreManager.Services
 {
@@ -28,17 +26,17 @@ namespace PhoneStoreManager.Services
                 string token = "";
                 do
                 {
-                    var tokenPre = string.Format("{0}|{1}|{2}|{3}|{4}", user.Username, user.Email, user.Phone, user.Password, DateTime.Now.ToString("yyyy/MM/dd-hh:mm:ss-tt"));
+                    var tokenPre = string.Format("{0}|{1}|{2}|{3}|{4}", user.Username, user.Email, user.Phone, user.Password, DateTime.UtcNow.ToString("yyyy/MM/dd-hh:mm:ss-tt"));
                     token = Utils.EncryptSHA256(tokenPre);
                 }
                 // If is exist in any session, will create new token instead.
                 while (_context.UserSessions.FirstOrDefault(p => p.Token == token) != null);
 
                 UserSession userSession = new UserSession();
-                userSession.ID = userId;
+                userSession.UserID = userId;
                 userSession.Token = token;
-                userSession.DateCreated = DateTime.Now;
-                userSession.DateExpired = DateTime.Now.AddDays(expiresInDay);
+                userSession.DateCreated = DateTime.UtcNow;
+                userSession.DateExpired = DateTime.UtcNow.AddDays(expiresInDay);
 
                 _context.UserSessions.Add(userSession);
                 int _rowAffected = _context.SaveChanges();
@@ -72,6 +70,18 @@ namespace PhoneStoreManager.Services
             return _context.UserSessions.Include(p => p.User).Where(p => p.Token == token).FirstOrDefault();
         }
 
+        public bool HasTokenAuthorizated(string? token, List<UserType> allowedType)
+        {
+            if (token == null)
+                return false;
+
+            var session = GetUserSessionByToken(token);
+            if (session == null)
+                return false;
+
+            return allowedType.Contains(session.User.UserType);
+        }
+
         public bool IsAccountLocked(string token)
         {
             var data = GetUserSessionByToken(token);
@@ -87,7 +97,7 @@ namespace PhoneStoreManager.Services
             var data = GetUserSessionByToken(token);
             if (data != null)
             {
-                return data.DateExpired.ToLocalTime() < DateTime.Now.ToLocalTime();
+                return data.DateExpired < DateTime.UtcNow;
             }
             else throw new Exception("Token is not exist!");
         }

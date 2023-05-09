@@ -34,12 +34,13 @@
 ### Controllers
 
 - Start date: 2023/04/24
-- Updated: 2023/05/03
+- Updated: 2023/05/09
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
-| Products					| Manage phone categories, phone manufacturers and phone in intentory.	| 2023/05/03	| <ul><li>[x] Get</li><li>[x] Add (`**`)</li><li>[x] Modify (`**`)</li><li>[x] Delete or hide (`**`)</li></ul> |
-| Users and user addresses	| Manage all users and user addresses.									| 2023/05/03	| <ul><li>[x] Get (`*`)</li><li>[ ] Add (`**`)</li><li>[ ] Modify (`**`)</li><li>[ ] Delete or hide (`**`)</li><li>[x] Enable/disable user (`**`)</li><li>[x] Change user type (`**`)</li><li>[x] Change password (`*`)</li></ul> |
+| Products					| Manage phone categories, phone manufacturers and phone in intentory.	| 2023/05/09	| <ul><li>[x] Get</li><li>[x] Add (`**`)</li><li>[x] Modify (`**`)</li><li>[x] Delete or hide (`**`)</li></ul> |
+| Users and user addresses	| Manage all users and user addresses (administrator account).			| 2023/05/09	| <ul><li>[x] Get (`*`)</li><li>[x] Add (`**`)</li><li>[x] Modify (`**`)</li><li>[x] Delete or hide (`**`)</li><li>[x] Enable/disable user (`**`)</li><li>[x] Change user type (`**`)</li><li>[x] Change password (`*`)</li></ul> |
+| Login/Logout              | Account Authorization.                                                | 2023/05/09    | <ul><li>[x] Login</li><li>[ ] Logout</li><li>[x] Register</li><li>[ ] Forgot your password?</li><li>[x] Include auth to Product/User controllers</li></ul> |
 
 (`*`): Owner account or administrator only
 

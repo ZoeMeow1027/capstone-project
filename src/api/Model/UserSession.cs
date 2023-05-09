@@ -14,10 +14,10 @@ namespace PhoneStoreManager.Model
         public string Token { get; set; } = string.Empty;
 
         [Required]
-        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
         [Required]
-        public DateTime DateExpired { get; set; } = DateTime.Now;
+        public DateTime DateExpired { get; set; } = DateTime.UtcNow;
 
         #region Entity
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

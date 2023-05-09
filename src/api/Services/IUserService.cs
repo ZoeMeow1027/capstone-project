@@ -6,7 +6,7 @@ namespace PhoneStoreManager.Services
     {
         List<User> GetAllUsers(bool includeDisabled);
 
-        List<User> FindAllUsersByUsernameAndName(string name, bool includeDisabled);
+        List<User> FindAllUsersByUsername(string name, bool includeDisabled);
 
         User? GetUserById(int id);
 
