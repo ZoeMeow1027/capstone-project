@@ -7,21 +7,19 @@ namespace PhoneStoreManager.Controllers
 {
     [ApiController]
     [Route("api/users")]
-    public class UserController : ControllerBase
+    public class UserController : UserSessionControllerBase
     {
         private readonly IUserService userService;
         private readonly IUserAddressService userAddressService;
-        private readonly IUserSessionService userSessionService;
 
         public UserController(
             IUserService userService,
             IUserAddressService userAddressService,
             IUserSessionService userSessionService
-            ) : base()
+            ) : base(userSessionService)
         {
             this.userService = userService;
             this.userAddressService = userAddressService;
-            this.userSessionService = userSessionService;
         }
 
         [HttpGet]
@@ -37,26 +35,47 @@ namespace PhoneStoreManager.Controllers
             }
             else
             {
-                switch (type.ToLower())
+                try
                 {
-                    case "user":
-                        result.Data = nameQuery != null
-                            ? userService.FindAllUsersByUsername(nameQuery, includeDisabled)
-                            : id == null
-                                ? userService.GetAllUsers(includeDisabled)
-                                : userService.GetUserById(id.Value);
-                        break;
-                    case "useraddress":
-                        result.Data = nameQuery != null
-                            ? userAddressService.FindAllUserAddressesByAddress(nameQuery)
-                            : id == null
-                                ? userAddressService.GetAllUserAddresses()
-                                : userAddressService.GetUserAddressById(id.Value);
-                        break;
-                    default:
-                        result.StatusCode = 400;
-                        result.Message = "Invalid \"type\" value!";
-                        break;
+                    CheckPermission(
+                        Request.Cookies["token"],
+                        new List<UserType>() { UserType.Administrator }
+                        );
+
+                    switch (type.ToLower())
+                    {
+                        case "user":
+                            result.Data = nameQuery != null
+                                ? userService.FindAllUsersByUsername(nameQuery, includeDisabled)
+                                : id == null
+                                    ? userService.GetAllUsers(includeDisabled)
+                                    : userService.GetUserById(id.Value);
+                            break;
+                        case "useraddress":
+                            result.Data = nameQuery != null
+                                ? userAddressService.FindAllUserAddressesByAddress(nameQuery)
+                                : id == null
+                                    ? userAddressService.GetAllUserAddresses()
+                                    : userAddressService.GetUserAddressById(id.Value);
+                            break;
+                        default:
+                            throw new BadHttpRequestException("Invalid \"type\" value!");
+                    }
+                }
+                catch (UnauthorizedAccessException uaEx)
+                {
+                    result.StatusCode = 401;
+                    result.Message = uaEx.Message;
+                }
+                catch (BadHttpRequestException bhqEx)
+                {
+                    result.StatusCode = 400;
+                    result.Message = bhqEx.Message;
+                }
+                catch (Exception ex)
+                {
+                    result.StatusCode = 500;
+                    result.Message = ex.Message;
                 }
             }
 
@@ -71,11 +90,10 @@ namespace PhoneStoreManager.Controllers
 
             try
             {
-                if (!userSessionService.HasTokenAuthorizated(
+                CheckPermission(
                     Request.Cookies["token"],
                     new List<UserType>() { UserType.Administrator }
-                    ))
-                    throw new UnauthorizedAccessException("Unauthorizated!");
+                    );
 
                 string? action = (string?)args["action"];
                 string? type = (string?)args["type"];

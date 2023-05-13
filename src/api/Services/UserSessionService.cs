@@ -67,10 +67,20 @@ namespace PhoneStoreManager.Services
 
         public UserSession? GetUserSessionByToken(string token)
         {
-            return _context.UserSessions.Include(p => p.User).Where(p => p.Token == token).FirstOrDefault();
+            var data = _context.UserSessions.Include(p => p.User).Where(p => p.Token == token).FirstOrDefault();
+            if (data == null)
+            {
+                return null;
+            }
+            if (data.DateExpired < DateTime.UtcNow)
+            {
+                try { DeleteSessionByToken(token); } catch { }
+                return null;
+            }
+            return data;
         }
 
-        public bool HasTokenAuthorizated(string? token, List<UserType> allowedType)
+        public bool HasTokenPermission(string? token, List<UserType> allowedType)
         {
             if (token == null)
                 return false;

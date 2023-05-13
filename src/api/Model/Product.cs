@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhoneStoreManager.Model
 {
@@ -37,8 +38,12 @@ namespace PhoneStoreManager.Model
 
         #region Entity
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        [Required]
+        [ForeignKey("CategoryID")]
         public ProductCategory Category { get; set; }
 
+        [Required]
+        [ForeignKey("ManufacturerID")]
         public ProductManufacturer Manufacturer { get; set; }
 
         [JsonIgnore]

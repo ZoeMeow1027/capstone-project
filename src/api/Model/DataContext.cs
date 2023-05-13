@@ -109,6 +109,13 @@ namespace PhoneStoreManager.Model
                 .HasForeignKey(p => p.BillID)
                 .HasPrincipalKey(c => c.ID);
 
+            // Foreign key UserID in Warranty and User
+            modelBuilder.Entity<Warranty>()
+                .HasOne(p => p.User)
+                .WithMany(c => c.Warranties)
+                .HasForeignKey(p => p.UserID)
+                .HasPrincipalKey(c => c.ID);
+
             base.OnModelCreating(modelBuilder);
         }
     }
