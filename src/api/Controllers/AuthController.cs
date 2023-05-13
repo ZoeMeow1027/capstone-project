@@ -4,7 +4,6 @@ using PhoneStoreManager.Model;
 using PhoneStoreManager.Model.DTO;
 using PhoneStoreManager.Services;
 using System.Dynamic;
-using System.Net.Mime;
 
 namespace PhoneStoreManager.Controllers
 {
@@ -108,7 +107,30 @@ namespace PhoneStoreManager.Controllers
         [HttpPost("logout")]
         public ActionResult Logout()
         {
-            return Ok();
+            try
+            {
+                string? token = Request.Cookies["token"];
+                if (token == null)
+                    throw new UnauthorizedAccessException("Invalid token!");
+                if (userSessionService.GetUserSessionByToken(token) == null)
+                    throw new UnauthorizedAccessException("Invalid token!");
+
+                userSessionService.DeleteSessionByToken(token);
+
+                return Ok();
+            }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                return Unauthorized(uaEx);
+            }
+            catch (BadHttpRequestException bhrEx)
+            {
+                return BadRequest(bhrEx);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
         }
     }
 }

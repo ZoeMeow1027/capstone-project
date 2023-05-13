@@ -7,24 +7,22 @@ namespace PhoneStoreManager.Controllers
 {
     [ApiController]
     [Route("api/products")]
-    public class ProductController : ControllerBase
+    public class ProductController : UserSessionControllerBase
     {
         private readonly IProductService productService;
         private readonly IProductCategoryService productCategoryService;
         private readonly IProductManufacturerService productManufacturerService;
-        private readonly IUserSessionService userSessionService;
 
         public ProductController(
             IProductService productService,
             IProductCategoryService productCategoryService,
             IProductManufacturerService productManufacturerService,
             IUserSessionService userSessionService
-            ) : base()
+            ) : base(userSessionService)
         {
             this.productService = productService;
             this.productCategoryService = productCategoryService;
             this.productManufacturerService = productManufacturerService;
-            this.userSessionService = userSessionService;
         }
 
         [HttpGet]
@@ -81,11 +79,10 @@ namespace PhoneStoreManager.Controllers
 
             try
             {
-                if (!userSessionService.HasTokenAuthorizated(
+                CheckPermission(
                     Request.Cookies["token"],
                     new List<UserType>() { UserType.Administrator, UserType.Staff }
-                    ))
-                    throw new UnauthorizedAccessException("Unauthorizated!");
+                    );
 
                 string? action = (string?)args["action"];
                 string? type = (string?)args["type"];
