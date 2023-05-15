@@ -1,0 +1,20 @@
+#admin-page-sidenavbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100%;
+    padding: 10px 14px;
+}
+
+#admin-page-data {
+    top: 0;
+    left: 200px;
+    position: absolute;
+}
+
+.nav-link:hover,
+.user-actions-hover:hover {
+    background-color: rgb(13, 110, 253);
+    color: white !important;
+}

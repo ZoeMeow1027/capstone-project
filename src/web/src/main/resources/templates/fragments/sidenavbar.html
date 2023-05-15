@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="sidenavbar" id="admin-page-sidenavbar" class="col-sm-auto bg-light sticky-top">
+        <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-left sticky-top h-100">
+            <a href="/" class="d-block py-3 px-3 text-decoration-none text-center" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Icon-only">
+                <i class="bi-bootstrap fs-1"></i>
+            </a>
+            <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-left justify-content-center w-100 align-items-left">
+                <li>
+                    <a href="/admin/dashboard" class="nav-link py-2 px-3 m-1" th:classappend="${tab} == 'dashboard' ? active : ''" title="Dashboard" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Dashboard">
+                        <i class="bi-pie-chart fs-2 align-middle me-2"></i><span class="nav-text align-middle">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/products" class="nav-link py-2 px-3 m-1" th:classappend="${tab} == 'products' ? active : ''" title="Products" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Products">
+                        <i class="bi-speedometer2 fs-2 align-middle me-2"></i><span class="nav-text align-middle">Products</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/bills" class="nav-link py-2 px-3 m-1" th:classappend="${tab} == 'bills' ? active : ''" title="Bills" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Bills">
+                        <i class="bi-receipt-cutoff fs-2 align-middle me-2"></i><span class="nav-text align-middle">Bills</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/warranties" class="nav-link py-2 px-3 m-1" th:classappend="${tab} == 'warranties' ? active : ''" title="Warranties" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Warranties">
+                        <i class="bi-award fs-2 align-middle me-2"></i><span class="nav-text align-middle">Warranties</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/statistics" class="nav-link py-2 px-3 m-1" th:classappend="${tab} == 'statistics' ? active : ''" title="Statistics" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Statistics">
+                        <i class="bi-bar-chart-line fs-2 align-middle me-2"></i><span class="nav-text align-middle">Statistics</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/users" class="nav-link py-2 px-3 m-1" th:classappend="${tab} == 'users' ? active : ''" title="Users" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Users">
+                        <i class="bi-people fs-2 align-middle me-2"></i><span class="nav-text align-middle">Users</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="dropdown nav nav-pills nav-flush flex-sm-column text-left align-items-left">
+                <a href="#" class="nav-link user-actions-hover d-flex align-items-center text-left justify-content-left rounded-2 py-2 px-3 m-1 text-decoration-none" title="User Actions" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi-person-circle fs-2 align-middle me-2"></i><span class="nav-text align-middle">ZoeMeow</span>
+                </a>
+                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
+                    <li><a class="dropdown-item" href="#"><i class="bi-input-cursor-text align-middle fs-4 me-2"></i><span class="nav-text align-middle">Change your password</span></a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi-box-arrow-right align-middle fs-4 me-2"></i><span class="nav-text align-middle">Logout</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
