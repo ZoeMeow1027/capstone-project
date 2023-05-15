@@ -28,6 +28,12 @@ namespace PhoneStoreManager.Model
         [Required]
         public string SerialNumberOrIMEI { get; set; } = string.Empty;
 
+        [Required]
+        public bool WarrantyDisabled { get; set; } = false;
+
+        [Required]
+        public string WarrantyDisabledReason { get; set; } = string.Empty;
+
         #region Entity
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         [ForeignKey("ProductID")]

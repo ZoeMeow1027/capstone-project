@@ -19,6 +19,8 @@ namespace PhoneStoreManager.Services
         void DeleteWarrantyById(int id);
 
         #region Quick Actions
+        void UpdateWarrantyStatus(bool forceUpdate);
+
         bool CheckIsExpired(Warranty warranty);
 
         bool CheckIsExpiredById(int id);
