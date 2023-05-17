@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using PhoneStoreManager.Model;
 using PhoneStoreManager.Model.DTO;
 using PhoneStoreManager.Services;
@@ -9,7 +8,7 @@ namespace PhoneStoreManager.Controllers
 {
     [ApiController]
     [Route("api/auth")]
-    public class AuthController : ControllerBase
+    public class AuthController : UserSessionControllerBase
     {
         private IUserService userService;
         private IUserSessionService userSessionService;
@@ -17,7 +16,7 @@ namespace PhoneStoreManager.Controllers
         public AuthController(
             IUserService userService,
             IUserSessionService userSessionService
-            )
+            ): base(userSessionService)
         {
             this.userService = userService;
             this.userSessionService = userSessionService;
@@ -26,8 +25,14 @@ namespace PhoneStoreManager.Controllers
         [HttpPost("login")]
         public ActionResult Login([FromBody] LoginDTO loginItem)
         {
+            ReturnResultTemplate result = new ReturnResultTemplate();
+            result.StatusCode = 200;
+
             try
             {
+                if (!loginItem.IsValidatedLogin())
+                    throw new BadHttpRequestException("Invalid data for login.");
+
                 var data = userService.FindAllUsersByUsername(loginItem.Username, false).ToList();
                 User? user = null;
                 foreach (User userItem in data)
@@ -43,10 +48,14 @@ namespace PhoneStoreManager.Controllers
                     if (user.Password == loginItem.Password)
                     {
                         string token = userSessionService.CreateAndStoreAccountToken(user.ID, 365);
-                        dynamic result = new ExpandoObject();
-                        result.username = user.Username;
-                        result.token = token;
-                        return StatusCode(200, Content(JsonConvert.SerializeObject(result), "application/json"));
+                        dynamic dataTemp = new ExpandoObject();
+                        dataTemp.username = user.Username;
+                        dataTemp.usertype = (int)user.UserType;
+                        dataTemp.token = token;
+
+                        result.Data = dataTemp;
+                        result.StatusCode = 200;
+                        result.Message = "";
                     }
                     else
                     {
@@ -60,21 +69,32 @@ namespace PhoneStoreManager.Controllers
             }
             catch (UnauthorizedAccessException uaEx)
             {
-                return Unauthorized(uaEx);
+                result.StatusCode = 401;
+                result.Message = uaEx.Message;
+                result.Data = null;
             }
             catch (BadHttpRequestException bhrEx)
             {
-                return BadRequest(bhrEx);
+                result.StatusCode = 400;
+                result.Message = bhrEx.Message;
+                result.Data = null;
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex);
+                result.StatusCode = 500;
+                result.Message = ex.Message;
+                result.Data = null;
             }
+
+            return StatusCode(result.StatusCode, result.ToDynamicObject());
         }
 
         [HttpPost("register")]
         public ActionResult Register([FromBody] RegisterDTO registerDTO)
         {
+            ReturnResultTemplate result = new ReturnResultTemplate();
+            result.StatusCode = 200;
+
             try
             {
                 if (userService.FindAllUsersByUsername(registerDTO.Username, true).Count > 0)
@@ -89,48 +109,26 @@ namespace PhoneStoreManager.Controllers
 
                 var data = userService.FindAllUsersByUsername(registerDTO.Username, false).ToList();
                 string token = userSessionService.CreateAndStoreAccountToken(data[0].ID, 365);
-                dynamic result = new ExpandoObject();
-                result.username = data[0].Username;
-                result.token = token;
-                return StatusCode(200, Content(JsonConvert.SerializeObject(result), "application/json"));
+                dynamic dataTemp = new ExpandoObject();
+                dataTemp.username = data[0].Username;
+                dataTemp.token = token;
+
+                result.StatusCode = 200;
+                result.Message = string.Empty;
+                result.Data = dataTemp;
             }
             catch (BadHttpRequestException bhrEx)
             {
-                return BadRequest(bhrEx);
+                result.StatusCode = 400;
+                result.Message = bhrEx.Message;
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex);
+                result.StatusCode = 500;
+                result.Message = ex.Message;
             }
-        }
 
-        [HttpPost("logout")]
-        public ActionResult Logout()
-        {
-            try
-            {
-                string? token = Request.Cookies["token"];
-                if (token == null)
-                    throw new UnauthorizedAccessException("Invalid token!");
-                if (userSessionService.GetUserSessionByToken(token) == null)
-                    throw new UnauthorizedAccessException("Invalid token!");
-
-                userSessionService.DeleteSessionByToken(token);
-
-                return Ok();
-            }
-            catch (UnauthorizedAccessException uaEx)
-            {
-                return Unauthorized(uaEx);
-            }
-            catch (BadHttpRequestException bhrEx)
-            {
-                return BadRequest(bhrEx);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            return StatusCode(result.StatusCode, result.ToDynamicObject());
         }
     }
 }

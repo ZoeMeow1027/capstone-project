@@ -6,12 +6,14 @@ namespace PhoneStoreManager.Model
     {
         private string? _connectionString = null;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public DataContext(string cString) : base()
         {
             _connectionString = cString;
         }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserAddress> UserAddresses { get; set; }

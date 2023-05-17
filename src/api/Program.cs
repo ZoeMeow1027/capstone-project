@@ -1,6 +1,8 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using PhoneStoreManager.Model;
 using PhoneStoreManager.Services;
+using System.Diagnostics;
 
 namespace PhoneStoreManager
 {
@@ -33,6 +35,34 @@ namespace PhoneStoreManager
                 .AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
+
+            // Initialize Database and create admin account if not exist.
+#pragma warning disable CS8604 // Possible null reference argument.
+            if (builder.Configuration.GetConnectionString("Default") == null)
+                throw new Exception("ConnectionString for connect to database hasn't been defined! Please config them in appsettings.json");
+
+            using (var sqlDataContext = new DataContext(builder.Configuration.GetConnectionString("Default")))
+            {
+                sqlDataContext.Database.EnsureCreated();
+                if (sqlDataContext.Users.Where(p => p.Username.ToLower() == "admin").FirstOrDefault() == null)
+                {
+                    Debug.WriteLine("Default admin account is not exist! Creating one...");
+                    sqlDataContext.Users.Add(new User()
+                    {
+                        Username = "admin",
+                        Password = "admin",
+                        Name = "Administrator",
+                        DateCreated = DateTime.UtcNow,
+                        DateModified = DateTime.UtcNow,
+                        IsEnabled = true,
+                        UserType = UserType.Administrator,
+                    });
+                    sqlDataContext.SaveChanges();
+                    Debug.WriteLine("\nDone creating! Default username/password is admin/admin.");
+                    Debug.WriteLine("Remember to change your password to enhance security.\n");
+                }
+            }
+#pragma warning restore CS8604 // Possible null reference argument.
 
             // TODO: Temporary ignore CORS. Remember to delete below line in release
             #region Ignore CORS

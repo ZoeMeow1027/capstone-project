@@ -4,12 +4,13 @@
 
 # Used technologies
 
-- API: ASP.NET based on .NET Core 6
 - Database: Microsoft SQL Server Local Database
+- API: ASP.NET based on .NET Core 6
+- Web: Spring Boot
 
 # Used tools
 
-- IDE: Visual Studio 2022
+- IDE: Visual Studio 2022 (API) & Visual Studio Code (Text editor - Web)
 - SQL Management: Azure Data Studio
 
 # Roadmap
@@ -34,14 +35,14 @@
 ### Controllers
 
 - Start date: 2023/04/24
-- Updated: 2023/05/14
+- Updated: 2023/05/17
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
 | Products					| Manage phone categories, phone manufacturers and phone in intentory.	| 2023/05/09	| <ul><li>[x] Get</li><li>[x] Add (`**`)</li><li>[x] Modify (`**`)</li><li>[x] Delete or hide (`**`)</li></ul> |
 | Users and user addresses	| Manage all users and user addresses (administrator account).			| 2023/05/09	| <ul><li>[x] Get (`*`)</li><li>[x] Add (`**`)</li><li>[x] Modify (`**`)</li><li>[x] Delete or hide (`**`)</li><li>[x] Enable/disable user (`**`)</li><li>[x] Change user type (`**`)</li><li>[x] Change password (`*`)</li></ul> |
-| Login/Logout              | Account Authorization.                                                | 2023/05/09    | <ul><li>[x] Login</li><li>[ ] Logout</li><li>[x] Register</li><li>[ ] Forgot your password?</li><li>[x] Include auth to Product/User controllers</li></ul> |
-| Warranty                  | Manage all warranties.                                                | 2023/05/14    | <ul><li>[x] Get (all (`**`)/by ID(`*`))</li></ul> |
+| Login/Logout              | Account Authorization.                                                | 2023/05/09    | <ul><li>[x] Login</li><li>[x] Logout</li><li>[x] Register</li><li>[ ] Forgot your password?</li><li>[x] Include auth to Product/User controllers</li></ul> |
+| Warranty                  | Manage all warranties.                                                | 2023/05/17    | <ul><li>[x] Get (all (`**`)/by ID(`*`))</li></ul> |
 
 (`*`): Owner account or administrator only
 
@@ -50,7 +51,7 @@
 ## Web
 
 - Start date: 2023/05/16
-- Updated: 2023/05/16
+- Updated: 2023/05/17
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|

@@ -14,7 +14,7 @@
                 </li>
                 <li>
                     <a href="/admin/products" class="nav-link py-2 px-3 m-1" th:classappend="${tab} == 'products' ? active : ''" title="Products" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Products">
-                        <i class="bi-speedometer2 fs-2 align-middle me-2"></i><span class="nav-text align-middle">Products</span>
+                        <i class="bi-box fs-2 align-middle me-2"></i><span class="nav-text align-middle">Products</span>
                     </a>
                 </li>
                 <li>
@@ -40,11 +40,11 @@
             </ul>
             <div class="dropdown nav nav-pills nav-flush flex-sm-column text-left align-items-left">
                 <a href="#" class="nav-link user-actions-hover d-flex align-items-center text-left justify-content-left rounded-2 py-2 px-3 m-1 text-decoration-none" title="User Actions" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi-person-circle fs-2 align-middle me-2"></i><span class="nav-text align-middle">ZoeMeow</span>
+                    <i class="bi-person-circle fs-2 align-middle me-2"></i><span class="nav-text align-middle" th:text="${user}"></span>
                 </a>
                 <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
                     <li><a class="dropdown-item" href="#"><i class="bi-input-cursor-text align-middle fs-4 me-2"></i><span class="nav-text align-middle">Change your password</span></a></li>
-                    <li><a class="dropdown-item" href="#"><i class="bi-box-arrow-right align-middle fs-4 me-2"></i><span class="nav-text align-middle">Logout</span></a></li>
+                    <li><a class="dropdown-item" href="/auth/logout"><i class="bi-box-arrow-right align-middle fs-4 me-2"></i><span class="nav-text align-middle">Logout</span></a></li>
                 </ul>
             </div>
         </div>
