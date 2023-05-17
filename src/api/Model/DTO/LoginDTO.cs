@@ -9,5 +9,10 @@ namespace PhoneStoreManager.Model.DTO
 
         [JsonProperty("password")]
         public string Password { get; set; }
+
+        public bool IsValidatedLogin()
+        {
+            return (Username != null && Username.Length >= 5) || (Password != null && Password.Length >= 5);
+        }
     }
 }

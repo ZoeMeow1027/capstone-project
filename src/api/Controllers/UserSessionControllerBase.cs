@@ -36,5 +36,15 @@ namespace PhoneStoreManager.Controllers
             // Return user (can be nullable)
             return userSession.User;
         }
+
+        public string CreateAndStoreToken(int ID, int day = 365)
+        {
+            return _userSessionService.CreateAndStoreAccountToken(ID, day);
+        }
+
+        public void DeleteSession(string token)
+        {
+            _userSessionService.DeleteSessionByToken(token);
+        }
     }
 }

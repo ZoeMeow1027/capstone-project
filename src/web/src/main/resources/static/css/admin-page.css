@@ -1,15 +1,20 @@
+body {
+    --sidebar-width: 200px;
+}
+
 #admin-page-sidenavbar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 200px;
+    width: var(--sidebar-width);
     height: 100%;
     padding: 10px 14px;
 }
 
 #admin-page-data {
     top: 0;
-    left: 200px;
+    left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
     position: absolute;
 }
 

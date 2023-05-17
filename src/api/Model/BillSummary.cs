@@ -7,45 +7,60 @@ namespace PhoneStoreManager.Model
     public class BillSummary
     {
         [Key]
+        [JsonProperty("id")]
         public int ID { get; set; }
 
         [Required]
+        [JsonProperty("userid")]
         public int? UserID { get; set; } = null;
 
         [Required]
+        [JsonProperty("recipient")]
         public string Recipient { get; set; } = string.Empty;
 
         [Required]
+        [JsonProperty("recipientaddress")]
         public string RecipientAddress { get; set; } = string.Empty;
 
         [Required]
+        [JsonProperty("datecreated")]
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
+        [JsonProperty("vat")]
         public long VAT { get; set; } = 0;
 
         [Required]
+        [JsonProperty("totalprice")]
         public long TotalPrice { get; set; } = 0;
 
         [Required]
+        [JsonProperty("status")]
         public DeliverStatus Status { get; set; } = DeliverStatus.WaitingForConfirm;
 
+        [JsonProperty("statusaddress")]
         public string StatusAddress { get; set; } = string.Empty;
 
         [Required]
+        [JsonProperty("paymentmethod")]
         public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.COD;
 
+        [JsonProperty("paymentmethodname")]
         public string? PaymentMethodName { get; set; } = null;
 
+        [JsonProperty("paymentid")]
         public string? PaymentID { get; set; } = null;
 
         [Required]
+        [JsonProperty("paymentcompleted")]
         public bool PaymentCompleted { get; set; } = false;
 
         #region Entity
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         [ForeignKey("UserID")]
+        [JsonProperty("user")]
         public User? User { get; set; } = null;
 
+        [JsonProperty("billdetails")]
         public List<BillDetails> BillDetails { get; set; }
 
         [JsonIgnore]

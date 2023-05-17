@@ -6,9 +6,11 @@ namespace PhoneStoreManager.Model
     public class ProductCategory
     {
         [Key]
+        [JsonProperty("id")]
         public int ID { get; set; }
 
         [Required]
+        [JsonProperty("name")]
         public string Name { get; set; } = string.Empty;
 
         #region Entity

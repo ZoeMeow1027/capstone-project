@@ -6,31 +6,43 @@ namespace PhoneStoreManager.Model
     public class User
     {
         [Key]
+        [JsonProperty("id")]
         public int ID { get; set; }
 
         [Required]
         [MaxLength(64)]
+        [JsonProperty("username")]
         public string Username { get; set; } = string.Empty;
 
         [Required]
+        [JsonIgnore]
+        [JsonProperty("password")]
         public string Password { get; set; } = string.Empty;
 
+        [JsonProperty("name")]
         public string Name { get; set; } = string.Empty;
 
+        [JsonProperty("email")]
         public string? Email { get; set; } = null;
 
+        [JsonProperty("phone")]
         public string? Phone { get; set; } = null;
 
+        [JsonProperty("datecreated")]
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
+        [JsonProperty("datemodified")]
         public DateTime DateModified { get; set; } = DateTime.UtcNow;
 
         [Required]
+        [JsonProperty("isenabled")]
         public bool IsEnabled { get; set; } = true;
 
+        [JsonProperty("disabledreason")]
         public string? DisabledReason { get; set; } = null;
 
         [Required]
+        [JsonProperty("usertype")]
         public UserType UserType { get; set; } = UserType.NormalUser;
 
         #region Entity
