@@ -16,7 +16,7 @@ namespace PhoneStoreManager.Controllers
         public void CheckPermission(string? token, List<UserType> allowedUserType)
         {
             if (!_userSessionService.HasTokenPermission(token, allowedUserType))
-                throw new UnauthorizedAccessException("Not enough permission to do that!");
+                throw new UnauthorizedAccessException("You don't have permission to do that!");
         }
 
         public bool HasPermission(string? token, List<UserType> allowedUserType)

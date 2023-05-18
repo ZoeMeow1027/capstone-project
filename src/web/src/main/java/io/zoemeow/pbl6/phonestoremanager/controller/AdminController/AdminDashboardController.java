@@ -18,7 +18,8 @@ public class AdminDashboardController extends BasicAPIRequestController {
     @GetMapping("/admin/dashboard")
     public ModelAndView index(
             HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response
+    ) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 

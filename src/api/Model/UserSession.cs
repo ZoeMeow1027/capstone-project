@@ -20,11 +20,11 @@ namespace PhoneStoreManager.Model
 
         [Required]
         [JsonProperty("datecreated")]
-        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        public long DateCreated { get; set; } = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
         [Required]
         [JsonProperty("dateexpired")]
-        public DateTime DateExpired { get; set; } = DateTime.UtcNow;
+        public long DateExpired { get; set; } = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
         #region Entity
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

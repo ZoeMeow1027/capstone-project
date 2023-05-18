@@ -12,7 +12,7 @@ namespace PhoneStoreManager.Services
         public WarrantyService(DataContext context)
         {
             _context = context;
-            _dateTimeStamp = DateTime.UtcNow.Subtract(new TimeSpan(0, 0, 1));
+            _dateTimeStamp = DateTime.Now.Subtract(new TimeSpan(0, 0, 1));
             _updateIntervalBySecond = 60;
         }
 
@@ -31,7 +31,7 @@ namespace PhoneStoreManager.Services
             var data = _context.Warranties.Where(p => p.ID == warranty.ID).FirstOrDefault();
             if (data != null)
             {
-                return (warranty.DateEnd < DateTime.UtcNow);
+                return (warranty.DateEnd < DateTimeOffset.Now.ToUnixTimeMilliseconds());
             }
             else
             {
@@ -86,13 +86,13 @@ namespace PhoneStoreManager.Services
         public List<Warranty> FindAllWarrantiesByBillId(int billId, bool includeExpired = true)
         {
             UpdateWarrantyStatus();
-            return _context.Warranties.Include(p => p.Product).Include(p => p.Bill).Where(p => (p.BillID == billId) && (includeExpired ? true : p.DateEnd > DateTime.UtcNow)).ToList();
+            return _context.Warranties.Include(p => p.Product).Include(p => p.Bill).Where(p => (p.BillID == billId) && (includeExpired ? true : p.DateEnd > DateTimeOffset.Now.ToUnixTimeMilliseconds())).ToList();
         }
 
         public List<Warranty> GetAllWarranties(bool includeExpired = true)
         {
             UpdateWarrantyStatus();
-            return _context.Warranties.Include(p => p.Product).Include(p => p.Bill).Where(p => (includeExpired ? true : p.DateEnd > DateTime.UtcNow)).ToList();
+            return _context.Warranties.Include(p => p.Product).Include(p => p.Bill).Where(p => (includeExpired ? true : p.DateEnd > DateTimeOffset.Now.ToUnixTimeMilliseconds())).ToList();
         }
 
         public Warranty? GetWarrantyById(int id)
@@ -110,7 +110,7 @@ namespace PhoneStoreManager.Services
                 data.WarrantyMonth = warranty.WarrantyMonth;
                 data.DateEnd = warranty.DateEnd;
                 data.SerialNumberOrIMEI = warranty.SerialNumberOrIMEI;
-                if (data.DateEnd < DateTime.UtcNow && !data.WarrantyDisabled)
+                if (data.DateEnd < DateTimeOffset.Now.ToUnixTimeMilliseconds() && !data.WarrantyDisabled)
                 {
                     data.WarrantyDisabled = true;
                     data.WarrantyDisabledReason = "Warranty has beed expired.";
@@ -131,13 +131,13 @@ namespace PhoneStoreManager.Services
 
         public void UpdateWarrantyStatus(bool forceUpdate = false)
         {
-            if (_dateTimeStamp < DateTime.UtcNow || forceUpdate)
+            if (_dateTimeStamp < DateTime.Now || forceUpdate)
             {
                 _context.Warranties
-                    .Where(p => (!p.WarrantyDisabled && p.DateEnd < DateTime.UtcNow))
+                    .Where(p => (!p.WarrantyDisabled && p.DateEnd < DateTimeOffset.Now.ToUnixTimeMilliseconds()))
                     .ExecuteUpdate(p => p.SetProperty(d => d.WarrantyDisabled, d => true).SetProperty(d => d.WarrantyDisabledReason, d => "Warranty has been expired."));
 
-                _dateTimeStamp = DateTime.UtcNow.AddSeconds(_updateIntervalBySecond);
+                _dateTimeStamp = DateTime.Now.AddSeconds(_updateIntervalBySecond);
             }
         }
     }

@@ -52,8 +52,8 @@ namespace PhoneStoreManager
                         Username = "admin",
                         Password = "admin",
                         Name = "Administrator",
-                        DateCreated = DateTime.UtcNow,
-                        DateModified = DateTime.UtcNow,
+                        DateCreated = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+                        DateModified = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
                         IsEnabled = true,
                         UserType = UserType.Administrator,
                     });
