@@ -29,10 +29,10 @@ namespace PhoneStoreManager.Model
         public string? Phone { get; set; } = null;
 
         [JsonProperty("datecreated")]
-        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        public long DateCreated { get; set; } = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
         [JsonProperty("datemodified")]
-        public DateTime DateModified { get; set; } = DateTime.UtcNow;
+        public long DateModified { get; set; } = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
         [Required]
         [JsonProperty("isenabled")]

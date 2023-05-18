@@ -9,7 +9,7 @@
     <title>Users - Phone Store Manager [Administrator]</title>
 </head>
 <body>
-    <div lang="en" th:replace="~{/fragments/sidenavbar :: sidenavbar(tab='users')}"></div>
+    <div lang="en" th:replace="~{/fragments/sidenavbar :: sidenavbar(tab='users', user=${name})}"></div>
     <div id="admin-page-data" class="col-sm p-3 min-vh-100">
         <h2>Users</h2>
         <h4>Manage user accounts</h4>
@@ -33,16 +33,21 @@
                     <th class="text-center">Actions</th>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="text-center">1</td>
-                        <td class="text-center">admin</td>
-                        <td class="text-center">Administrator</td>
-                        <td class="text-center">admin@email.com</td>
-                        <td class="text-center">0123456789</td>
-                        <td class="text-center">User</td>
-                        <td class="text-center">2023/05/16 00:00</td>
-                        <td class="text-center">2023/05/16 00:00</td>
-                        <td class="text-center">true</td>
+                    <tr th:each="item: ${userList}">
+                        <td class="text-center" th:text="${item.get('id').getAsInt()}"></td>
+                        <td class="text-center" th:text="${item.get('username').getAsString()}"></td>
+                        <td class="text-center" th:text="${item.get('name').getAsString()}"></td>
+                        <td class="text-center" th:text="${!item.get('email').isJsonNull() ? item.get('email').getAsString() : ''}"></td>
+                        <td class="text-center" th:text="${!item.get('phone').isJsonNull() ? item.get('phone').getAsString() : ''}"></td>
+                        <td class="text-center" th:text="${item.get('usertype').getAsInt() == 2 ? 'Administrator' : item.get('usertype').getAsInt() == 1 ? 'Staff' : 'User'}"></td>
+                        <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.get('datecreated').getAsLong()), 'dd/MM/yyyy HH:mm:ss')}"></td>
+                        <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.get('datemodified').getAsLong()), 'dd/MM/yyyy HH:mm:ss')}"></td>
+                        <div th:with="condition=${item.get('isenabled').getAsBoolean()}" th:remove="tag">
+                            <td class="text-center" th:if="${condition}" th:text="Yes"></td>
+                            <!-- <td class="text-center" th:unless="${condition}" th:text="${T(java.lang.String).format('No (%s)', !item.get('disabledreason').isJsonNull() ? item.get('disabledreason').getAsString() : 'no information')}"></td> -->
+                            <td class="text-center" th:unless="${condition}" th:text="No"></td>
+                        </div>
+                        
                         <td class="text-center">
                             <a href="#"><button type="button" class="btn btn-primary">Update</button></a>
                             <a href="#"><button type="button" class="btn btn-danger">Delete</button></a>

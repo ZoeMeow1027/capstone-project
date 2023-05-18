@@ -28,55 +28,50 @@ namespace PhoneStoreManager.Controllers
             ReturnResultTemplate result = new ReturnResultTemplate();
             result.StatusCode = 200;
 
-            if (type == null)
+            try
             {
-                result.StatusCode = 400;
-                result.Message = string.Format("Missing \"type\" parameter!", "type");
-            }
-            else
-            {
-                try
-                {
-                    CheckPermission(
+                if (type == null)
+                    throw new BadHttpRequestException("Missing \"type\" parameter!");
+
+                CheckPermission(
                         Request.Cookies["token"],
                         new List<UserType>() { UserType.Administrator }
                         );
 
-                    switch (type.ToLower())
-                    {
-                        case "user":
-                            result.Data = nameQuery != null
-                                ? userService.FindAllUsersByUsername(nameQuery, includeDisabled)
-                                : id == null
-                                    ? userService.GetAllUsers(includeDisabled)
-                                    : userService.GetUserById(id.Value);
-                            break;
-                        case "useraddress":
-                            result.Data = nameQuery != null
-                                ? userAddressService.FindAllUserAddressesByAddress(nameQuery)
-                                : id == null
-                                    ? userAddressService.GetAllUserAddresses()
-                                    : userAddressService.GetUserAddressById(id.Value);
-                            break;
-                        default:
-                            throw new BadHttpRequestException("Invalid \"type\" value!");
-                    }
-                }
-                catch (UnauthorizedAccessException uaEx)
+                switch (type.ToLower())
                 {
-                    result.StatusCode = 401;
-                    result.Message = uaEx.Message;
+                    case "user":
+                        result.Data = nameQuery != null
+                            ? userService.FindAllUsersByUsername(nameQuery, includeDisabled)
+                            : id == null
+                                ? userService.GetAllUsers(includeDisabled)
+                                : userService.GetUserById(id.Value);
+                        break;
+                    case "useraddress":
+                        result.Data = nameQuery != null
+                            ? userAddressService.FindAllUserAddressesByAddress(nameQuery)
+                            : id == null
+                                ? userAddressService.GetAllUserAddresses()
+                                : userAddressService.GetUserAddressById(id.Value);
+                        break;
+                    default:
+                        throw new BadHttpRequestException("Invalid \"type\" value!");
                 }
-                catch (BadHttpRequestException bhqEx)
-                {
-                    result.StatusCode = 400;
-                    result.Message = bhqEx.Message;
-                }
-                catch (Exception ex)
-                {
-                    result.StatusCode = 500;
-                    result.Message = ex.Message;
-                }
+            }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                result.StatusCode = 403;
+                result.Message = string.Format("Fobbiden: {0}", uaEx.Message);
+            }
+            catch (BadHttpRequestException bhrEx)
+            {
+                result.StatusCode = 400;
+                result.Message = string.Format("Bad Request: {0}", bhrEx.Message);
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.Message = string.Format("Internal server error: {0}", ex.Message);
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());
@@ -85,8 +80,10 @@ namespace PhoneStoreManager.Controllers
         [HttpPost]
         public ActionResult Post(JToken args)
         {
-            ReturnResultTemplate result = new ReturnResultTemplate();
-            result.StatusCode = 200;
+            ReturnResultTemplate result = new ReturnResultTemplate
+            {
+                StatusCode = 200
+            };
 
             try
             {
@@ -101,10 +98,12 @@ namespace PhoneStoreManager.Controllers
 
                 if (action == null || type == null || data == null)
                 {
-                    throw new ArgumentException("Invalid requests!");
+                    throw new BadHttpRequestException("Missing parameters!");
                 }
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                // This line for avoid null reference issue from VS.
+                type ??= ""; action ??= "";
+
                 switch (type.ToLower())
                 {
                     case "user":
@@ -127,7 +126,7 @@ namespace PhoneStoreManager.Controllers
                                 ChangePassword(data);
                                 break;
                             default:
-                                throw new ArgumentException("Invalid \"action\" value!", "action");
+                                throw new BadHttpRequestException("Invalid \"action\" value!");
                         }
                         break;
                     case "useraddress":
@@ -143,33 +142,27 @@ namespace PhoneStoreManager.Controllers
                                 DeleteUserAddress(data);
                                 break;
                             default:
-                                throw new ArgumentException("Invalid \"action\" value!", "action");
+                                throw new BadHttpRequestException("Invalid \"action\" value!");
                         }
                         break;
                     default:
-                        throw new ArgumentException("Invalid \"type\" value!", "type");
+                        throw new BadHttpRequestException("Invalid \"type\" value!");
                 }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
             catch (UnauthorizedAccessException uaEx)
             {
-                result.StatusCode = 401;
-                result.Message = uaEx.Message;
+                result.StatusCode = 403;
+                result.Message = string.Format("Fobbiden: {0}", uaEx.Message);
             }
-            catch (ArgumentNullException argNullEx)
+            catch (BadHttpRequestException bhrEx)
             {
                 result.StatusCode = 400;
-                result.Message = argNullEx.Message;
-            }
-            catch (ArgumentException argEx)
-            {
-                result.StatusCode = 400;
-                result.Message = argEx.Message;
+                result.Message = string.Format("Bad Request: {0}", bhrEx.Message);
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = ex.Message;
+                result.Message = string.Format("Internal server error: {0}", ex.Message);
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());
@@ -189,14 +182,14 @@ namespace PhoneStoreManager.Controllers
             {
                 if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))
                 {
-                    throw new ArgumentException("Failed while validating 'phone' parameter!", "phone");
+                    throw new BadHttpRequestException("Failed while validating 'phone' parameter!");
                 }
             }
             if ((string?)data["email"] != null)
             {
                 if (!Utils.DataValidate.IsValidEmail((string?)data["email"]))
                 {
-                    throw new ArgumentException("Failed while validating 'email' parameter!", "email");
+                    throw new BadHttpRequestException("Failed while validating 'email' parameter!");
                 }
             }
 
@@ -224,14 +217,14 @@ namespace PhoneStoreManager.Controllers
             {
                 if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))
                 {
-                    throw new ArgumentException("Failed while validating 'phone' parameter!", "phone");
+                    throw new BadHttpRequestException("Failed while validating 'phone' parameter!");
                 }
             }
             if ((string?)data["email"] != null)
             {
                 if (!Utils.DataValidate.IsValidEmail((string?)data["email"]))
                 {
-                    throw new ArgumentException("Failed while validating 'email' parameter!", "email");
+                    throw new BadHttpRequestException("Failed while validating 'email' parameter!");
                 }
             }
 
@@ -239,7 +232,7 @@ namespace PhoneStoreManager.Controllers
             var dataTemp = userService.GetUserById((int)data["id"]);
             if (dataTemp == null)
             {
-                throw new ArgumentException("User ID isn't exist!");
+                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", (int)data["id"]));
             }
 
             dataTemp.Username = (string?)data["username"] ?? dataTemp.Username;
@@ -251,21 +244,21 @@ namespace PhoneStoreManager.Controllers
             dataTemp.IsEnabled = (bool?)data["isenabled"] ?? dataTemp.IsEnabled;
             dataTemp.DisabledReason = (string?)data["disabledreason"] ?? dataTemp.DisabledReason;
             dataTemp.UserType = (UserType?)data["usertype"] ?? dataTemp.UserType;
-            dataTemp.DateModified = DateTime.UtcNow;
+            dataTemp.DateModified = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             // User [Update] - Begin updating
             userService.UpdateUser(dataTemp);
         }
 
         private void ToggleUserEnabled(dynamic data)
         {
-            List<string> reqArgList = new List<string>() { "userid", "enabled" };
+            List<string> reqArgList = new List<string>() { "id", "enabled" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // User [Toggle User] - Check if user exist
-            var dataTemp = userService.GetUserById((int)data["userid"]);
+            var dataTemp = userService.GetUserById((int)data["id"]);
             if (dataTemp == null)
             {
-                throw new ArgumentException("User ID isn't exist!");
+                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", (int)data["id"]));
             }
 
             // User [Toggle User] - Begin toggling
@@ -282,20 +275,20 @@ namespace PhoneStoreManager.Controllers
 
         private void ChangeUserType(dynamic data)
         {
-            List<string> reqArgList = new List<string>() { "userid", "usertype" };
+            List<string> reqArgList = new List<string>() { "id", "usertype" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // User [Change User Type] - Check if "usertype" value is valid
             if ((int)data["type"] < 0 || (int)data["usertype"] > 2)
             {
-                throw new ArgumentException("Invalid \"usertype\" value!", "usertype");
+                throw new BadHttpRequestException("Invalid \"usertype\" value!");
             }
 
             // User [Change User Type] - Check if user is exist
-            var dataTemp = userService.GetUserById((int)data["userid"]);
+            var dataTemp = userService.GetUserById((int)data["id"]);
             if (dataTemp == null)
             {
-                throw new ArgumentException("User ID isn't exist!");
+                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", (int)data["id"]));
             }
 
             // User [Change User Type] - Begin changing
@@ -304,14 +297,14 @@ namespace PhoneStoreManager.Controllers
 
         private void ChangePassword(dynamic data)
         {
-            List<string> reqArgList = new List<string>() { "userid", "newpassword" };
+            List<string> reqArgList = new List<string>() { "id", "newpassword" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // User [Change Password] - Check if user exist
-            var dataTemp = userService.GetUserById((int)data["userid"]);
+            var dataTemp = userService.GetUserById((int)data["id"]);
             if (dataTemp == null)
             {
-                throw new ArgumentException("User ID isn't exist!");
+                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", (int)data["id"]));
             }
 
             // TODO: User [Change Password] - Encrypt password here! Make sure equals to Add user.
@@ -328,14 +321,19 @@ namespace PhoneStoreManager.Controllers
             List<string> reqArgList = new List<string>() { "userid", "name", "address", "phone" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
-            // TODO: User Address [Add] - Check if user is exist!
             // User Address [Add] - CHeck if phone are valid!
             if ((string?)data["phone"] != null)
             {
                 if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))
                 {
-                    throw new ArgumentException("Failed while validating 'phone' parameter!", "phone");
+                    throw new BadHttpRequestException("Failed while validating 'phone' parameter!");
                 }
+            }
+            // User Address [Add] - Check if user is exist!
+            var dataTemp = userService.GetUserById((int)data["userid"]);
+            if (dataTemp == null)
+            {
+                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", (int)data["userid"]));
             }
 
             // User Address [Add] - Begin adding
@@ -357,21 +355,22 @@ namespace PhoneStoreManager.Controllers
             var dataTemp = userAddressService.GetUserAddressById((int)data["id"]);
             if (dataTemp == null)
             {
-                throw new ArgumentException("UserAddress with ID is not exist!", "id");
+                throw new BadHttpRequestException(string.Format("UserAddress ID {0} is not exist!", (int)data["id"]));
             }
-
             // User Address [Update] - Check if user exist
-            if (userService.GetUserById((int)data["userid"]) == null)
+            if ((int?)data["userid"] != null)
             {
-                throw new ArgumentException("User with ID is not exist!", "userid");
+                if (userService.GetUserById((int)data["userid"]) == null)
+                {
+                    throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", (int?)data["userid"]));
+                }
             }
-
             // User Address [Update] - Check if phone is valid.
             if ((string?)data["phone"] != null)
             {
                 if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))
                 {
-                    throw new ArgumentException("Failed while validating 'phone' parameter!", "phone");
+                    throw new BadHttpRequestException("Failed while validating 'phone' parameter!");
                 }
             }
 

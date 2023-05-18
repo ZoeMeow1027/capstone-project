@@ -26,7 +26,7 @@ namespace PhoneStoreManager.Services
                 string token = "";
                 do
                 {
-                    var tokenPre = string.Format("{0}|{1}|{2}|{3}|{4}", user.Username, user.Email, user.Phone, user.Password, DateTime.UtcNow.ToString("yyyy/MM/dd-hh:mm:ss-tt"));
+                    var tokenPre = string.Format("{0}|{1}|{2}|{3}|{4}", user.Username, user.Email, user.Phone, user.Password, DateTime.Now.ToString("yyyy/MM/dd-hh:mm:ss-tt"));
                     token = Utils.EncryptSHA256(tokenPre);
                 }
                 // If is exist in any session, will create new token instead.
@@ -35,8 +35,8 @@ namespace PhoneStoreManager.Services
                 UserSession userSession = new UserSession();
                 userSession.UserID = userId;
                 userSession.Token = token;
-                userSession.DateCreated = DateTime.UtcNow;
-                userSession.DateExpired = DateTime.UtcNow.AddDays(expiresInDay);
+                userSession.DateCreated = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                userSession.DateExpired = DateTimeOffset.Now.AddDays(expiresInDay).ToUnixTimeMilliseconds();
 
                 _context.UserSessions.Add(userSession);
                 int _rowAffected = _context.SaveChanges();
@@ -72,7 +72,7 @@ namespace PhoneStoreManager.Services
             {
                 return null;
             }
-            if (data.DateExpired < DateTime.UtcNow)
+            if (data.DateExpired < DateTimeOffset.Now.ToUnixTimeMilliseconds())
             {
                 try { DeleteSessionByToken(token); } catch { }
                 return null;
@@ -107,7 +107,7 @@ namespace PhoneStoreManager.Services
             var data = GetUserSessionByToken(token);
             if (data != null)
             {
-                return data.DateExpired < DateTime.UtcNow;
+                return data.DateExpired < DateTimeOffset.Now.ToUnixTimeMilliseconds();
             }
             else throw new Exception("Token is not exist!");
         }

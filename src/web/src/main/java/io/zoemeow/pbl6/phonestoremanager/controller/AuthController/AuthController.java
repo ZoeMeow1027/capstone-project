@@ -83,7 +83,7 @@ public class AuthController extends BasicAPIRequestController {
                 response.addCookie(cookie);
 
                 if (jObject.get("data").getAsJsonObject().get("usertype").getAsInt() == 2)
-                    return "redirect:/admin/dashboard";
+                    return "redirect:/admin";
                 else return "redirect:/auth/login";
             }
         } catch (Exception ex) {

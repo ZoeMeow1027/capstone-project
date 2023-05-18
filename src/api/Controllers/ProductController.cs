@@ -32,11 +32,9 @@ namespace PhoneStoreManager.Controllers
             result.StatusCode = 200;
 
             if (type == null)
-            {
-                result.StatusCode = 200;
-                result.Data = productService.GetAllProducts(includeHidden);
-            }
-            else
+                type = "product";
+
+            try
             {
                 switch (type.ToLower())
                 {
@@ -62,10 +60,18 @@ namespace PhoneStoreManager.Controllers
                                 : productManufacturerService.GetProductManufacturerById(id.Value);
                         break;
                     default:
-                        result.StatusCode = 400;
-                        result.Message = "Invalid \"type\" value!";
-                        break;
+                        throw new BadHttpRequestException("Invalid \"type\" value!");
                 }
+            }
+            catch (BadHttpRequestException bhrEx)
+            {
+                result.StatusCode = 400;
+                result.Message = string.Format("Bad Request: {0}", bhrEx.Message);
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.Message = string.Format("Internal server error: {0}", ex.Message);
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());
@@ -90,7 +96,7 @@ namespace PhoneStoreManager.Controllers
 
                 if (action == null || type == null || data == null)
                 {
-                    throw new ArgumentException("Invalid requests!");
+                    throw new BadHttpRequestException("Missing parameters!");
                 }
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
@@ -109,7 +115,7 @@ namespace PhoneStoreManager.Controllers
                                 DeleteProductManufacturerById(data);
                                 break;
                             default:
-                                throw new ArgumentException("Invalid \"action\" value!", "action");
+                                throw new BadHttpRequestException("Invalid \"action\" value!");
                         }
                         break;
                     case "category":
@@ -125,7 +131,7 @@ namespace PhoneStoreManager.Controllers
                                 DeleteProductCategoryById(data);
                                 break;
                             default:
-                                throw new ArgumentException("Invalid \"action\" value!", "action");
+                                throw new BadHttpRequestException("Invalid \"action\" value!");
                         }
                         break;
                     case "product":
@@ -141,11 +147,11 @@ namespace PhoneStoreManager.Controllers
                                 HideProductById(data);
                                 break;
                             default:
-                                throw new ArgumentException("Invalid \"action\" value!", "action");
+                                throw new BadHttpRequestException("Invalid \"action\" value!");
                         }
                         break;
                     default:
-                        throw new ArgumentException("Invalid \"type\" value!", "type");
+                        throw new BadHttpRequestException("Invalid \"type\" value!");
                 }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 
@@ -154,23 +160,18 @@ namespace PhoneStoreManager.Controllers
             }
             catch (UnauthorizedAccessException uaEx)
             {
-                result.StatusCode = 401;
-                result.Message = uaEx.Message;
+                result.StatusCode = 403;
+                result.Message = string.Format("Fobbiden: {0}", uaEx.Message);
             }
-            catch (ArgumentNullException argNullEx)
+            catch (BadHttpRequestException bhrEx)
             {
                 result.StatusCode = 400;
-                result.Message = argNullEx.Message;
-            }
-            catch (ArgumentException argEx)
-            {
-                result.StatusCode = 400;
-                result.Message = argEx.Message;
+                result.Message = string.Format("Bad Request: {0}", bhrEx.Message);
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = ex.Message;
+                result.Message = string.Format("Internal server error: {0}", ex.Message);
             }
 
             return StatusCode(result.StatusCode, Content(result.ToDynamicObject(), "application/json"));
@@ -197,7 +198,7 @@ namespace PhoneStoreManager.Controllers
             var dataTemp = productManufacturerService.GetProductManufacturerById((int)data["id"]);
             if (dataTemp == null)
             {
-                throw new ArgumentException("ProductManufacturer with ID is not exist!", "id");
+                throw new BadHttpRequestException(string.Format("Bad Request: ProductManufacturer with ID {0} is not exist!", (int)data["id"]));
             }
 
             dataTemp.Name = (string)data["name"];
@@ -234,7 +235,7 @@ namespace PhoneStoreManager.Controllers
             var dataTemp = productCategoryService.GetProductCategoryById((int)data["id"]);
             if (dataTemp == null)
             {
-                throw new ArgumentException("ProductCategory with ID is not exist!", "id");
+                throw new BadHttpRequestException(string.Format("Bad Request: ProductCategory with ID {0} is not exist!", (int)data["id"]));
             }
 
             dataTemp.Name = (string)data["name"];
@@ -253,37 +254,41 @@ namespace PhoneStoreManager.Controllers
         #region Product area
         private void AddProduct(dynamic data)
         {
-            List<string> reqArgList = new List<string>() { "name", "categoryid", "manufacturerid", "inventorycount", "warrantymonth", "price", "showinpage" };
+            List<string> reqArgList = new List<string>() { "name", "categoryid", "manufacturerid", "price" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // Product [Add] - Check if invalid 'inventorycount' value
-            if ((long)data[reqArgList[3]] < 0)
+            if ((long?)data["inventorycount"] != null)
             {
-                throw new ArgumentException("Invalid 'inventorycount' value!", "inventorycount");
+                if ((long)data["inventorycount"] < 0)
+                {
+                    throw new BadHttpRequestException("Invalid 'inventorycount' value!");
+                }
             }
-
             // Product [Add] - Check if invalid 'warrantymonth' value
-            if ((long)data[reqArgList[4]] < 0)
+            if ((long?)data["warrantymonth"] != null)
             {
-                throw new ArgumentException("Invalid 'warrantymonth' value!", "warrantymonth");
+                if ((long)data["warrantymonth"] < 0)
+                {
+                    throw new BadHttpRequestException("Invalid 'warrantymonth' value!");
+                }
             }
-
             // Product [Add] - Check if invalid 'price' value
-            if ((long)data[reqArgList[5]] < 0)
+            if ((long)data["price"] < 0)
             {
-                throw new ArgumentException("Invalid 'price' value!", "price");
+                throw new BadHttpRequestException("Invalid 'price' value!");
             }
 
             // Product [Add] - Check if product category by id is exist
             if (productCategoryService.GetProductCategoryById((int)data["categoryid"]) == null)
             {
-                throw new ArgumentException("Product Category with ID is not exist!", "categoryid");
+                throw new BadHttpRequestException(string.Format("Product Category ID {0} is not exist!", (int)data["categoryid"]));
             }
 
             // Product [Add] - Check if product manufacturer by id is exist
             if (productManufacturerService.GetProductManufacturerById((int)data["manufacturerid"]) == null)
             {
-                throw new ArgumentException("Product Manufacturer with ID is not exist!", "manufacturerid");
+                throw new BadHttpRequestException(string.Format("Product Manufacturer ID {0} is not exist!", (int)data["manufacturerid"]));
             }
 
             productService.AddProduct(new Product()
@@ -304,40 +309,51 @@ namespace PhoneStoreManager.Controllers
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // Product [Update] - Check if invalid 'inventorycount' value
-            if ((long)data[reqArgList[3]] < 0)
+            if ((long?)data["inventorycount"] != null)
             {
-                throw new ArgumentException("Invalid 'inventorycount' value!", "inventorycount");
+                if ((long)data["inventorycount"] < 0)
+                {
+                    throw new BadHttpRequestException("Invalid 'inventorycount' value!");
+                }
             }
-
             // Product [Update] - Check if invalid 'warrantymonth' value
-            if ((long)data[reqArgList[4]] < 0)
+            if ((long?)data["warrantymonth"] != null)
             {
-                throw new ArgumentException("Invalid 'warrantymonth' value!", "warrantymonth");
+                if ((long)data["warrantymonth"] < 0)
+                {
+                    throw new BadHttpRequestException("Invalid 'warrantymonth' value!");
+                }
             }
-
             // Product [Update] - Check if invalid 'price' value
-            if ((long)data[reqArgList[5]] < 0)
+            if ((long?)data["price"] != null)
             {
-                throw new ArgumentException("Invalid 'price' value!", "price");
+                if ((long)data["price"] < 0)
+                {
+                    throw new BadHttpRequestException("Invalid 'price' value!");
+                }
             }
-
             // Product [Update] - Check if product category by id is exist
-            if (productCategoryService.GetProductCategoryById((int)data["categoryid"]) == null)
+            if ((int?)data["categoryid"] != null)
             {
-                throw new ArgumentException("Product Category with ID is not exist!", "categoryid");
+                if (productCategoryService.GetProductCategoryById((int)data["categoryid"]) == null)
+                {
+                    throw new BadHttpRequestException(string.Format("Product Category ID {0} is not exist!", (int)data["categoryid"]));
+                }
             }
-
             // Product [Update] - Check if product manufacturer by id is exist
-            if (productManufacturerService.GetProductManufacturerById((int)data["manufacturerid"]) == null)
+            if ((int?)data["manufacturerid"] != null)
             {
-                throw new ArgumentException("Product Manufacturer with ID is not exist!", "manufacturerid");
+                if (productManufacturerService.GetProductManufacturerById((int)data["manufacturerid"]) == null)
+                {
+                    throw new BadHttpRequestException(string.Format("Product Manufacturer ID {0} is not exist!", (int)data["manufacturerid"]));
+                }
             }
 
             // Product [Update] - Check if product exist
             var productTemp = productService.GetProductById((int)data["id"]);
             if (productTemp == null)
             {
-                throw new ArgumentException("Product with ID is not exist!", "id");
+                throw new BadHttpRequestException(string.Format("Product ID {0} is not exist!", (int)data["id"]));
             }
 
             productTemp.Name = (string?)data["name"] ?? productTemp.Name;
@@ -347,7 +363,7 @@ namespace PhoneStoreManager.Controllers
             productTemp.WarrantyMonth = (int?)data["warrantymonth"] ?? productTemp.WarrantyMonth;
             productTemp.Price = (long?)data["price"] ?? productTemp.Price;
             productTemp.ShowInPage = (bool?)data["showinpage"] ?? productTemp.ShowInPage;
-            productTemp.DateModified = DateTime.UtcNow;
+            productTemp.DateModified = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             // Product [Update] - Begin updating
             productService.UpdateProduct(productTemp);
         }

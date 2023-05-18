@@ -31,7 +31,7 @@ namespace PhoneStoreManager.Controllers
             try
             {
                 if (!loginItem.IsValidatedLogin())
-                    throw new BadHttpRequestException("Invalid data for login.");
+                    throw new BadHttpRequestException("Missing parameters or invalid login!");
 
                 var data = userService.FindAllUsersByUsername(loginItem.Username, false).ToList();
                 User? user = null;
@@ -43,47 +43,37 @@ namespace PhoneStoreManager.Controllers
                         break;
                     }
                 }
-                if (user != null)
-                {
-                    if (user.Password == loginItem.Password)
-                    {
-                        string token = userSessionService.CreateAndStoreAccountToken(user.ID, 365);
-                        dynamic dataTemp = new ExpandoObject();
-                        dataTemp.username = user.Username;
-                        dataTemp.usertype = (int)user.UserType;
-                        dataTemp.token = token;
 
-                        result.Data = dataTemp;
-                        result.StatusCode = 200;
-                        result.Message = "";
-                    }
-                    else
-                    {
-                        throw new UnauthorizedAccessException("Password mismatch!");
-                    }
-                }
-                else
-                {
-                    throw new BadHttpRequestException("Username isn't exist!");
-                }
+                if (user == null)
+                    throw new BadHttpRequestException(string.Format("Username \'{0}\' is not exist!", loginItem.Username));
+
+                if (user.Password != loginItem.Password)
+                    throw new UnauthorizedAccessException("Password mismatch!");
+
+                string token = userSessionService.CreateAndStoreAccountToken(user.ID, 365);
+                dynamic dataTemp = new ExpandoObject();
+                dataTemp.username = user.Username;
+                dataTemp.usertype = (int)user.UserType;
+                dataTemp.token = token;
+
+                result.Data = dataTemp;
+                result.StatusCode = 200;
+                result.Message = "Successful";
             }
             catch (UnauthorizedAccessException uaEx)
             {
                 result.StatusCode = 401;
-                result.Message = uaEx.Message;
-                result.Data = null;
+                result.Message = string.Format("Unauthorized: {0}", uaEx.Message);
             }
             catch (BadHttpRequestException bhrEx)
             {
                 result.StatusCode = 400;
-                result.Message = bhrEx.Message;
-                result.Data = null;
+                result.Message = string.Format("Bad Request: {0}", bhrEx.Message);
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = ex.Message;
-                result.Data = null;
+                result.Message = string.Format("Internal server error: {0}", ex.Message);
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());
@@ -98,7 +88,7 @@ namespace PhoneStoreManager.Controllers
             try
             {
                 if (userService.FindAllUsersByUsername(registerDTO.Username, true).Count > 0)
-                    throw new BadHttpRequestException("Username is exist!");
+                    throw new BadHttpRequestException(string.Format("Username \'{0}\'is exist!", registerDTO.Username));
 
                 User user = new User();
                 user.Username = registerDTO.Username;
@@ -114,18 +104,18 @@ namespace PhoneStoreManager.Controllers
                 dataTemp.token = token;
 
                 result.StatusCode = 200;
-                result.Message = string.Empty;
+                result.Message = "Successful";
                 result.Data = dataTemp;
             }
             catch (BadHttpRequestException bhrEx)
             {
                 result.StatusCode = 400;
-                result.Message = bhrEx.Message;
+                result.Message = string.Format("Bad Request: {0}", bhrEx.Message);
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = ex.Message;
+                result.Message = string.Format("Internal server error: {0}", ex.Message);
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());

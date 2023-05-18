@@ -9,7 +9,7 @@
     <title>Products - Phone Store Manager [Administrator]</title>
 </head>
 <body>
-    <div lang="en" th:replace="~{/fragments/sidenavbar :: sidenavbar(tab='products')}"></div>
+    <div lang="en" th:replace="~{/fragments/sidenavbar :: sidenavbar(tab='products', user=${name})}"></div>
     <section id="admin-page-data" class="col-sm p-3 min-vh-100">
         <h2>Products</h2>
         <h4>Manage your imported products</h4>
@@ -31,20 +31,22 @@
                     <th class="text-center">Price</th>
                     <th class="text-center">Date Created</th>
                     <th class="text-center">Date Modified</th>
+                    <th class="text-center">Show in Homepage</th>
                     <th class="text-center">Actions</th>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="text-center">1</td>
-                        <td class="text-center">1</td>
-                        <td class="text-center">1</td>
-                        <td class="text-center">1</td>
-                        <td class="text-center">1</td>
-                        <td class="text-center">1</td>
-                        <td class="text-center">1</td>
-                        <td class="text-center">1</td>
-                        <td class="text-center">1</td>
-                        <td class="text-center">1</td>
+                    <tr th:each="item: ${productList}">
+                        <td class="text-center" th:text="${item.get('id').getAsInt()}"></td>
+                        <td class="text-center" th:text="${item.get('name').getAsString()}"></td>
+                        <td class="text-center" th:text="${item.get('category').getAsJsonObject().get('name').getAsString()}"></td>
+                        <td class="text-center" th:text="${item.get('manufacturer').getAsJsonObject().get('name').getAsString()}"></td>
+                        <td class="text-center" th:text="${item.get('inventorycount').getAsInt()}"></td>
+                        <td class="text-center" th:text="${item.get('unit').getAsString()}"></td>
+                        <td class="text-center" th:text="${item.get('warrantymonth').getAsInt()}"></td>
+                        <td class="text-center" th:text="${item.get('price').getAsLong()}"></td>
+                        <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.get('datecreated').getAsLong()), 'dd/MM/yyyy HH:mm:ss')}"></td>
+                        <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.get('datemodified').getAsLong()), 'dd/MM/yyyy HH:mm:ss')}"></td>
+                        <td class="text-center" th:text="${item.get('showinpage').getAsBoolean() ? 'Yes' : 'No'}"></td>
                         <td class="text-center">
                             <a href="#"><button type="button" class="btn btn-primary">Update</button></a>
                             <a href="#"><button type="button" class="btn btn-danger">Delete</button></a>

@@ -24,7 +24,11 @@ namespace PhoneStoreManager.Model
 
         [Required]
         [JsonProperty("datecreated")]
-        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        public long DateCreated { get; set; } = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+        [Required]
+        [JsonProperty("datecompleted")]
+        public long? DateCompleted{ get; set; } = null;
 
         [JsonProperty("vat")]
         public long VAT { get; set; } = 0;

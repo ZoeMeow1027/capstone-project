@@ -26,11 +26,11 @@ namespace PhoneStoreManager.Model
 
         [Required]
         [JsonProperty("datestart")]
-        public DateTime DateStart { get; set; } = DateTime.UtcNow;
+        public long DateStart { get; set; } = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
         [Required]
         [JsonProperty("dateend")]
-        public DateTime DateEnd { get; set; } = DateTime.UtcNow;
+        public long DateEnd { get; set; } = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
         [Required]
         [JsonProperty("serialnumberorimei")]

@@ -32,17 +32,17 @@ namespace PhoneStoreManager.Controllers
 
                 result.Data = user;
                 result.StatusCode = 200;
-                result.Message = "";
+                result.Message = "Successful";
             }
             catch (UnauthorizedAccessException uaEx)
             {
                 result.StatusCode = 401;
-                result.Message = uaEx.Message;
+                result.Message = string.Format("Unauthorized: {0}", uaEx.Message);
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = ex.Message;
+                result.Message = string.Format("Internal server error: {0}", ex.Message);
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());
@@ -65,18 +65,18 @@ namespace PhoneStoreManager.Controllers
                 DeleteSession(token);
 
                 result.StatusCode = 200;
-                result.Message = "Logged out";
+                result.Message = "Logged out!";
                 result.Data = null;
             }
             catch (UnauthorizedAccessException uaEx)
             {
                 result.StatusCode = 401;
-                result.Message = uaEx.Message;
+                result.Message = string.Format("Unauthorized: {0}", uaEx.Message);
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = ex.Message;
+                result.Message = string.Format("Internal server error: {0}", ex.Message);
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());
