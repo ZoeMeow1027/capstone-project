@@ -51,11 +51,11 @@
 ## Web
 
 - Start date: 2023/05/16
-- Updated: 2023/05/18
+- Updated: 2023/05/19
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
-| Admin                     | Administrator page for manage everything on web.                      | 2023/05/18    | <ul><li>[ ] Dashboard</li><li>[ ] Products</li><li>[ ] Bills</li><li>[ ] Warranties</li><li>[ ] Statistics</li><li>[ ] Users</li></ul>
+| Admin                     | Administrator page for manage everything on web.                      | 2023/05/19    | <ul><li>[ ] Dashboard</li><li>[ ] Products</li><li>[ ] Bills</li><li>[ ] Warranties</li><li>[ ] Statistics</li><li>[ ] Users</li></ul>
 
 ## Mobile (optional)
 

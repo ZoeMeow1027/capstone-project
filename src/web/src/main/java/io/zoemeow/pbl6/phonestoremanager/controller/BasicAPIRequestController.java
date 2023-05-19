@@ -1,7 +1,5 @@
 package io.zoemeow.pbl6.phonestoremanager.controller;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -24,61 +22,117 @@ import org.apache.hc.core5.ssl.SSLContextBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import io.zoemeow.pbl6.phonestoremanager.model.RequestException;
+import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
+
 public class BasicAPIRequestController {
     private final Boolean ignoreSSL = true;
 
-    public JsonObject getRequest(String uri, Map<String, String> parameters, Map<String, String> header)
-            throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException, IOException,
-            URISyntaxException {
-        URIBuilder builder = new URIBuilder(uri);
-        if (parameters != null) {
-            for (String parItem : parameters.keySet()) {
-                builder.addParameter(parItem, parameters.get(parItem));
-            }
-        }
+    public RequestResult getRequest(String uri, Map<String, String> parameters, Map<String, String> header) {
+        RequestResult result = new RequestResult();
 
-        HttpGet httpGet = new HttpGet(builder.build());
-        if (header != null) {
-            for (String key : header.keySet()) {
-                httpGet.addHeader(key, header.get(key));
-            }
-        }
-
-        CloseableHttpClient httpClient = createHttpClient();
-
-        CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
         try {
-            String responseString = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
-            JsonObject jObject = JsonParser.parseString(responseString).getAsJsonObject();
-            return jObject;
+            URIBuilder uriBuilder = new URIBuilder(uri);
+            if (parameters != null) {
+                for (String parItem : parameters.keySet()) {
+                    uriBuilder.addParameter(parItem, parameters.get(parItem));
+                }
+            }
+
+            HttpGet httpGet = new HttpGet(uriBuilder.build());
+            if (header != null) {
+                for (String key : header.keySet()) {
+                    httpGet.addHeader(key, header.get(key));
+                }
+            }
+
+            CloseableHttpClient httpClient = createHttpClient();
+            CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
+
+            if (httpResponse.getCode() != 200)
+                throw new RequestException(
+                        uriBuilder.build().toString(),
+                        httpResponse.getCode(),
+                        "");
+            result.setStatusCode(httpResponse.getCode());
+            result.setIsSuccessfulRequest(true);
+            result.setMessage("Successful");
+
+            try {
+                String responseString = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
+                JsonObject jObject = JsonParser.parseString(responseString).getAsJsonObject();
+
+                result.setData(jObject);
+
+            } catch (Exception ex) {
+                result.setData(null);
+            }
+        } catch (RequestException rEx) {
+            result.setStatusCode(rEx.getStatusCode());
+            result.setMessage(rEx.getMessage());
+            result.setIsSuccessfulRequest(true);
         } catch (Exception ex) {
-            return null;
+            result.setIsSuccessfulRequest(false);
+            result.setMessage(ex.getMessage());
         }
+
+        return result;
     }
 
-    public JsonObject postRequest(String uri, String jsonString, Map<String, String> header) throws URISyntaxException,
-            KeyManagementException, NoSuchAlgorithmException, KeyStoreException, IOException {
-        URIBuilder builder = new URIBuilder(uri);
-
-        HttpPost httppost = new HttpPost(builder.build());
-        if (header != null) {
-            for (String key : header.keySet()) {
-                httppost.addHeader(key, header.get(key));
-            }
-        }
-        StringEntity jsonparam = new StringEntity(jsonString);
-        httppost.setEntity(jsonparam);
-
-        CloseableHttpClient httpClient = createHttpClient();
-        CloseableHttpResponse httpResponse = httpClient.execute(httppost);
+    public RequestResult postRequest(String uri, Map<String, String> parameters,
+            Map<String, String> header, String jsonString) {
+        RequestResult result = new RequestResult();
 
         try {
-            String responseString = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
-            JsonObject jObject = JsonParser.parseString(responseString).getAsJsonObject();
-            return jObject;
+            URIBuilder uriBuilder = new URIBuilder(uri);
+            if (parameters != null) {
+                for (String parItem : parameters.keySet()) {
+                    uriBuilder.addParameter(parItem, parameters.get(parItem));
+                }
+            }
+
+            HttpPost httppost = new HttpPost(uriBuilder.build());
+            if (header != null) {
+                for (String key : header.keySet()) {
+                    httppost.addHeader(key, header.get(key));
+                }
+            }
+
+            StringEntity jsonparam = new StringEntity(jsonString);
+            httppost.setEntity(jsonparam);
+
+            CloseableHttpClient httpClient = createHttpClient();
+            CloseableHttpResponse httpResponse = httpClient.execute(httppost);
+
+            JsonObject jObject = null;
+            try {
+                String responseString = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
+                jObject = JsonParser.parseString(responseString).getAsJsonObject();
+
+                result.setData(jObject);
+            } catch (Exception ex) {
+                result.setData(null);
+            }
+
+            if (httpResponse.getCode() != 200)
+                throw new RequestException(
+                        uriBuilder.build().toString(),
+                        httpResponse.getCode(),
+                        jObject != null ? jObject.get("msg").getAsString() : "Unknown error"
+                        );
+            result.setStatusCode(httpResponse.getCode());
+            result.setIsSuccessfulRequest(true);
+            result.setMessage("Successful");
+        } catch (RequestException rEx) {
+            result.setStatusCode(rEx.getStatusCode());
+            result.setMessage(rEx.getMessage());
+            result.setIsSuccessfulRequest(true);
         } catch (Exception ex) {
-            return null;
+            result.setIsSuccessfulRequest(false);
+            result.setMessage(ex.getMessage());
         }
+
+        return result;
     }
 
     private CloseableHttpClient createHttpClient()
