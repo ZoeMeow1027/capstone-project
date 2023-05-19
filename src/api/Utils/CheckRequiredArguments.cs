@@ -1,21 +1,26 @@
-﻿namespace PhoneStoreManager
+﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+
+namespace PhoneStoreManager
 {
     public static partial class Utils
     {
-        public static void CheckRequiredArguments(dynamic data, List<string> reqArgs)
+        public static void CheckRequiredArguments(object args, List<string> requiredProperties)
         {
-            foreach (string argItem in reqArgs)
+            var data = JsonConvert.DeserializeObject<JToken>(JsonConvert.SerializeObject(args));
+
+            foreach (var requiredPropertyItem in requiredProperties)
             {
-                if (data[argItem] == null)
+                if (data[requiredPropertyItem] == null)
                 {
                     throw new ArgumentNullException(
-                        argItem,
+                        requiredPropertyItem,
                         string.Format(
                             "Missing '{0}' argument! (Required: {1})",
-                            argItem,
-                            string.Join(", ", reqArgs)
-                        )
-                    );
+                            requiredPropertyItem,
+                            string.Join(", ", requiredProperties)
+                            )
+                        );
                 }
             }
         }

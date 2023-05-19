@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using PhoneStoreManager.Model;
+using PhoneStoreManager.Model.DTO;
 using PhoneStoreManager.Services;
 
 namespace PhoneStoreManager.Controllers
@@ -23,7 +24,7 @@ namespace PhoneStoreManager.Controllers
         }
 
         [HttpGet]
-        public ActionResult Get(string? type = null, int? id = null, string? nameQuery = null, bool includeDisabled = false)
+        public ActionResult Get(string? type = null, int? id = null, string? query = null, bool includedisabled = false)
         {
             ReturnResultTemplate result = new ReturnResultTemplate();
             result.StatusCode = 200;
@@ -41,15 +42,15 @@ namespace PhoneStoreManager.Controllers
                 switch (type.ToLower())
                 {
                     case "user":
-                        result.Data = nameQuery != null
-                            ? userService.FindAllUsersByUsername(nameQuery, includeDisabled)
+                        result.Data = query != null
+                            ? userService.FindAllUsersByUsername(query, includedisabled)
                             : id == null
-                                ? userService.GetAllUsers(includeDisabled)
+                                ? userService.GetAllUsers(includedisabled)
                                 : userService.GetUserById(id.Value);
                         break;
                     case "useraddress":
-                        result.Data = nameQuery != null
-                            ? userAddressService.FindAllUserAddressesByAddress(nameQuery)
+                        result.Data = query != null
+                            ? userAddressService.FindAllUserAddressesByAddress(query)
                             : id == null
                                 ? userAddressService.GetAllUserAddresses()
                                 : userAddressService.GetUserAddressById(id.Value);
@@ -87,59 +88,60 @@ namespace PhoneStoreManager.Controllers
 
             try
             {
+                RequestDTO? userDTO = args.ToObject<RequestDTO>();
+                if (userDTO == null)
+                    throw new Exception("Error while converting parameters!");
+
                 CheckPermission(
                     Request.Cookies["token"],
                     new List<UserType>() { UserType.Administrator }
                     );
 
-                string? action = (string?)args["action"];
-                string? type = (string?)args["type"];
-                dynamic? data = args["data"];
-
-                if (action == null || type == null || data == null)
+                if (userDTO.Type == null || userDTO.Action == null || userDTO.Data == null)
                 {
                     throw new BadHttpRequestException("Missing parameters!");
                 }
 
                 // This line for avoid null reference issue from VS.
-                type ??= ""; action ??= "";
 
-                switch (type.ToLower())
+                switch (userDTO.Type.ToLower())
                 {
                     case "user":
-                        switch (action.ToLower())
+                        switch (userDTO.Action.ToLower())
                         {
                             case "add":
-                                AddUser(data);
+                                AddUser(userDTO.Data.ToObject<UserDataDTO>());
                                 break;
                             case "update":
-                                UpdateUser(data);
+                                UpdateUser(userDTO.Data.ToObject<UserDataDTO>());
                                 break;
                             case "enable":
+                                ToggleUserEnabled(userDTO.Data.ToObject<UserDataDTO>(), true);
+                                break;
                             case "disable":
-                                ToggleUserEnabled(data);
+                                ToggleUserEnabled(userDTO.Data.ToObject<UserDataDTO>(), false);
                                 break;
                             case "changetype":
-                                ChangeUserType(data);
+                                ChangeUserType(userDTO.Data.ToObject<UserDataDTO>());
                                 break;
                             case "changepassword":
-                                ChangePassword(data);
+                                ChangePassword(userDTO.Data.ToObject<UserDataDTO>());
                                 break;
                             default:
                                 throw new BadHttpRequestException("Invalid \"action\" value!");
                         }
                         break;
                     case "useraddress":
-                        switch (action.ToLower())
+                        switch (userDTO.Action.ToLower())
                         {
                             case "add":
-                                AddUserAddress(data);
+                                AddUserAddress(userDTO.Data.ToObject<UserAddressDataDTO>());
                                 break;
                             case "update":
-                                UpdateUserAddress(data);
+                                UpdateUserAddress(userDTO.Data.ToObject<UserAddressDataDTO>());
                                 break;
                             case "delete":
-                                DeleteUserAddress(data);
+                                DeleteUserAddress(userDTO.Data.ToObject<UserAddressDataDTO>());
                                 break;
                             default:
                                 throw new BadHttpRequestException("Invalid \"action\" value!");
@@ -174,25 +176,25 @@ namespace PhoneStoreManager.Controllers
         }
 
         #region User area
-        private void AddUser(dynamic data)
+        private void AddUser(UserDataDTO userDataDTO)
         {
             List<string> reqArgList = new List<string>() { "username", "password", "name" };
-            Utils.CheckRequiredArguments(data, reqArgList);
+            Utils.CheckRequiredArguments(userDataDTO, reqArgList);
 
             // TODO: User [Add] - Check if username is valid or not exist.
             // TODO: User [Add] - Check if password is valid.
 
             // User [Update] - Check if exist
-            if ((string?)data["phone"] != null)
+            if (userDataDTO.Phone != null)
             {
-                if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))
+                if (!Utils.DataValidate.IsValidPhone(userDataDTO.Phone))
                 {
                     throw new BadHttpRequestException("Failed while validating 'phone' parameter!");
                 }
             }
-            if ((string?)data["email"] != null)
+            if (userDataDTO.Email != null)
             {
-                if (!Utils.DataValidate.IsValidEmail((string?)data["email"]))
+                if (!Utils.DataValidate.IsValidEmail(userDataDTO.Email))
                 {
                     throw new BadHttpRequestException("Failed while validating 'email' parameter!");
                 }
@@ -201,73 +203,73 @@ namespace PhoneStoreManager.Controllers
             // User [Add] - Begin adding
             userService.AddUser(new User()
             {
-                Username = (string)data["username"],
+                Username = userDataDTO.Username,
                 // TODO: User [Add] - Encrypt password here!
-                Password = (string)data["password"],
-                Name = (string)data["name"],
-                Email = (string?)data["email"],
-                Phone = (string?)data["phone"]
+                Password = userDataDTO.Password,
+                Name = userDataDTO.Name,
+                Email = userDataDTO.Email,
+                Phone = userDataDTO.Phone
             });
         }
 
-        private void UpdateUser(dynamic data)
+        private void UpdateUser(UserDataDTO userDataDTO)
         {
             List<string> reqArgList = new List<string>() { "id" };
-            Utils.CheckRequiredArguments(data, reqArgList);
+            Utils.CheckRequiredArguments(userDataDTO, reqArgList);
 
             // TODO: User [Update] - Check if username is valid or not exist.
             // TODO: User [Update] - Check if password is valid.
             // User [Update] - Check if email and phone are valid!
-            if ((string?)data["phone"] != null)
+            if (userDataDTO.Phone != null)
             {
-                if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))
+                if (!Utils.DataValidate.IsValidPhone(userDataDTO.Phone))
                 {
                     throw new BadHttpRequestException("Failed while validating 'phone' parameter!");
                 }
             }
-            if ((string?)data["email"] != null)
+            if (userDataDTO.Email != null)
             {
-                if (!Utils.DataValidate.IsValidEmail((string?)data["email"]))
+                if (!Utils.DataValidate.IsValidEmail(userDataDTO.Email))
                 {
                     throw new BadHttpRequestException("Failed while validating 'email' parameter!");
                 }
             }
 
             // User [Update] - Check if exist
-            var dataTemp = userService.GetUserById((int)data["id"]);
+            var dataTemp = userService.GetUserById(userDataDTO.ID.Value);
             if (dataTemp == null)
             {
-                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", (int)data["id"]));
+                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", userDataDTO.ID));
             }
 
-            dataTemp.Username = (string?)data["username"] ?? dataTemp.Username;
+            dataTemp.Username = userDataDTO.Username ?? dataTemp.Username;
             // TODO: User [Update] - Encrypt password here!
-            dataTemp.Password = (string?)data["password"] ?? dataTemp.Password;
-            dataTemp.Name = (string?)data["name"] ?? dataTemp.Name;
-            dataTemp.Email = (string?)data["email"] ?? dataTemp.Email;
-            dataTemp.Phone = (string?)data["phone"] ?? dataTemp.Phone;
-            dataTemp.IsEnabled = (bool?)data["isenabled"] ?? dataTemp.IsEnabled;
-            dataTemp.DisabledReason = (string?)data["disabledreason"] ?? dataTemp.DisabledReason;
-            dataTemp.UserType = (UserType?)data["usertype"] ?? dataTemp.UserType;
+            dataTemp.Password = userDataDTO.Password ?? dataTemp.Password;
+            dataTemp.Name = userDataDTO.Name ?? dataTemp.Name;
+            dataTemp.Email = userDataDTO.Email ?? dataTemp.Email;
+            dataTemp.Phone = userDataDTO.Phone ?? dataTemp.Phone;
+            dataTemp.IsEnabled = userDataDTO.IsEnabled ?? dataTemp.IsEnabled;
+            dataTemp.DisabledReason = userDataDTO.DisabledReason ?? dataTemp.DisabledReason;
+            dataTemp.UserType = (UserType?)userDataDTO.UserType ?? dataTemp.UserType;
             dataTemp.DateModified = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             // User [Update] - Begin updating
             userService.UpdateUser(dataTemp);
         }
 
-        private void ToggleUserEnabled(dynamic data)
+        private void ToggleUserEnabled(UserDataDTO userDataDTO, bool enabled)
         {
-            List<string> reqArgList = new List<string>() { "id", "enabled" };
-            Utils.CheckRequiredArguments(data, reqArgList);
+            List<string> reqArgList = new List<string>() { "id" };
+            Utils.CheckRequiredArguments(userDataDTO, reqArgList);
 
             // User [Toggle User] - Check if user exist
-            var dataTemp = userService.GetUserById((int)data["id"]);
+            var dataTemp = userService.GetUserById(userDataDTO.ID.Value);
             if (dataTemp == null)
             {
-                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", (int)data["id"]));
+                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", userDataDTO.ID));
             }
 
             // User [Toggle User] - Begin toggling
-            switch ((bool)data["enabled"])
+            switch (enabled)
             {
                 case true:
                     userService.EnableUser(dataTemp);
@@ -278,42 +280,42 @@ namespace PhoneStoreManager.Controllers
             }
         }
 
-        private void ChangeUserType(dynamic data)
+        private void ChangeUserType(UserDataDTO userDataDTO)
         {
             List<string> reqArgList = new List<string>() { "id", "usertype" };
-            Utils.CheckRequiredArguments(data, reqArgList);
+            Utils.CheckRequiredArguments(userDataDTO, reqArgList);
 
             // User [Change User Type] - Check if "usertype" value is valid
-            if ((int)data["type"] < 0 || (int)data["usertype"] > 2)
+            if (userDataDTO.UserType < 0 || userDataDTO.UserType > 2)
             {
                 throw new BadHttpRequestException("Invalid \"usertype\" value!");
             }
 
             // User [Change User Type] - Check if user is exist
-            var dataTemp = userService.GetUserById((int)data["id"]);
+            var dataTemp = userService.GetUserById(userDataDTO.ID.Value);
             if (dataTemp == null)
             {
-                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", (int)data["id"]));
+                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", userDataDTO.ID));
             }
 
             // User [Change User Type] - Begin changing
-            userService.ChangeUserType(dataTemp, (UserType)data["usertype"]);
+            userService.ChangeUserType(dataTemp, (UserType)userDataDTO.UserType);
         }
 
-        private void ChangePassword(dynamic data)
+        private void ChangePassword(UserDataDTO userDataDTO)
         {
-            List<string> reqArgList = new List<string>() { "id", "newpassword" };
-            Utils.CheckRequiredArguments(data, reqArgList);
+            List<string> reqArgList = new List<string>() { "id", "password" };
+            Utils.CheckRequiredArguments(userDataDTO, reqArgList);
 
             // User [Change Password] - Check if user exist
-            var dataTemp = userService.GetUserById((int)data["id"]);
+            var dataTemp = userService.GetUserById(userDataDTO.ID.Value);
             if (dataTemp == null)
             {
-                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", (int)data["id"]));
+                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", userDataDTO.ID));
             }
 
             // TODO: User [Change Password] - Encrypt password here! Make sure equals to Add user.
-            dataTemp.Password = data["newpassword"];
+            dataTemp.Password = userDataDTO.Password;
 
             // User [Change Password] - Begin changing
             userService.UpdateUser(dataTemp);
@@ -321,80 +323,80 @@ namespace PhoneStoreManager.Controllers
         #endregion
 
         #region User Address area
-        private void AddUserAddress(dynamic data)
+        private void AddUserAddress(UserAddressDataDTO data)
         {
             List<string> reqArgList = new List<string>() { "userid", "name", "address", "phone" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // User Address [Add] - CHeck if phone are valid!
-            if ((string?)data["phone"] != null)
+            if (data.Phone != null)
             {
-                if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))
+                if (!Utils.DataValidate.IsValidPhone(data.Phone))
                 {
                     throw new BadHttpRequestException("Failed while validating 'phone' parameter!");
                 }
             }
             // User Address [Add] - Check if user is exist!
-            var dataTemp = userService.GetUserById((int)data["userid"]);
+            var dataTemp = userService.GetUserById(data.UserID.Value);
             if (dataTemp == null)
             {
-                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", (int)data["userid"]));
+                throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", data.UserID));
             }
 
             // User Address [Add] - Begin adding
             userAddressService.AddUserAddress(new UserAddress()
             {
-                UserID = (int)data["userid"],
-                Name = (string)data["name"],
-                Address = (string)data["address"],
-                Phone = (string)data["phone"]
+                UserID = data.UserID.Value,
+                Name = data.Name,
+                Address = data.Address,
+                Phone = data.Phone
             });
         }
 
-        private void UpdateUserAddress(dynamic data)
+        private void UpdateUserAddress(UserAddressDataDTO data)
         {
             List<string> reqArgList = new List<string>() { "id" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // User Address [Update] - Check if address exist
-            var dataTemp = userAddressService.GetUserAddressById((int)data["id"]);
+            var dataTemp = userAddressService.GetUserAddressById(data.ID.Value);
             if (dataTemp == null)
             {
-                throw new BadHttpRequestException(string.Format("UserAddress ID {0} is not exist!", (int)data["id"]));
+                throw new BadHttpRequestException(string.Format("UserAddress ID {0} is not exist!", data.ID));
             }
             // User Address [Update] - Check if user exist
-            if ((int?)data["userid"] != null)
+            if (data.UserID != null)
             {
-                if (userService.GetUserById((int)data["userid"]) == null)
+                if (userService.GetUserById(data.UserID.Value) == null)
                 {
-                    throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", (int?)data["userid"]));
+                    throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", data.UserID));
                 }
             }
             // User Address [Update] - Check if phone is valid.
-            if ((string?)data["phone"] != null)
+            if (data.Phone != null)
             {
-                if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))
+                if (!Utils.DataValidate.IsValidPhone(data.Phone))
                 {
                     throw new BadHttpRequestException("Failed while validating 'phone' parameter!");
                 }
             }
 
             // User Address [Update] - Begin updating
-            dataTemp.UserID = (int?)data["userid"] ?? dataTemp.UserID;
-            dataTemp.Name = (string?)data["name"] ?? dataTemp.Name;
-            dataTemp.Address = (string?)data["address"] ?? dataTemp.Address;
-            dataTemp.Phone = (string?)data["phone"] ?? dataTemp.Phone;
+            dataTemp.UserID = data.UserID ?? dataTemp.UserID;
+            dataTemp.Name = data.Name ?? dataTemp.Name;
+            dataTemp.Address = data.Address ?? dataTemp.Address;
+            dataTemp.Phone = data.Phone ?? dataTemp.Phone;
             userAddressService.UpdateUserAddress(dataTemp);
 
         }
 
-        private void DeleteUserAddress(dynamic data)
+        private void DeleteUserAddress(UserAddressDataDTO data)
         {
             List<string> reqArgList = new List<string>() { "id" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // User Address [Delete] - Begin deleting
-            userAddressService.DeleteUserAddressById((int)data["id"]);
+            userAddressService.DeleteUserAddressById(data.ID.Value);
         }
         #endregion
     }
