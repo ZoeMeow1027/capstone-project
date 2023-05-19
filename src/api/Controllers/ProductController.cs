@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using PhoneStoreManager.Model;
+using PhoneStoreManager.Model.DTO;
 using PhoneStoreManager.Services;
 
 namespace PhoneStoreManager.Controllers
@@ -85,66 +86,66 @@ namespace PhoneStoreManager.Controllers
 
             try
             {
+                RequestDTO? productDTO = args.ToObject<RequestDTO>();
+                if (productDTO == null)
+                    throw new Exception("Error while converting parameters!");
+
                 CheckPermission(
                     Request.Cookies["token"],
                     new List<UserType>() { UserType.Administrator, UserType.Staff }
                     );
 
-                string? action = (string?)args["action"];
-                string? type = (string?)args["type"];
-                dynamic? data = args["data"];
-
-                if (action == null || type == null || data == null)
+                if (productDTO.Type == null || productDTO.Action == null || productDTO.Data == null)
                 {
                     throw new BadHttpRequestException("Missing parameters!");
                 }
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                switch (type.ToLower())
+                switch (productDTO.Type.ToLower())
                 {
                     case "manufacturer":
-                        switch (action.ToLower())
+                        switch (productDTO.Action.ToLower())
                         {
                             case "add":
-                                AddProductManufacturer(data);
+                                AddProductManufacturer(productDTO.Data.ToObject<ProductManufacturerDTO>());
                                 break;
                             case "update":
-                                UpdateProductManufacturer(data);
+                                UpdateProductManufacturer(productDTO.Data.ToObject<ProductManufacturerDTO>());
                                 break;
                             case "delete":
-                                DeleteProductManufacturerById(data);
+                                DeleteProductManufacturerById(productDTO.Data.ToObject<ProductManufacturerDTO>());
                                 break;
                             default:
                                 throw new BadHttpRequestException("Invalid \"action\" value!");
                         }
                         break;
                     case "category":
-                        switch (action.ToLower())
+                        switch (productDTO.Action.ToLower())
                         {
                             case "add":
-                                AddProductCategory(data);
+                                AddProductCategory(productDTO.Data.ToObject<ProductCategoryDTO>());
                                 break;
                             case "update":
-                                UpdateProductCategory(data);
+                                UpdateProductCategory(productDTO.Data.ToObject<ProductCategoryDTO>());
                                 break;
                             case "delete":
-                                DeleteProductCategoryById(data);
+                                DeleteProductCategoryById(productDTO.Data.ToObject<ProductCategoryDTO>());
                                 break;
                             default:
                                 throw new BadHttpRequestException("Invalid \"action\" value!");
                         }
                         break;
                     case "product":
-                        switch (action.ToLower())
+                        switch (productDTO.Action.ToLower())
                         {
                             case "add":
-                                AddProduct(data);
+                                AddProduct(productDTO.Data.ToObject<ProductDTO>());
                                 break;
                             case "update":
-                                UpdateProduct(data);
+                                UpdateProduct(productDTO.Data.ToObject<ProductDTO>());
                                 break;
                             case "delete":
-                                HideProductById(data);
+                                HideProductById(productDTO.Data.ToObject<ProductDTO>());
                                 break;
                             default:
                                 throw new BadHttpRequestException("Invalid \"action\" value!");
@@ -178,202 +179,202 @@ namespace PhoneStoreManager.Controllers
         }
 
         #region Product Manufacturer area
-        private void AddProductManufacturer(dynamic data)
+        private void AddProductManufacturer(ProductManufacturerDTO data)
         {
             List<string> reqArgList = new List<string>() { "name" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             productManufacturerService.AddProductManufacturer(new ProductManufacturer()
             {
-                Name = (string)data["name"]
+                Name = data.Name
             });
         }
 
-        private void UpdateProductManufacturer(dynamic data)
+        private void UpdateProductManufacturer(ProductManufacturerDTO data)
         {
             List<string> reqArgList = new List<string>() { "id", "name" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // Product Category [Update] - Check if product category exist
-            var dataTemp = productManufacturerService.GetProductManufacturerById((int)data["id"]);
+            var dataTemp = productManufacturerService.GetProductManufacturerById(data.ID.Value);
             if (dataTemp == null)
             {
-                throw new BadHttpRequestException(string.Format("Bad Request: ProductManufacturer with ID {0} is not exist!", (int)data["id"]));
+                throw new BadHttpRequestException(string.Format("Bad Request: ProductManufacturer with ID {0} is not exist!", data.ID));
             }
 
-            dataTemp.Name = (string)data["name"];
+            dataTemp.Name = data.Name;
             productManufacturerService.UpdateProductManufacturer(dataTemp);
         }
 
-        private void DeleteProductManufacturerById(dynamic data)
+        private void DeleteProductManufacturerById(ProductManufacturerDTO data)
         {
             List<string> reqArgList = new List<string>() { "id" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
-            productManufacturerService.DeleteProductManufacturerById(data["id"]);
+            productManufacturerService.DeleteProductManufacturerById(data.ID.Value);
         }
         #endregion
 
         #region Product Category area
-        private void AddProductCategory(dynamic data)
+        private void AddProductCategory(ProductCategoryDTO data)
         {
             List<string> reqArgList = new List<string>() { "name" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             productCategoryService.AddProductCategory(new ProductCategory()
             {
-                Name = (string)data["name"]
+                Name = data.Name
             });
         }
 
-        private void UpdateProductCategory(dynamic data)
+        private void UpdateProductCategory(ProductCategoryDTO data)
         {
             List<string> reqArgList = new List<string>() { "id", "name" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // Product Category [Update] - Check if product category exist
-            var dataTemp = productCategoryService.GetProductCategoryById((int)data["id"]);
+            var dataTemp = productCategoryService.GetProductCategoryById(data.ID.Value);
             if (dataTemp == null)
             {
-                throw new BadHttpRequestException(string.Format("Bad Request: ProductCategory with ID {0} is not exist!", (int)data["id"]));
+                throw new BadHttpRequestException(string.Format("Bad Request: ProductCategory with ID {0} is not exist!", data.ID));
             }
 
-            dataTemp.Name = (string)data["name"];
+            dataTemp.Name = data.Name;
             productCategoryService.UpdateProductCategory(dataTemp);
         }
 
-        private void DeleteProductCategoryById(dynamic data)
+        private void DeleteProductCategoryById(ProductCategoryDTO data)
         {
             List<string> reqArgList = new List<string>() { "id" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
-            productCategoryService.DeleteProductCategoryById(data["id"]);
+            productCategoryService.DeleteProductCategoryById(data.ID.Value);
         }
         #endregion
 
         #region Product area
-        private void AddProduct(dynamic data)
+        private void AddProduct(ProductDTO data)
         {
             List<string> reqArgList = new List<string>() { "name", "categoryid", "manufacturerid", "price" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // Product [Add] - Check if invalid 'inventorycount' value
-            if ((long?)data["inventorycount"] != null)
+            if (data.InventoryCount != null)
             {
-                if ((long)data["inventorycount"] < 0)
+                if (data.InventoryCount < 0)
                 {
                     throw new BadHttpRequestException("Invalid 'inventorycount' value!");
                 }
             }
             // Product [Add] - Check if invalid 'warrantymonth' value
-            if ((long?)data["warrantymonth"] != null)
+            if (data.WarrantyMonth != null)
             {
-                if ((long)data["warrantymonth"] < 0)
+                if (data.WarrantyMonth < 0)
                 {
                     throw new BadHttpRequestException("Invalid 'warrantymonth' value!");
                 }
             }
             // Product [Add] - Check if invalid 'price' value
-            if ((long)data["price"] < 0)
+            if (data.Price < 0)
             {
                 throw new BadHttpRequestException("Invalid 'price' value!");
             }
 
             // Product [Add] - Check if product category by id is exist
-            if (productCategoryService.GetProductCategoryById((int)data["categoryid"]) == null)
+            if (productCategoryService.GetProductCategoryById(data.CategoryID.Value) == null)
             {
-                throw new BadHttpRequestException(string.Format("Product Category ID {0} is not exist!", (int)data["categoryid"]));
+                throw new BadHttpRequestException(string.Format("Product Category ID {0} is not exist!", data.CategoryID));
             }
 
             // Product [Add] - Check if product manufacturer by id is exist
-            if (productManufacturerService.GetProductManufacturerById((int)data["manufacturerid"]) == null)
+            if (productManufacturerService.GetProductManufacturerById(data.ManufacturerID.Value) == null)
             {
-                throw new BadHttpRequestException(string.Format("Product Manufacturer ID {0} is not exist!", (int)data["manufacturerid"]));
+                throw new BadHttpRequestException(string.Format("Product Manufacturer ID {0} is not exist!", data.ManufacturerID));
             }
 
             productService.AddProduct(new Product()
             {
-                Name = (string)data["name"],
-                CategoryID = (int)data["categoryid"],
-                ManufacturerID = (int)data["manufacturerid"],
-                InventoryCount = (int?)data["inventorycount"] ?? 0,
-                WarrantyMonth = (int?)data["warrantymonth"] ?? 12,
-                Price = (long)data["price"],
-                ShowInPage = (bool?)data["showinpage"] ?? true
+                Name = data.Name,
+                CategoryID = data.CategoryID.Value,
+                ManufacturerID = data.ManufacturerID.Value,
+                InventoryCount = data.InventoryCount ?? 0,
+                WarrantyMonth = data.WarrantyMonth ?? 12,
+                Price = data.Price.Value,
+                ShowInPage = data.ShowInPage ?? true
             });
         }
 
-        private void UpdateProduct(dynamic data)
+        private void UpdateProduct(ProductDTO data)
         {
             List<string> reqArgList = new List<string>() { "id" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // Product [Update] - Check if invalid 'inventorycount' value
-            if ((long?)data["inventorycount"] != null)
+            if (data.InventoryCount != null)
             {
-                if ((long)data["inventorycount"] < 0)
+                if (data.InventoryCount < 0)
                 {
                     throw new BadHttpRequestException("Invalid 'inventorycount' value!");
                 }
             }
             // Product [Update] - Check if invalid 'warrantymonth' value
-            if ((long?)data["warrantymonth"] != null)
+            if (data.WarrantyMonth != null)
             {
-                if ((long)data["warrantymonth"] < 0)
+                if (data.WarrantyMonth < 0)
                 {
                     throw new BadHttpRequestException("Invalid 'warrantymonth' value!");
                 }
             }
             // Product [Update] - Check if invalid 'price' value
-            if ((long?)data["price"] != null)
+            if (data.Price != null)
             {
-                if ((long)data["price"] < 0)
+                if (data.Price < 0)
                 {
                     throw new BadHttpRequestException("Invalid 'price' value!");
                 }
             }
             // Product [Update] - Check if product category by id is exist
-            if ((int?)data["categoryid"] != null)
+            if (data.CategoryID != null)
             {
-                if (productCategoryService.GetProductCategoryById((int)data["categoryid"]) == null)
+                if (productCategoryService.GetProductCategoryById(data.CategoryID.Value) == null)
                 {
-                    throw new BadHttpRequestException(string.Format("Product Category ID {0} is not exist!", (int)data["categoryid"]));
+                    throw new BadHttpRequestException(string.Format("Product Category ID {0} is not exist!", data.CategoryID));
                 }
             }
             // Product [Update] - Check if product manufacturer by id is exist
-            if ((int?)data["manufacturerid"] != null)
+            if (data.ManufacturerID != null)
             {
-                if (productManufacturerService.GetProductManufacturerById((int)data["manufacturerid"]) == null)
+                if (productManufacturerService.GetProductManufacturerById(data.ManufacturerID.Value) == null)
                 {
-                    throw new BadHttpRequestException(string.Format("Product Manufacturer ID {0} is not exist!", (int)data["manufacturerid"]));
+                    throw new BadHttpRequestException(string.Format("Product Manufacturer ID {0} is not exist!", data.ManufacturerID));
                 }
             }
 
             // Product [Update] - Check if product exist
-            var productTemp = productService.GetProductById((int)data["id"]);
+            var productTemp = productService.GetProductById(data.ID.Value);
             if (productTemp == null)
             {
-                throw new BadHttpRequestException(string.Format("Product ID {0} is not exist!", (int)data["id"]));
+                throw new BadHttpRequestException(string.Format("Product ID {0} is not exist!", data.ID));
             }
 
-            productTemp.Name = (string?)data["name"] ?? productTemp.Name;
-            productTemp.CategoryID = (int?)data["categoryid"] ?? productTemp.CategoryID;
-            productTemp.ManufacturerID = (int?)data["manufacturerid"] ?? productTemp.ManufacturerID;
-            productTemp.InventoryCount = (int?)data["inventorycount"] ?? productTemp.InventoryCount;
-            productTemp.WarrantyMonth = (int?)data["warrantymonth"] ?? productTemp.WarrantyMonth;
-            productTemp.Price = (long?)data["price"] ?? productTemp.Price;
-            productTemp.ShowInPage = (bool?)data["showinpage"] ?? productTemp.ShowInPage;
+            productTemp.Name = data.Name ?? productTemp.Name;
+            productTemp.CategoryID = data.CategoryID ?? productTemp.CategoryID;
+            productTemp.ManufacturerID = data.ManufacturerID ?? productTemp.ManufacturerID;
+            productTemp.InventoryCount = data.InventoryCount ?? productTemp.InventoryCount;
+            productTemp.WarrantyMonth = data.WarrantyMonth ?? productTemp.WarrantyMonth;
+            productTemp.Price = data.Price ?? productTemp.Price;
+            productTemp.ShowInPage = data.ShowInPage ?? productTemp.ShowInPage;
             productTemp.DateModified = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             // Product [Update] - Begin updating
             productService.UpdateProduct(productTemp);
         }
 
-        private void HideProductById(dynamic data)
+        private void HideProductById(ProductDTO data)
         {
             List<string> reqArgList = new List<string>() { "id" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
-            productService.HideProductById(data["id"]);
+            productService.HideProductById(data.ID.Value);
         }
         #endregion
     }
