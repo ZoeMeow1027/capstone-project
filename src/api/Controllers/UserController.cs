@@ -149,6 +149,11 @@ namespace PhoneStoreManager.Controllers
                         throw new BadHttpRequestException("Invalid \"type\" value!");
                 }
             }
+            catch (ArgumentException argEx)
+            {
+                result.StatusCode = 400;
+                result.Message = string.Format("Bad Request: {0}", argEx.Message);
+            }
             catch (UnauthorizedAccessException uaEx)
             {
                 result.StatusCode = 403;
@@ -177,7 +182,7 @@ namespace PhoneStoreManager.Controllers
             // TODO: User [Add] - Check if username is valid or not exist.
             // TODO: User [Add] - Check if password is valid.
 
-            // User [Add] - Check if email and phone are valid.
+            // User [Update] - Check if exist
             if ((string?)data["phone"] != null)
             {
                 if (!Utils.DataValidate.IsValidPhone((string?)data["phone"]))

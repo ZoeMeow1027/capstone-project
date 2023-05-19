@@ -11,8 +11,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.JsonObject;
 import io.zoemeow.pbl6.phonestoremanager.controller.BasicAPIRequestController;
+import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,13 +31,13 @@ public class AuthController extends BasicAPIRequestController {
                 Map<String, String> header = new HashMap<String, String>();
                 header.put("cookie", request.getHeader("cookie"));
 
-                JsonObject jObject = getRequest("https://localhost:7053/api/account/my", null, header);
-                if (jObject == null)
+                RequestResult reqResult = getRequest("https://localhost:7053/api/account/my", null, header);
+                if (reqResult.getData() == null)
                     throw new Exception("No data");
 
-                int code = jObject.get("code").getAsInt();
+                int code = reqResult.getData().get("code").getAsInt();
                 if (code == 200) {
-                    if (jObject.get("data").getAsJsonObject().get("usertype").getAsInt() == 2)
+                    if (reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt() == 2)
                         uriRedirect = "redirect:/admin/dashboard";
                     else uriRedirect = "redirect:/auth/login";
                 } else {
@@ -67,22 +67,23 @@ public class AuthController extends BasicAPIRequestController {
             header.put("content-type", "application/json; charset=UTF-8");
             header.put("cookie", request.getHeader("cookie"));
 
-            JsonObject jObject = postRequest("https://localhost:7053/api/auth/login", mapper.writeValueAsString(auth),
-                    header);
-            if (jObject == null)
+            RequestResult reqResult = postRequest("https://localhost:7053/api/auth/login", null,
+                    header, mapper.writeValueAsString(auth));
+
+            if (reqResult.getData() == null)
                 throw new Exception("No data");
 
-            int code = jObject.get("code").getAsInt();
+            int code = reqResult.getData().get("code").getAsInt();
             if (code != 200) {
                 throw new Exception(String.format("API was returned with code %d", code));
             } else {
-                Cookie cookie = new Cookie("token", jObject.get("data").getAsJsonObject().get("token").getAsString());
+                Cookie cookie = new Cookie("token", reqResult.getData().get("data").getAsJsonObject().get("token").getAsString());
                 cookie.setPath("/");
                 // 1-year
                 cookie.setMaxAge(365 * 24 * 60 * 60);
                 response.addCookie(cookie);
 
-                if (jObject.get("data").getAsJsonObject().get("usertype").getAsInt() == 2)
+                if (reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt() == 2)
                     return "redirect:/admin";
                 else return "redirect:/auth/login";
             }
@@ -103,7 +104,7 @@ public class AuthController extends BasicAPIRequestController {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
         try {
-            postRequest("https://localhost:7053/api/account/logout", null, header);
+            postRequest("https://localhost:7053/api/account/logout", null, header, null);
         } catch (Exception ex) {
 
         } finally {

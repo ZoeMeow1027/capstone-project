@@ -14,6 +14,10 @@ namespace PhoneStoreManager.Services
 
         public void AddUser(User item)
         {
+            if (_context.Users.Where(p => p.Username == item.Username).FirstOrDefault() != null)
+            {
+                throw new ArgumentException(string.Format("User {0} is exist!", item.Username));
+            }
             _context.Users.Add(item);
             int _rowAffected = _context.SaveChanges();
             if (_rowAffected != 1)

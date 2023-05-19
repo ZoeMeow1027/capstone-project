@@ -6,14 +6,12 @@ import java.security.NoSuchAlgorithmException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import io.zoemeow.pbl6.utils.utils;
+import io.zoemeow.pbl6.phonestoremanager.utils.SSLOptions;
 
 @SpringBootApplication
-public class PhonestoremanagerApplication {
-
+public class PhoneStoreManagerApp {
 	public static void main(String[] args) throws KeyManagementException, NoSuchAlgorithmException {
-		utils.turnOffSslChecking();
-		SpringApplication.run(PhonestoremanagerApplication.class, args);
+		SSLOptions.turnOffSslChecking();
+		SpringApplication.run(PhoneStoreManagerApp.class, args);
 	}
-
 }
