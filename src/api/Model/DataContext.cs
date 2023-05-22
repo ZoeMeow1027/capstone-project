@@ -1,18 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PhoneStoreManager.Model.Enums;
+using System.Diagnostics;
 
 namespace PhoneStoreManager.Model
 {
     public class DataContext : DbContext
     {
-        private string? _connectionString = null;
-
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public DataContext(string cString) : base()
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-            _connectionString = cString;
-        }
 
-        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+        }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public DbSet<User> Users { get; set; }
@@ -24,13 +22,10 @@ namespace PhoneStoreManager.Model
         public DbSet<BillDetails> BillDetails { get; set; }
         public DbSet<UserSession> UserSessions { get; set; }
         public DbSet<Warranty> Warranties { get; set; }
+        public DbSet<ProductImageMetadata> ImageMetadatas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (_connectionString != null)
-            {
-                optionsBuilder.UseSqlServer(_connectionString);
-            }
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -116,6 +111,13 @@ namespace PhoneStoreManager.Model
                 .HasOne(p => p.User)
                 .WithMany(c => c.Warranties)
                 .HasForeignKey(p => p.UserID)
+                .HasPrincipalKey(c => c.ID);
+
+            // Foreign key ProductID in ProductImageMetadata and Product
+            modelBuilder.Entity<ProductImageMetadata>()
+                .HasOne(p => p.Product)
+                .WithMany(c => c.Images)
+                .HasForeignKey(p => p.ProductID)
                 .HasPrincipalKey(c => c.ID);
 
             base.OnModelCreating(modelBuilder);

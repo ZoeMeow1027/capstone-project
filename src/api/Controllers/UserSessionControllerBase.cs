@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PhoneStoreManager.Model;
+using PhoneStoreManager.Model.Enums;
 using PhoneStoreManager.Services;
 
 namespace PhoneStoreManager.Controllers

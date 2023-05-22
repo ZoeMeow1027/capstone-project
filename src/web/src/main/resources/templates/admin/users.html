@@ -6,6 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/admin-page.css}">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
     <title>Users - Phone Store Manager [Administrator]</title>
 </head>
 <body>
@@ -16,7 +17,7 @@
         <hr />
         <div class="w-100 pb-2 d-flex justify-content-end">
             <!-- <a href="#" class="ps-2"><button type="button" class="btn btn-primary">Refresh</button></a> -->
-            <a href="#" class="ps-2"><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#dialog-addnew">Create new</button></a>
+            <a href="/admin/users/add" class="ps-2"><button type="button" class="btn btn-success">Add new</button></a>
         </div>
         <div class="table-responsive">
             <table class="table table-hover table-bordered border-primary">
@@ -39,148 +40,81 @@
                         <td class="text-center" th:text="${item.get('name').getAsString()}"></td>
                         <td class="text-center" th:text="${!item.get('email').isJsonNull() ? item.get('email').getAsString() : ''}"></td>
                         <td class="text-center" th:text="${!item.get('phone').isJsonNull() ? item.get('phone').getAsString() : ''}"></td>
-                        <td class="text-center" th:text="${item.get('usertype').getAsInt() == 2 ? 'Administrator' : item.get('usertype').getAsInt() == 1 ? 'Staff' : 'User'}"></td>
-                        <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.get('datecreated').getAsLong()), 'dd/MM/yyyy HH:mm:ss')}"></td>
-                        <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.get('datemodified').getAsLong()), 'dd/MM/yyyy HH:mm:ss')}"></td>
+                        <td class="text-center"
+                            th:text="${item.get('usertype').getAsInt() == 2 ? 'Administrator' : item.get('usertype').getAsInt() == 1 ? 'Staff' : 'User'}">
+                        </td>
+                        <td class="text-center"
+                            th:text="${#calendars.format(new java.util.Date(item.get('datecreated').getAsLong()), 'dd/MM/yyyy HH:mm:ss')}"></td>
+                        <td class="text-center"
+                            th:text="${#calendars.format(new java.util.Date(item.get('datemodified').getAsLong()), 'dd/MM/yyyy HH:mm:ss')}">
+                        </td>
                         <div th:with="condition=${item.get('isenabled').getAsBoolean()}" th:remove="tag">
                             <td class="text-center" th:if="${condition}" th:text="Yes"></td>
                             <td class="text-center" th:unless="${condition}" th:text="No"></td>
                         </div>
                         
                         <td class="text-center">
-                            <a href="#"><button type="button" class="btn btn-primary">Update</button></a>
-                            <a href="#"><button type="button" class="btn btn-danger">Delete</button></a>
+                            <a th:href="${'/admin/users/update?id=' + item.get('id').getAsInt()}"><button type="button" class="btn btn-primary">Update</button></a>
+                            <div th:with="condition=${item.get('isenabled').getAsBoolean()}" th:remove="tag">
+                                <a th:if="${condition}" th:href="${'/admin/users/toggle?enabled=0&id=' + item.get('id').getAsInt()}">
+                                    <button type="button" class="btn btn-danger">Disable</button>
+                                </a>
+                                <a th:unless="${condition}" th:href="${'/admin/users/toggle?enabled=1&id=' + item.get('id').getAsInt()}">
+                                    <button type="button" class="btn btn-success">Enable</button>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
             </table>    
         </div>
-        <div class="modal fade" id="dialog-addnew" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal fade" role="dialog" id="modal-dialog" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-lg">
-                <form class="modal-content">
+                <div class="modal-content">
                     <!-- Modal Header -->
                     <div class="modal-header">
-                        <h4 class="modal-title">Add new user</h4>
+                        <h4 id="modal-dialog-title" class="modal-title" style="white-space: pre-wrap;"></h4>
                         <!-- <button type="button" class="btn-close" data-bs-dismiss="modal"></button> -->
-                    </div>
-        
+                    </div>        
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <div id="dialog-addnew-errline" class="text-left text-white bg-danger mb-3 p-2 rounded-1" style="visibility: hidden;"></div>
-                        <div class="form-floating mb-3">
-                            <input type="text" id="dialog-addnew-tbname" name="name" class="form-control">
-                            <label for="floatingInput">Name</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="email" id="dialog-addnew-tbemail" name="email" class="form-control">
-                            <label for="floatingInput">Email address</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="tel" id="dialog-addnew-tbphone" name="phone" class="form-control">
-                            <label for="floatingInput">Phone</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" id="dialog-addnew-tbusername" name="username" class="form-control">
-                            <label for="floatingInput">Username</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="password" id="dialog-addnew-tbpassword" name="password" class="form-control">
-                            <label for="floatingInput">Password</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="password" id="dialog-addnew-tbrepassword" class="form-control">
-                            <label for="floatingInput">Re-enter Password</label>
-                        </div>
+                        <div id="dialog-addnew-errline" class="text-left text-white bg-danger mb-1 p-2 rounded-1" style="visibility: hidden;"></div>
+                        <span id="modal-dialog-body" class="text-left" style="white-space: pre-wrap;"></span>
                     </div>
-        
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button id="dialog-addnew-btnadd" type="button" onclick="addNewUser()" class="btn btn-primary">Add</button>
-                        <button id="dialog-addnew-btncancel" type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button id="modal-dialog-btnadd" type="button" onclick="toggleUser()" class="btn btn-primary">Enable/disable</button>
+                        <button id="modal-dialog-btncancel" type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </body>
 <script>
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-        
-    async function addNewUser() {
-        function setErrText(text) {
-            var errLine = document.getElementById('dialog-addnew-errline');
-            if (text != null) {
-                errLine.style.visibility = null;
-                errLine.textContent = text;
-            } else {
-                errLine.style.visibility = 'hidden';
-                errLine.textContent = null;
-            }
+    function showToggleModel(id, name, value) {
+        var title = "", body = "";
+        if (value) {
+            title = `Enable account ${name}?`;
+            body = `You are about to enable user ${name}?\r\nThis user will able to login again.`;
+        } else {
+            title = `Disable account ${name}?`;
+            body = `You are about to disable user ${name}?\r\nThis user won't able to login.`;
         }
-
-        var btnAdd = document.getElementById('dialog-addnew-btnadd');
-        var btnCancel = document.getElementById('dialog-addnew-btncancel');
-
-        var tbName = document.getElementById('dialog-addnew-tbname');
-        var tbEmail = document.getElementById('dialog-addnew-tbemail');
-        var tbPhone = document.getElementById('dialog-addnew-tbphone');
-        var tbUsername = document.getElementById('dialog-addnew-tbusername');
-        var tbPassword = document.getElementById('dialog-addnew-tbpassword');
-        var tbRePassword = document.getElementById('dialog-addnew-tbrepassword');
-
-        function enableControl(enabled) {
-            tbName.readonly = !enabled;
-            tbEmail.readonly = !enabled;
-            tbPhone.readonly = !enabled;
-            tbUsername.readonly = !enabled;
-            tbPassword.readonly = !enabled;
-            tbRePassword.readonly = !enabled;
-
-            btnAdd.disabled = !enabled;
-            btnCancel.disabled != enabled;
+        body = `${body}\r\n\r\nAre you sure you want to continue?`;
+        document.getElementById('modal-dialog-title').textContent = title;
+        document.getElementById('modal-dialog-body').textContent = body;
+        var okBtn = document.getElementById("modal-dialog-btnadd");
+        if (value) {
+            okBtn.classList.remove("btn-danger");
+            okBtn.classList.add("btn-success");
+            okBtn.textContent = "Enable";
+        } else {
+            okBtn.classList.remove("btn-success");
+            okBtn.classList.add("btn-danger");
+            okBtn.textContent = "Disable";
         }
-
-        if (tbPassword.value !== tbRePassword.value) {
-            setErrText("Re-enter password and Password mismatch!");
-            return;
-        }
-
-        btnAdd.textContent = 'Adding...';
-        enableControl(false);
-        setErrText(null);
-
-        const response = await fetch('/admin/users/new', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json; charset=UTF-8",
-            },
-            body: JSON.stringify({
-                "type": "user",
-                "username": tbUsername.value,
-                "password": tbPassword.value,
-                "name": tbName.value,
-                "phone": tbPhone.value,
-                "email": tbEmail.value
-            })
-        })
-        .then(jsondata => jsondata.text())
-        .then(body => {
-            btnAdd.textContent = 'Add';
-            enableControl(true);
-
-            const result = JSON.parse(body);
-            if (!result["isSuccessfulRequest"]) {
-                setErrText(result["message"]);
-            }
-
-            if (result["statusCode"] != 200) {
-                setErrText(result["message"]);
-            } else {
-                window.location.href = "/admin/users";
-            }
-        });
+        $("#modal-dialog").modal("show");
     }
 </script>
 </html>

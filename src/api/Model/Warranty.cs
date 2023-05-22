@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhoneStoreManager.Model
 {
+    [Table("Warranty")]
     public class Warranty
     {
         [Key]

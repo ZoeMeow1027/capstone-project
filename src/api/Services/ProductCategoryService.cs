@@ -42,18 +42,18 @@ namespace PhoneStoreManager.Services
             }
         }
 
-        public List<ProductCategory> FindAllProductCategoriesByName(string name)
+        public List<ProductCategory> FindAllProductCategoriesByName(string name, bool includeHidden)
         {
             return _context.ProductCategories.Include(p => p.Products).Where(p =>
                 // Filter by name
-                p.Name.ToLower().Contains(name.ToLower())
+                p.Name.ToLower().Contains(name.ToLower()) && (includeHidden ? true : p.ShowInPage)
             ).ToList();
         }
 
-        public List<ProductCategory> GetAllProductCategories()
+        public List<ProductCategory> GetAllProductCategories(bool includeHidden)
         {
             // Include hidden. This is ignored by default.
-            return _context.ProductCategories.Include(p => p.Products).ToList();
+            return _context.ProductCategories.Include(p => p.Products).Where(p => (includeHidden ? true : p.ShowInPage)).ToList();
         }
 
         public ProductCategory? GetProductCategoryById(int id)

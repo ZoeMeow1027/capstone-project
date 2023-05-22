@@ -18,6 +18,9 @@
                     <div class="card-body p-md-5 mx-md-4">
                         <form action="/auth/login" method="post">
                             <h4 class="text-center mb-4">Login</h4>
+                            <div th:with="condition=${errMsg != null}" th:remove="tag">
+                                <div id="dialog-addnew-errline" class="text-left text-white bg-danger mb-3 p-2 rounded-1" th:if="${condition}" th:text="${errMsg}"></div>
+                            </div>
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="username" name="username" placeholder="Username">
                                 <label for="floatingInput">Username</label>

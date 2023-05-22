@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using PhoneStoreManager.Model;
 using PhoneStoreManager.Model.DTO;
+using PhoneStoreManager.Model.Enums;
 using PhoneStoreManager.Services;
 
 namespace PhoneStoreManager.Controllers
@@ -62,17 +63,17 @@ namespace PhoneStoreManager.Controllers
             catch (UnauthorizedAccessException uaEx)
             {
                 result.StatusCode = 403;
-                result.Message = string.Format("Fobbiden: {0}", uaEx.Message);
+                result.Message = uaEx.Message;
             }
             catch (BadHttpRequestException bhrEx)
             {
                 result.StatusCode = 400;
-                result.Message = string.Format("Bad Request: {0}", bhrEx.Message);
+                result.Message = bhrEx.Message;
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = string.Format("Internal server error: {0}", ex.Message);
+                result.Message = ex.Message;
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());
@@ -121,7 +122,7 @@ namespace PhoneStoreManager.Controllers
                             case "disable":
                                 ToggleUserEnabled(userDTO.Data.ToObject<UserDataDTO>(), false);
                                 break;
-                            case "changetype":
+                            case "changeusertype":
                                 ChangeUserType(userDTO.Data.ToObject<UserDataDTO>());
                                 break;
                             case "changepassword":
@@ -154,22 +155,22 @@ namespace PhoneStoreManager.Controllers
             catch (ArgumentException argEx)
             {
                 result.StatusCode = 400;
-                result.Message = string.Format("Bad Request: {0}", argEx.Message);
+                result.Message = argEx.Message;
             }
             catch (UnauthorizedAccessException uaEx)
             {
                 result.StatusCode = 403;
-                result.Message = string.Format("Fobbiden: {0}", uaEx.Message);
+                result.Message = uaEx.Message;
             }
             catch (BadHttpRequestException bhrEx)
             {
                 result.StatusCode = 400;
-                result.Message = string.Format("Bad Request: {0}", bhrEx.Message);
+                result.Message = bhrEx.Message;
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = string.Format("Internal server error: {0}", ex.Message);
+                result.Message = ex.Message;
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());
@@ -199,16 +200,30 @@ namespace PhoneStoreManager.Controllers
                     throw new BadHttpRequestException("Failed while validating 'email' parameter!");
                 }
             }
+            if (userDataDTO.UserType != null)
+            {
+                if (!(new List<int>() { 0, 1, 2 }.Contains(userDataDTO.UserType.Value)))
+                {
+                    throw new BadHttpRequestException("Invalid 'usertype' value!");
+                }
+            }
+            if (userDataDTO.Password.Length < 6)
+            {
+                throw new ArgumentException("Password must be greater than 5 characters!");
+            }
 
             // User [Add] - Begin adding
+            string pHash = Utils.RandomString(12);
             userService.AddUser(new User()
             {
                 Username = userDataDTO.Username,
-                // TODO: User [Add] - Encrypt password here!
-                Password = userDataDTO.Password,
+                // User [Add] - Encrypt password here!
+                PasswordHash = pHash,
+                Password = Utils.EncryptSHA256(string.Format("{0}{1}", userDataDTO.Password, pHash)),
                 Name = userDataDTO.Name,
                 Email = userDataDTO.Email,
-                Phone = userDataDTO.Phone
+                Phone = userDataDTO.Phone,
+                UserType = (UserType)userDataDTO.UserType.Value
             });
         }
 
@@ -218,7 +233,7 @@ namespace PhoneStoreManager.Controllers
             Utils.CheckRequiredArguments(userDataDTO, reqArgList);
 
             // TODO: User [Update] - Check if username is valid or not exist.
-            // TODO: User [Update] - Check if password is valid.
+
             // User [Update] - Check if email and phone are valid!
             if (userDataDTO.Phone != null)
             {
@@ -234,6 +249,13 @@ namespace PhoneStoreManager.Controllers
                     throw new BadHttpRequestException("Failed while validating 'email' parameter!");
                 }
             }
+            if (userDataDTO.UserType != null)
+            {
+                if (!(new List<int>() { 0, 1, 2 }.Contains(userDataDTO.UserType.Value)))
+                {
+                    throw new BadHttpRequestException("Invalid 'usertype' value!");
+                }
+            }
 
             // User [Update] - Check if exist
             var dataTemp = userService.GetUserById(userDataDTO.ID.Value);
@@ -243,8 +265,6 @@ namespace PhoneStoreManager.Controllers
             }
 
             dataTemp.Username = userDataDTO.Username ?? dataTemp.Username;
-            // TODO: User [Update] - Encrypt password here!
-            dataTemp.Password = userDataDTO.Password ?? dataTemp.Password;
             dataTemp.Name = userDataDTO.Name ?? dataTemp.Name;
             dataTemp.Email = userDataDTO.Email ?? dataTemp.Email;
             dataTemp.Phone = userDataDTO.Phone ?? dataTemp.Phone;
@@ -252,6 +272,20 @@ namespace PhoneStoreManager.Controllers
             dataTemp.DisabledReason = userDataDTO.DisabledReason ?? dataTemp.DisabledReason;
             dataTemp.UserType = (UserType?)userDataDTO.UserType ?? dataTemp.UserType;
             dataTemp.DateModified = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            dataTemp.UserType = (UserType)userDataDTO.UserType.Value;
+
+
+            // User [Update] - Encrypt password here!
+            // User [Update] - Check if given password is valid.
+            if (userDataDTO.Password != null)
+            {
+                if (userDataDTO.Password.Length < 6)
+                    throw new ArgumentException("Password must be greater than 5 characters!");
+                string pHash = Utils.RandomString(12);
+                dataTemp.PasswordHash = pHash;
+                dataTemp.Password = Utils.EncryptSHA256(string.Format("{0}{1}", userDataDTO.Password, pHash));
+            }
+
             // User [Update] - Begin updating
             userService.UpdateUser(dataTemp);
         }
@@ -260,6 +294,16 @@ namespace PhoneStoreManager.Controllers
         {
             List<string> reqArgList = new List<string>() { "id" };
             Utils.CheckRequiredArguments(userDataDTO, reqArgList);
+
+            User? user = userService.GetUserById(userDataDTO.ID.Value);
+            if (user == null)
+            {
+                throw new ArgumentException(string.Format("User {0} is not exist!", userDataDTO.ID));
+            }
+            if (user.Username.ToLower() == "admin")
+            {
+                throw new UnauthorizedAccessException("'admin' account cannot be disabled or control here!");
+            }
 
             // User [Toggle User] - Check if user exist
             var dataTemp = userService.GetUserById(userDataDTO.ID.Value);
@@ -314,8 +358,10 @@ namespace PhoneStoreManager.Controllers
                 throw new BadHttpRequestException(string.Format("User ID {0} is not exist!", userDataDTO.ID));
             }
 
-            // TODO: User [Change Password] - Encrypt password here! Make sure equals to Add user.
-            dataTemp.Password = userDataDTO.Password;
+            // User [Change Password] - Encrypt password here! Make sure equals to Add user.
+            string pHash = Utils.RandomString(12);
+            dataTemp.PasswordHash = pHash;
+            dataTemp.Password = Utils.EncryptSHA256(string.Format("{0}{1}", userDataDTO.Password, pHash));
 
             // User [Change Password] - Begin changing
             userService.UpdateUser(dataTemp);

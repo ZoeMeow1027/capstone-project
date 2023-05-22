@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhoneStoreManager.Model
 {
+    [Table("Product")]
     public class Product
     {
         [Key]
@@ -67,6 +68,9 @@ namespace PhoneStoreManager.Model
 
         [JsonIgnore]
         public List<Warranty> Warranties { get; set; }
+
+        [JsonProperty("images")]
+        public List<ProductImageMetadata> Images { get; set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         #endregion
     }

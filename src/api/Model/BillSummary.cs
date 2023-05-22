@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
+using PhoneStoreManager.Model.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhoneStoreManager.Model
 {
+    [Table("BillSummary")]
     public class BillSummary
     {
         [Key]

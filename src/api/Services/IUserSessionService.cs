@@ -1,4 +1,5 @@
 ﻿using PhoneStoreManager.Model;
+using PhoneStoreManager.Model.Enums;
 
 namespace PhoneStoreManager.Services
 {

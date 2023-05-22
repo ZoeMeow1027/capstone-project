@@ -1,4 +1,4 @@
-﻿namespace PhoneStoreManager.Model
+﻿namespace PhoneStoreManager.Model.Enums
 {
     public enum UserType
     {

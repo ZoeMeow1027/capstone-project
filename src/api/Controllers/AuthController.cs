@@ -33,7 +33,7 @@ namespace PhoneStoreManager.Controllers
                 if (!loginItem.IsValidatedLogin())
                     throw new BadHttpRequestException("Missing parameters or invalid login!");
 
-                var data = userService.FindAllUsersByUsername(loginItem.Username, false).ToList();
+                var data = userService.FindAllUsersByUsername(loginItem.Username, true).ToList();
                 User? user = null;
                 foreach (User userItem in data)
                 {
@@ -45,10 +45,14 @@ namespace PhoneStoreManager.Controllers
                 }
 
                 if (user == null)
-                    throw new BadHttpRequestException(string.Format("Username \'{0}\' is not exist!", loginItem.Username));
+                    throw new BadHttpRequestException("Username or password is incorrect!");
 
-                if (user.Password != loginItem.Password)
-                    throw new UnauthorizedAccessException("Password mismatch!");
+                string pHash = Utils.EncryptSHA256(string.Format("{0}{1}", loginItem.Password, user.PasswordHash));
+                if (user.Password != pHash)
+                    throw new UnauthorizedAccessException("Username or password is incorrect!");
+
+                if (!user.IsEnabled)
+                    throw new UnauthorizedAccessException("Your account has been disabled! Please go to contact support for more information.");
 
                 string token = userSessionService.CreateAndStoreAccountToken(user.ID, 365);
                 dynamic dataTemp = new ExpandoObject();
@@ -63,17 +67,17 @@ namespace PhoneStoreManager.Controllers
             catch (UnauthorizedAccessException uaEx)
             {
                 result.StatusCode = 401;
-                result.Message = string.Format("Unauthorized: {0}", uaEx.Message);
+                result.Message = uaEx.Message;
             }
             catch (BadHttpRequestException bhrEx)
             {
                 result.StatusCode = 400;
-                result.Message = string.Format("Bad Request: {0}", bhrEx.Message);
+                result.Message = bhrEx.Message;
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = string.Format("Internal server error: {0}", ex.Message);
+                result.Message = ex.Message;
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());
@@ -110,12 +114,12 @@ namespace PhoneStoreManager.Controllers
             catch (BadHttpRequestException bhrEx)
             {
                 result.StatusCode = 400;
-                result.Message = string.Format("Bad Request: {0}", bhrEx.Message);
+                result.Message = bhrEx.Message;
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = string.Format("Internal server error: {0}", ex.Message);
+                result.Message = ex.Message;
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());
