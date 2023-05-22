@@ -1,5 +1,7 @@
 package io.zoemeow.pbl6.phonestoremanager.controller.AdminController;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,13 +27,7 @@ public class AdminDashboardController extends BasicAPIRequestController {
         try {
             ModelAndView view = new ModelAndView("/admin/dashboard");
 
-            reqResult = getRequest("https://localhost:7053/api/account/my", null, header);
-            if (!reqResult.getIsSuccessfulRequest()) {
-                // TODO: Check if not successful request here!
-            }
-            if (reqResult.getStatusCode() != 200) {
-                throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
-            }
+            reqResult = getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             if (reqResult.getData() != null) {
                 view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
             } else {

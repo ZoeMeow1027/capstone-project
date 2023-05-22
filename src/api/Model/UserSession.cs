@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhoneStoreManager.Model
 {
+    [Table("UserSession")]
     public class UserSession
     {
         [Key]

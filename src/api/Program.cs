@@ -1,6 +1,6 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using PhoneStoreManager.Model;
+using PhoneStoreManager.Model.Enums;
 using PhoneStoreManager.Services;
 using System.Diagnostics;
 
@@ -23,6 +23,7 @@ namespace PhoneStoreManager
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserSessionService, UserSessionService>();
             builder.Services.AddScoped<IWarrantyService, WarrantyService>();
+            builder.Services.AddScoped<IImageMetadataService, ImageMetadataService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -30,6 +31,7 @@ namespace PhoneStoreManager
 
             // Add MSSQL
             builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
 
             builder.Services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
@@ -41,16 +43,19 @@ namespace PhoneStoreManager
             if (builder.Configuration.GetConnectionString("Default") == null)
                 throw new Exception("ConnectionString for connect to database hasn't been defined! Please config them in appsettings.json");
 
-            using (var sqlDataContext = new DataContext(builder.Configuration.GetConnectionString("Default")))
+            using (var sqlDataContext = new DataContext(new DbContextOptionsBuilder<DataContext>().UseSqlServer(builder.Configuration.GetConnectionString("Default")).Options))
             {
                 sqlDataContext.Database.EnsureCreated();
+                sqlDataContext.Database.Migrate();
                 if (sqlDataContext.Users.Where(p => p.Username.ToLower() == "admin").FirstOrDefault() == null)
                 {
                     Debug.WriteLine("Default admin account is not exist! Creating one...");
+                    string pHash = Utils.RandomString(12);
                     sqlDataContext.Users.Add(new User()
                     {
                         Username = "admin",
-                        Password = "admin",
+                        PasswordHash = pHash,
+                        Password = Utils.EncryptSHA256(string.Format("{0}{1}", "admin", pHash)),
                         Name = "Administrator",
                         DateCreated = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
                         DateModified = DateTimeOffset.Now.ToUnixTimeMilliseconds(),

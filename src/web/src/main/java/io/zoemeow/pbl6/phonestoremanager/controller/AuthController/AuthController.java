@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,30 +20,32 @@ import jakarta.servlet.http.HttpServletResponse;
 public class AuthController extends BasicAPIRequestController {
     @GetMapping("/auth/login")
     public ModelAndView loginPage(
-            @CookieValue(name = "token", required = false) String token,
             HttpServletRequest request,
             HttpServletResponse response) {
         String uriRedirect = "";
 
         try {
-            if (token != null) {
-                Map<String, String> header = new HashMap<String, String>();
-                header.put("cookie", request.getHeader("cookie"));
+            Map<String, String> header = new HashMap<String, String>();
+            header.put("cookie", request.getHeader("cookie"));
 
-                RequestResult reqResult = getRequest("https://localhost:7053/api/account/my", null, header);
-                if (reqResult.getData() == null)
-                    throw new Exception("No data");
-
-                int code = reqResult.getData().get("code").getAsInt();
-                if (code == 200) {
-                    if (reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt() == 2)
-                        uriRedirect = "redirect:/admin/dashboard";
-                    else uriRedirect = "redirect:/auth/login";
-                } else {
-                    uriRedirect = "/auth/login";
-                }
-            } else {
-                uriRedirect = "/auth/login";
+            RequestResult reqResult = getRequest("https://localhost:7053/api/account/my", null, header);
+            if (!reqResult.getIsSuccessfulRequest()) {
+                // TODO: Check if not successful request here!
+            }
+            if (reqResult.getStatusCode() != 200) {
+                throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
+            }
+            switch (reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt()) {
+                case 2:
+                    uriRedirect = "redirect:/admin/dashboard";
+                    break;
+                case 1:
+                    // TODO: Return staff page here
+                    uriRedirect = "redirect:/admin/dashboard";
+                    break;
+                default:
+                    uriRedirect = "redirect:/";
+                    break;
             }
         } catch (Exception ex) {
             uriRedirect = "/auth/login";
@@ -55,8 +56,10 @@ public class AuthController extends BasicAPIRequestController {
     }
 
     @PostMapping("/auth/login")
-    public String loginPostRequest(HttpServletRequest request, HttpServletResponse response, String username,
+    public ModelAndView loginPostRequest(HttpServletRequest request, HttpServletResponse response, String username,
             String password) {
+        ModelAndView modelAndView;
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode auth = mapper.createObjectNode();
@@ -70,26 +73,40 @@ public class AuthController extends BasicAPIRequestController {
             RequestResult reqResult = postRequest("https://localhost:7053/api/auth/login", null,
                     header, mapper.writeValueAsString(auth));
 
-            if (reqResult.getData() == null)
-                throw new Exception("No data");
-
-            int code = reqResult.getData().get("code").getAsInt();
-            if (code != 200) {
-                throw new Exception(String.format("API was returned with code %d", code));
-            } else {
-                Cookie cookie = new Cookie("token", reqResult.getData().get("data").getAsJsonObject().get("token").getAsString());
-                cookie.setPath("/");
-                // 1-year
-                cookie.setMaxAge(365 * 24 * 60 * 60);
-                response.addCookie(cookie);
-
-                if (reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt() == 2)
-                    return "redirect:/admin";
-                else return "redirect:/auth/login";
+            if (!reqResult.getIsSuccessfulRequest()) {
+                throw new Exception("Cannot receive information from API. Please try again.");
             }
+            if (reqResult.getStatusCode() != 200) {
+                throw new Exception(reqResult.getMessage());
+            }
+
+            Cookie cookie = new Cookie("token",
+                    reqResult.getData().get("data").getAsJsonObject().get("token").getAsString());
+            cookie.setPath("/");
+            // 1-year
+            cookie.setMaxAge(365 * 24 * 60 * 60);
+            response.addCookie(cookie);
+
+            String urlRedirect;
+            switch (reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt()) {
+                case 2:
+                    urlRedirect = "redirect:/admin/dashboard";
+                    break;
+                case 1:
+                    // TODO: Return staff page here
+                    urlRedirect = "redirect:/admin/dashboard";
+                    break;
+                default:
+                    urlRedirect = "redirect:/";
+                    break;
+            }
+            modelAndView = new ModelAndView(urlRedirect);
         } catch (Exception ex) {
-            return "redirect:/auth/login";
+            modelAndView = new ModelAndView("/auth/login");
+            modelAndView.addObject("errMsg", ex.getMessage());
         }
+
+        return modelAndView;
     }
 
     @GetMapping("/auth/register")

@@ -1,5 +1,7 @@
 package io.zoemeow.pbl6.phonestoremanager.controller.AdminController;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Controller
 public class AdminProductsController extends BasicAPIRequestController {
     @GetMapping("/admin/products")
-    public ModelAndView index(
+    public ModelAndView pageProducts(
             HttpServletRequest request,
             HttpServletResponse response) {
         Map<String, String> header = new HashMap<String, String>();
@@ -25,13 +27,7 @@ public class AdminProductsController extends BasicAPIRequestController {
         try {
             ModelAndView view = new ModelAndView("/admin/products");
 
-            reqResult = getRequest("https://localhost:7053/api/account/my", null, header);
-            if (!reqResult.getIsSuccessfulRequest()) {
-                // TODO: Check if not successful request here!
-            }
-            if (reqResult.getStatusCode() != 200) {
-                throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
-            }
+            reqResult = getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             if (reqResult.getData() != null) {
                 view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
             } else {
@@ -39,7 +35,6 @@ public class AdminProductsController extends BasicAPIRequestController {
             }
 
             Map<String, String> parameters = new HashMap<String, String>();
-            parameters.put("includeHidden", "true");
             reqResult = getRequest("https://localhost:7053/api/products", parameters, header);
             if (!reqResult.getIsSuccessfulRequest()) {
                 // TODO: Check if not successful request here!
@@ -51,6 +46,86 @@ public class AdminProductsController extends BasicAPIRequestController {
                 view.addObject("productList", reqResult.getData().get("data").getAsJsonArray());
             } else {
                 view.addObject("productList", null);
+            }
+
+            return view;
+        } catch (Exception ex) {
+            ModelAndView view = new ModelAndView("redirect:/admin");
+            return view;
+        }
+    }
+
+    @GetMapping("/admin/products/categories")
+    public ModelAndView pageProductCategories(
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
+        RequestResult reqResult = null;
+        try {
+            ModelAndView view = new ModelAndView("/admin/productCategory");
+
+            reqResult = getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            if (reqResult.getData() != null) {
+                view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
+            } else {
+                view.addObject("name", "(Unknown)");
+            }
+
+            Map<String, String> parameters = new HashMap<String, String>();
+            parameters.put("type", "category");
+            reqResult = getRequest("https://localhost:7053/api/products", parameters, header);
+            if (!reqResult.getIsSuccessfulRequest()) {
+                // TODO: Check if not successful request here!
+            }
+            if (reqResult.getStatusCode() != 200) {
+                throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
+            }
+            if (reqResult.getData() != null) {
+                view.addObject("productCategoryList", reqResult.getData().get("data").getAsJsonArray());
+            } else {
+                view.addObject("productCategoryList", null);
+            }
+
+            return view;
+        } catch (Exception ex) {
+            ModelAndView view = new ModelAndView("redirect:/admin");
+            return view;
+        }
+    }
+
+    @GetMapping("/admin/products/manufacturers")
+    public ModelAndView pageProductManufacturers(
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
+        RequestResult reqResult = null;
+        try {
+            ModelAndView view = new ModelAndView("/admin/productManufacturer");
+
+            reqResult = getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            if (reqResult.getData() != null) {
+                view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
+            } else {
+                view.addObject("name", "(Unknown)");
+            }
+
+            Map<String, String> parameters = new HashMap<String, String>();
+            parameters.put("type", "manufacturer");
+            reqResult = getRequest("https://localhost:7053/api/products", parameters, header);
+            if (!reqResult.getIsSuccessfulRequest()) {
+                // TODO: Check if not successful request here!
+            }
+            if (reqResult.getStatusCode() != 200) {
+                throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
+            }
+            if (reqResult.getData() != null) {
+                view.addObject("productManufacturerList", reqResult.getData().get("data").getAsJsonArray());
+            } else {
+                view.addObject("productManufacturerList", null);
             }
 
             return view;

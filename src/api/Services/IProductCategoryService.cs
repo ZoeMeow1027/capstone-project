@@ -4,9 +4,9 @@ namespace PhoneStoreManager.Services
 {
     public interface IProductCategoryService
     {
-        List<ProductCategory> GetAllProductCategories();
+        List<ProductCategory> GetAllProductCategories(bool includeHidden);
 
-        List<ProductCategory> FindAllProductCategoriesByName(string name);
+        List<ProductCategory> FindAllProductCategoriesByName(string name, bool includeHidden);
 
         ProductCategory? GetProductCategoryById(int id);
 

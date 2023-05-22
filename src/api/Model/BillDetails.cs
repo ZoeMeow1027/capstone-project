@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhoneStoreManager.Model
 {
+    [Table("BillDetails")]
     public class BillDetails
     {
         public int ID { get; set; }

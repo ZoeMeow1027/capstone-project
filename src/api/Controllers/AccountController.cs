@@ -37,12 +37,12 @@ namespace PhoneStoreManager.Controllers
             catch (UnauthorizedAccessException uaEx)
             {
                 result.StatusCode = 401;
-                result.Message = string.Format("Unauthorized: {0}", uaEx.Message);
+                result.Message = uaEx.Message;
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = string.Format("Internal server error: {0}", ex.Message);
+                result.Message = ex.Message;
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());
@@ -71,12 +71,12 @@ namespace PhoneStoreManager.Controllers
             catch (UnauthorizedAccessException uaEx)
             {
                 result.StatusCode = 401;
-                result.Message = string.Format("Unauthorized: {0}", uaEx.Message);
+                result.Message = uaEx.Message;
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = string.Format("Internal server error: {0}", ex.Message);
+                result.Message = ex.Message;
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());

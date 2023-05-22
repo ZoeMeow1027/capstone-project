@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using PhoneStoreManager.Model;
 using PhoneStoreManager.Model.DTO;
+using PhoneStoreManager.Model.Enums;
 using PhoneStoreManager.Services;
 
 namespace PhoneStoreManager.Controllers
@@ -27,7 +28,7 @@ namespace PhoneStoreManager.Controllers
         }
 
         [HttpGet]
-        public ActionResult Get(string? type = null, int? id = null, string? nameQuery = null, bool includeHidden = false)
+        public ActionResult Get(string? type = null, int? id = null, string? query = null, bool includehidden = false)
         {
             ReturnResultTemplate result = new ReturnResultTemplate();
             result.StatusCode = 200;
@@ -40,24 +41,24 @@ namespace PhoneStoreManager.Controllers
                 switch (type.ToLower())
                 {
                     case "product":
-                        result.Data = nameQuery != null
-                            ? productService.FindAllProductsByName(nameQuery, includeHidden)
+                        result.Data = query != null
+                            ? productService.FindAllProductsByName(query, includehidden)
                             : id == null
-                                ? productService.GetAllProducts(includeHidden)
+                                ? productService.GetAllProducts(includehidden)
                                 : productService.GetProductById(id.Value);
                         break;
                     case "category":
-                        result.Data = nameQuery != null
-                            ? productCategoryService.FindAllProductCategoriesByName(nameQuery)
+                        result.Data = query != null
+                            ? productCategoryService.FindAllProductCategoriesByName(query, includehidden)
                             : id == null
-                                ? productCategoryService.GetAllProductCategories()
+                                ? productCategoryService.GetAllProductCategories(includehidden)
                                 : productCategoryService.GetProductCategoryById(id.Value);
                         break;
                     case "manufacturer":
-                        result.Data = nameQuery != null
-                            ? productManufacturerService.FindAllProductManufacturersByName(nameQuery)
+                        result.Data = query != null
+                            ? productManufacturerService.FindAllProductManufacturersByName(query, includehidden)
                             : id == null
-                                ? productManufacturerService.GetAllProductManufacturers()
+                                ? productManufacturerService.GetAllProductManufacturers(includehidden)
                                 : productManufacturerService.GetProductManufacturerById(id.Value);
                         break;
                     default:
@@ -67,12 +68,12 @@ namespace PhoneStoreManager.Controllers
             catch (BadHttpRequestException bhrEx)
             {
                 result.StatusCode = 400;
-                result.Message = string.Format("Bad Request: {0}", bhrEx.Message);
+                result.Message = bhrEx.Message;
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = string.Format("Internal server error: {0}", ex.Message);
+                result.Message = ex.Message;
             }
 
             return StatusCode(result.StatusCode, result.ToDynamicObject());
@@ -162,17 +163,17 @@ namespace PhoneStoreManager.Controllers
             catch (UnauthorizedAccessException uaEx)
             {
                 result.StatusCode = 403;
-                result.Message = string.Format("Fobbiden: {0}", uaEx.Message);
+                result.Message = uaEx.Message;
             }
             catch (BadHttpRequestException bhrEx)
             {
                 result.StatusCode = 400;
-                result.Message = string.Format("Bad Request: {0}", bhrEx.Message);
+                result.Message = bhrEx.Message;
             }
             catch (Exception ex)
             {
                 result.StatusCode = 500;
-                result.Message = string.Format("Internal server error: {0}", ex.Message);
+                result.Message = ex.Message;
             }
 
             return StatusCode(result.StatusCode, Content(result.ToDynamicObject(), "application/json"));

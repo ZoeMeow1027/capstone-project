@@ -1,4 +1,5 @@
 ﻿using PhoneStoreManager.Model;
+using PhoneStoreManager.Model.Enums;
 
 namespace PhoneStoreManager.Services
 {
@@ -14,6 +15,7 @@ namespace PhoneStoreManager.Services
         public void AddBill(BillSummary item)
         {
             _context.Add(item);
+            _context.SaveChanges();
         }
 
         public List<BillSummary> FindAllBillSummariesByUserId(int userId)

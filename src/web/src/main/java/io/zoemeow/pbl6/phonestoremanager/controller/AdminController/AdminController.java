@@ -1,5 +1,7 @@
 package io.zoemeow.pbl6.phonestoremanager.controller.AdminController;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import io.zoemeow.pbl6.phonestoremanager.controller.BasicAPIRequestController;
-import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,17 +24,10 @@ public class AdminController extends BasicAPIRequestController {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
-        RequestResult reqResult = null;
         try {
             ModelAndView view = new ModelAndView("redirect:/admin/dashboard");
 
-            reqResult = getRequest("https://localhost:7053/api/account/my", null, header);
-            if (!reqResult.getIsSuccessfulRequest()) {
-                // TODO: Check if not successful request here!
-            }
-            if (reqResult.getStatusCode() != 200) {
-                throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
-            }
+            getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
 
             return view;
         } catch (Exception ex) {

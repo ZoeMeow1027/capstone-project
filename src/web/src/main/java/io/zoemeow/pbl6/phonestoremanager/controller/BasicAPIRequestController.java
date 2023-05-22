@@ -3,6 +3,7 @@ package io.zoemeow.pbl6.phonestoremanager.controller;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -155,5 +156,21 @@ public class BasicAPIRequestController {
         }
 
         return httpClient;
+    }
+
+    public RequestResult getUserInformation(Map<String, String> header, ArrayList<Integer> allowedUserType) throws Exception {
+        RequestResult reqResult = getRequest("https://localhost:7053/api/account/my", null, header);
+        if (!reqResult.getIsSuccessfulRequest()) {
+            // TODO: Check if not successful request here!
+        } else if (reqResult.getStatusCode() != 200) {
+            throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
+        } else if (allowedUserType != null) {
+            if (!allowedUserType
+                    .contains(reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt())) {
+                throw new Exception("This user isn't have enough permission to do that!");
+            }
+        }
+
+        return reqResult;
     }
 }

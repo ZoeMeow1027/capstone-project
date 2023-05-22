@@ -1,8 +1,11 @@
 ﻿using Newtonsoft.Json;
+using PhoneStoreManager.Model.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhoneStoreManager.Model
 {
+    [Table("User")]
     public class User
     {
         [Key]
@@ -18,6 +21,10 @@ namespace PhoneStoreManager.Model
         [JsonIgnore]
         [JsonProperty("password")]
         public string Password { get; set; } = string.Empty;
+
+        [Required]
+        [JsonIgnore]
+        public string PasswordHash { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; } = string.Empty;
