@@ -20,7 +20,7 @@
         </div>
         <div th:unless="${condition == 'add'}">
             <h2>Edit user</h2>
-            <h4>Edit a user information</h4>
+            <h4 th:text="${'User ' + (user == null ? '' : user.get('username').isJsonNull() ? '' : user.get('username').getAsString()) + ' with ID ' + (user == null ? '' : user.get('id').isJsonNull() ? '' : user.get('id').getAsInt())}"></h4>
         </div>
         <hr />
         <div class="modal-body" id="dialog-addnew">

@@ -10,37 +10,32 @@
     <title>Login - Phone Store</title>
 </head>
 <body>
-    <div id="auth-img"></div>
-    <div class="container py-5 center-screen" style="width: 40%;">
-        <div class="row d-flex justify-content-center align-items-center">
-            <div class="col-xl-10">
-                <div id="auth-form" class="card text-black rounded-2">
-                    <div class="card-body p-md-5 mx-md-4">
-                        <form action="/auth/login" method="post">
-                            <h4 class="text-center mb-4">Login</h4>
-                            <div th:with="condition=${errMsg != null}" th:remove="tag">
-                                <div id="dialog-addnew-errline" class="text-left text-white bg-danger mb-3 p-2 rounded-1" th:if="${condition}" th:text="${errMsg}"></div>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="username" name="username" placeholder="Username">
-                                <label for="floatingInput">Username</label>
-                            </div>
-                            <div class="form-floating">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                                <label for="floatingPassword">Password</label>
-                            </div>
-                            <div class="text-center pt-1 mb-5 mt-3 pb-1">
-                                <button class="btn btn-outline-danger mb-3" type="result" style="width: 100px;">Login</button>
-                                <br />
-                                <a class="text-muted" href="#!">Forgot your password?</a>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-center pb-4">
-                                <p class="mb-0 me-2">Don't have an account?</p>
-                                <a href="/auth/register"><button type="button" class="btn btn-outline-danger">Create one</button></a>
-                            </div>
-                        </form>
+    <div id="auth-img">
+        <div id="auth-form" class="card text-black rounded-2">
+            <div class="card-body p-md-5 mx-md-4">
+                <form action="/auth/login" method="post">
+                    <h4 class="text-center mb-4">Login</h4>
+                    <div th:with="condition=${errMsg != null}" th:remove="tag">
+                        <div id="dialog-addnew-errline" class="text-left text-white bg-danger mb-3 p-2 rounded-1" th:if="${condition}" th:text="${errMsg}"></div>
                     </div>
-                </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                        <label for="floatingInput">Username</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                    <div class="text-center pt-1 mb-5 mt-3 pb-1">
+                        <button class="btn btn-outline-danger mb-3" type="result" style="width: 100px;">Login</button>
+                        <br />
+                        <a class="text-muted" href="#!">Forgot your password?</a>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center pb-4">
+                        <p class="mb-0 me-2">Don't have an account?</p>
+                        <a href="/auth/register"><button type="button" class="btn btn-outline-danger">Create one</button></a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
