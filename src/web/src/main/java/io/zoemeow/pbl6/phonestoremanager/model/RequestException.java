@@ -2,10 +2,10 @@ package io.zoemeow.pbl6.phonestoremanager.model;
 
 public class RequestException extends Exception {
     private String url;
-    private int statusCode;
+    private Integer statusCode;
     private String message;
 
-    public RequestException(String url, int statusCode, String message) {
+    public RequestException(String url, Integer statusCode, String message) {
         this.url = url;
         this.statusCode = statusCode;
         this.message = message;
@@ -16,10 +16,10 @@ public class RequestException extends Exception {
     public void setUrl(String url) {
         this.url = url;
     }
-    public int getStatusCode() {
+    public Integer getStatusCode() {
         return statusCode;
     }
-    public void setStatusCode(int statusCode) {
+    public void setStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
     }
     public String getMessage() {

@@ -9,13 +9,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import io.zoemeow.pbl6.phonestoremanager.controller.BasicAPIRequestController;
+import com.google.gson.JsonObject;
+
+import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-public class AdminDashboardController extends BasicAPIRequestController {
+public class AdminDashboardController {
+    AuthRepository _AuthRepository;
+
+    public AdminDashboardController() {
+        _AuthRepository = new AuthRepository();
+    }
+
     @GetMapping("/admin/dashboard")
     public ModelAndView index(
             HttpServletRequest request,
@@ -23,21 +32,20 @@ public class AdminDashboardController extends BasicAPIRequestController {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
-        RequestResult reqResult = null;
+        ModelAndView view = null;
         try {
-            ModelAndView view = new ModelAndView("/admin/dashboard");
-
-            reqResult = getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            view = new ModelAndView("/admin/dashboard");
+            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             if (reqResult.getData() != null) {
                 view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
             } else {
                 view.addObject("name", "(Unknown)");
             }
-
-            return view;
+        } catch (NoInternetException niEx) {
+            // TODO: No internet connection
         } catch (Exception ex) {
-            ModelAndView view = new ModelAndView("redirect:/admin");
-            return view;
+            view = new ModelAndView("redirect:/admin");
         }
+        return view;
     }
 }

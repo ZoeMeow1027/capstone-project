@@ -9,13 +9,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import io.zoemeow.pbl6.phonestoremanager.controller.BasicAPIRequestController;
+import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-public class AdminController extends BasicAPIRequestController {
+public class AdminController {
+    AuthRepository _AuthRepository;
+
+    public AdminController() {
+        _AuthRepository = new AuthRepository();
+    }
+
     @GetMapping("/admin")
     public ModelAndView index(
         HttpServletRequest request,
@@ -24,20 +31,20 @@ public class AdminController extends BasicAPIRequestController {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
+        ModelAndView view = null;
         try {
-            ModelAndView view = new ModelAndView("redirect:/admin/dashboard");
-
-            getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
-
-            return view;
+            view = new ModelAndView("redirect:/admin/dashboard");
+            _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+        } catch (NoInternetException niEx) {
+            // TODO: No internet connection
         } catch (Exception ex) {
             Cookie cookie = new Cookie("token", "");
             cookie.setPath("/");
             cookie.setMaxAge(0);
             response.addCookie(cookie);
 
-            ModelAndView view = new ModelAndView("redirect:/auth/login");
-            return view;
+            view = new ModelAndView("redirect:/auth/login");
         }
+        return view;
     }
 }

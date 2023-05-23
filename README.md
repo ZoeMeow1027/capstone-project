@@ -48,14 +48,14 @@
 ## Web
 
 - Start date: 2023/05/16
-- Updated: 2023/05/23
+- Updated: 2023/05/24
 
 ### Admin page (Start date: 2023/05/16)
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
-| Users                     | Manage user accounts.                                                 | 2023/05/23    | <ul><li>[x] View</li><li>[x] Add</li><li>[x] Update</li><li>[x] Disable/enable</li></ul> |
-| Products                  | Manage all imported products (include category and manufacturer).     | 2023/05/23    | <ul><li>[x] View</li><li>[ ] Add</li><li>[ ] Update</li><li>[ ] Hide/show/delete</li></ul> |
+| Users                     | Manage user accounts.                                                 | 2023/05/24    | <ul><li>[x] View</li><li>[x] Add</li><li>[x] Update</li><li>[x] Disable/enable</li></ul> |
+| Products                  | Manage all imported products (include category and manufacturer).     | 2023/05/24    | <ul><li>[x] View</li><li>[ ] Add</li><li>[ ] Update</li><li>[ ] Hide/show/delete</li></ul> |
 | Bills                     | Manage all bills created by user when done submitting information.    | ----/--/--    | <ul><li>[ ] View</li><li>[ ] Mark as purchased</li><li>[ ] Mark as delivered</li><li>[ ] Update status</li></ul> |
 | Warranties                | Manage all warranties.                                                | ----/--/--    | <ul><li>[ ] View</li><li>[ ] Add</li><li>[ ] Update</li><li>[ ] Mark as disabled</li></ul> |
 | Statistics/Dashboard      | View all store states.                                                | ----/--/--    | <ul><li>[ ] View</li><li>[ ] List by date</li></ul> |
