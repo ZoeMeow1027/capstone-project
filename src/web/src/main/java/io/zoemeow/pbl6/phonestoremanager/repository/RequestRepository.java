@@ -1,9 +1,8 @@
-package io.zoemeow.pbl6.phonestoremanager.controller;
+package io.zoemeow.pbl6.phonestoremanager.repository;
 
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -26,11 +25,11 @@ import com.google.gson.JsonParser;
 import io.zoemeow.pbl6.phonestoremanager.model.RequestException;
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
 
-public class BasicAPIRequestController {
-    private final Boolean ignoreSSL = true;
+public class RequestRepository {
+    private static final Boolean ignoreSSL = true;
 
-    public RequestResult getRequest(String uri, Map<String, String> parameters, Map<String, String> header) {
-        RequestResult result = new RequestResult();
+    public static RequestResult<JsonObject> getRequest(String uri, Map<String, String> parameters, Map<String, String> header) {
+        RequestResult<JsonObject> result = new RequestResult<JsonObject>();
 
         try {
             URIBuilder uriBuilder = new URIBuilder(uri);
@@ -64,7 +63,6 @@ public class BasicAPIRequestController {
                 JsonObject jObject = JsonParser.parseString(responseString).getAsJsonObject();
 
                 result.setData(jObject);
-
             } catch (Exception ex) {
                 result.setData(null);
             }
@@ -80,9 +78,9 @@ public class BasicAPIRequestController {
         return result;
     }
 
-    public RequestResult postRequest(String uri, Map<String, String> parameters,
+    public static RequestResult<JsonObject> postRequest(String uri, Map<String, String> parameters,
             Map<String, String> header, String jsonString) {
-        RequestResult result = new RequestResult();
+        RequestResult<JsonObject> result = new RequestResult<JsonObject>();
 
         try {
             URIBuilder uriBuilder = new URIBuilder(uri);
@@ -136,7 +134,7 @@ public class BasicAPIRequestController {
         return result;
     }
 
-    private CloseableHttpClient createHttpClient()
+    private static CloseableHttpClient createHttpClient()
             throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
         CloseableHttpClient httpClient = null;
 
@@ -156,21 +154,5 @@ public class BasicAPIRequestController {
         }
 
         return httpClient;
-    }
-
-    public RequestResult getUserInformation(Map<String, String> header, ArrayList<Integer> allowedUserType) throws Exception {
-        RequestResult reqResult = getRequest("https://localhost:7053/api/account/my", null, header);
-        if (!reqResult.getIsSuccessfulRequest()) {
-            // TODO: Check if not successful request here!
-        } else if (reqResult.getStatusCode() != 200) {
-            throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
-        } else if (allowedUserType != null) {
-            if (!allowedUserType
-                    .contains(reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt())) {
-                throw new Exception("This user isn't have enough permission to do that!");
-            }
-        }
-
-        return reqResult;
     }
 }

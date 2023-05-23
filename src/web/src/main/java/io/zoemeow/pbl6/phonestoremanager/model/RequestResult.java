@@ -1,16 +1,14 @@
 package io.zoemeow.pbl6.phonestoremanager.model;
 
-import com.google.gson.JsonObject;
-
-public class RequestResult {
-    private JsonObject data = null;
+public class RequestResult<T> {
+    private T data = null;
     private Integer statusCode = null;
     private Boolean isSuccessfulRequest = false;
     private String message = "";
 
     public RequestResult() {}
     
-    public RequestResult(Boolean isSuccessfulRequest, Integer statusCode, JsonObject data, String message) {
+    public RequestResult(Boolean isSuccessfulRequest, Integer statusCode, T data, String message) {
         this.data = data;
         this.statusCode = statusCode;
         this.isSuccessfulRequest = isSuccessfulRequest;
@@ -41,11 +39,11 @@ public class RequestResult {
         this.statusCode = statusCode;
     }
 
-    public JsonObject getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(JsonObject data) {
+    public void setData(T data) {
         this.data = data;
     }
 }

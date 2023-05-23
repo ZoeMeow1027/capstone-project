@@ -10,14 +10,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.zoemeow.pbl6.phonestoremanager.controller.BasicAPIRequestController;
+import com.google.gson.JsonObject;
+
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.repository.RequestRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-public class AuthController extends BasicAPIRequestController {
+public class AuthController extends RequestRepository {
     @GetMapping("/auth/login")
     public ModelAndView loginPage(
             HttpServletRequest request,
@@ -28,7 +30,7 @@ public class AuthController extends BasicAPIRequestController {
             Map<String, String> header = new HashMap<String, String>();
             header.put("cookie", request.getHeader("cookie"));
 
-            RequestResult reqResult = getRequest("https://localhost:7053/api/account/my", null, header);
+            RequestResult<JsonObject> reqResult = getRequest("https://localhost:7053/api/account/my", null, header);
             if (!reqResult.getIsSuccessfulRequest()) {
                 // TODO: Check if not successful request here!
             }
@@ -70,7 +72,7 @@ public class AuthController extends BasicAPIRequestController {
             header.put("content-type", "application/json; charset=UTF-8");
             header.put("cookie", request.getHeader("cookie"));
 
-            RequestResult reqResult = postRequest("https://localhost:7053/api/auth/login", null,
+            RequestResult<JsonObject> reqResult = postRequest("https://localhost:7053/api/auth/login", null,
                     header, mapper.writeValueAsString(auth));
 
             if (!reqResult.getIsSuccessfulRequest()) {
@@ -132,7 +134,6 @@ public class AuthController extends BasicAPIRequestController {
         }
 
         ModelAndView view = new ModelAndView("redirect:/auth/login");
-        // view.addObject(null, view);
         return view;
     }
 }

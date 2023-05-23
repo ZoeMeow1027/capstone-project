@@ -15,43 +15,52 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
-import io.zoemeow.pbl6.phonestoremanager.controller.BasicAPIRequestController;
+import com.google.gson.JsonObject;
+
+import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
 import io.zoemeow.pbl6.phonestoremanager.model.DTO.UserAddDTO;
 import io.zoemeow.pbl6.phonestoremanager.model.DTO.UserResetPassDTO;
 import io.zoemeow.pbl6.phonestoremanager.model.DTO.UserToggleEnableDTO;
+import io.zoemeow.pbl6.phonestoremanager.repository.AdminUserRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.RequestRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @Configuration
 @Import({ SimpleDateFormat.class })
-public class AdminUsersController extends BasicAPIRequestController {
+public class AdminUsersController extends RequestRepository {
+    AdminUserRepository _AdminUserRepository;
+    AuthRepository _AuthRepository;
+
+    public AdminUsersController() {
+        _AdminUserRepository = new AdminUserRepository();
+        _AuthRepository = new AuthRepository();
+    }
+
     @GetMapping("/admin/users")
-    public ModelAndView index(
+    public ModelAndView pageViewAllUsers(
             HttpServletRequest request,
             HttpServletResponse response) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
-        RequestResult reqResult = null;
+        ModelAndView view = null;
         try {
-            ModelAndView view = new ModelAndView("/admin/users");
+            view = new ModelAndView("/admin/users");
 
-            reqResult = getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
+                    new ArrayList<Integer>(Arrays.asList(2)));
             if (reqResult.getData() != null) {
                 view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
             } else {
                 view.addObject("name", "(Unknown)");
             }
 
-            Map<String, String> parameters = new HashMap<String, String>();
-            parameters.put("type", "user");
-            parameters.put("includedisabled", "true");
-            reqResult = getRequest("https://localhost:7053/api/users", parameters, header);
+            reqResult = _AdminUserRepository.getAllUsers(header, true);
             if (!reqResult.getIsSuccessfulRequest()) {
                 // TODO: Check if not successful request here!
             }
@@ -64,11 +73,12 @@ public class AdminUsersController extends BasicAPIRequestController {
                 view.addObject("userList", null);
             }
 
-            return view;
+        } catch (NoInternetException niEx) {
+            // TODO: No internet connection
         } catch (Exception ex) {
-            ModelAndView view = new ModelAndView("redirect:/admin");
-            return view;
+            view = new ModelAndView("redirect:/admin");
         }
+        return view;
     }
 
     @GetMapping("/admin/users/toggle")
@@ -81,28 +91,25 @@ public class AdminUsersController extends BasicAPIRequestController {
         header.put("content-type", "application/json; charset=UTF-8");
         header.put("cookie", request.getHeader("cookie"));
 
-        RequestResult reqResult = null;
+        ModelAndView view = null;
         try {
             if (enabled == null)
                 throw new Exception("Invalid 'enabled' value!");
             if (!(enabled == 0 || enabled == 1))
                 throw new Exception("Invalid 'enabled' value!");
 
-            ModelAndView view = new ModelAndView("/admin/userToggle");
+            view = new ModelAndView("/admin/userToggle");
             view.addObject("action", enabled == 0 ? "disable" : "enable");
 
-            reqResult = getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
+                    new ArrayList<Integer>(Arrays.asList(2)));
             if (reqResult.getData() != null) {
                 view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
             } else {
                 view.addObject("name", "(Unknown)");
             }
 
-            Map<String, String> parameters = new HashMap<String, String>();
-            parameters.put("type", "user");
-            parameters.put("includedisabled", "true");
-            parameters.put("id", id.toString());
-            reqResult = getRequest("https://localhost:7053/api/users", parameters, header);
+            reqResult = _AdminUserRepository.getUser(header, id);
             if (!reqResult.getIsSuccessfulRequest()) {
                 // TODO: Check if not successful request here!
             }
@@ -114,12 +121,12 @@ public class AdminUsersController extends BasicAPIRequestController {
             } else {
                 view.addObject("user", null);
             }
-
-            return view;
+        } catch (NoInternetException niEx) {
+            // TODO: No internet connection
         } catch (Exception ex) {
-            ModelAndView view = new ModelAndView("redirect:/admin");
-            return view;
+            view = new ModelAndView("redirect:/admin");
         }
+        return view;
     }
 
     @PostMapping("/admin/users/toggle")
@@ -128,25 +135,14 @@ public class AdminUsersController extends BasicAPIRequestController {
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody UserToggleEnableDTO userEnableDTO) {
-        RequestResult reqResult = null;
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
+        RequestResult<JsonObject> reqResult;
         try {
-            Map<String, String> header = new HashMap<String, String>();
-            header.put("content-type", "application/json; charset=UTF-8");
-            header.put("cookie", request.getHeader("cookie"));
-
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode userToggle = mapper.createObjectNode();
-            userToggle.put("id", userEnableDTO.getId());
-            ObjectNode bodyRoot = mapper.createObjectNode();
-            bodyRoot.put("type", "user");
-            bodyRoot.put("action", userEnableDTO.getEnabled().compareTo("1") == 0 ? "enable" : "disable");
-            bodyRoot.set("data", userToggle);
-
-            String putData = mapper.writeValueAsString(bodyRoot);
-            reqResult = postRequest("https://localhost:7053/api/users", null, header,
-                    putData);
+            reqResult = _AdminUserRepository.toggleUser(header, userEnableDTO);
         } catch (Exception ex) {
-            reqResult = new RequestResult(false, null, null, ex.getMessage());
+            reqResult = new RequestResult<JsonObject>(false, null, null, ex.getMessage());
         }
 
         return (new Gson().toJson(reqResult));
@@ -159,23 +155,24 @@ public class AdminUsersController extends BasicAPIRequestController {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
-        RequestResult reqResult = null;
+        ModelAndView view = null;
         try {
-            ModelAndView view = new ModelAndView("/admin/userAdd.html");
+            view = new ModelAndView("/admin/userAdd.html");
             view.addObject("action", "add");
 
-            reqResult = getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
+                    new ArrayList<Integer>(Arrays.asList(2)));
             if (reqResult.getData() != null) {
                 view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
             } else {
                 view.addObject("name", "(Unknown)");
             }
-
-            return view;
+        } catch (NoInternetException niEx) {
+            // TODO: No internet connection
         } catch (Exception ex) {
-            ModelAndView view = new ModelAndView("redirect:/admin");
-            return view;
+            view = new ModelAndView("redirect:/admin");
         }
+        return view;
     }
 
     @PostMapping("/admin/users/add")
@@ -184,34 +181,16 @@ public class AdminUsersController extends BasicAPIRequestController {
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody UserAddDTO userAddDTO) {
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
         try {
             userAddDTO.validate("add");
 
-            Map<String, String> header = new HashMap<String, String>();
-            header.put("content-type", "application/json; charset=UTF-8");
-            header.put("cookie", request.getHeader("cookie"));
-
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode userAdd = mapper.createObjectNode();
-            userAdd.put("username", userAddDTO.getUsername());
-            userAdd.put("password", userAddDTO.getPassword());
-            userAdd.put("name", userAddDTO.getName());
-            if (userAddDTO.getEmail() != null)
-                userAdd.put("email", userAddDTO.getEmail());
-            if (userAddDTO.getPhone() != null)
-                userAdd.put("phone", userAddDTO.getPhone());
-            userAdd.put("usertype", userAddDTO.getUsertype());
-            ObjectNode bodyRoot = mapper.createObjectNode();
-            bodyRoot.put("type", "user");
-            bodyRoot.put("action", "add");
-            bodyRoot.set("data", userAdd);
-
-            String putData = mapper.writeValueAsString(bodyRoot);
-            RequestResult reqResult = postRequest("https://localhost:7053/api/users", null, header,
-                    putData);
+            RequestResult<JsonObject> reqResult = _AdminUserRepository.addUser(header, userAddDTO);
             return (new Gson().toJson(reqResult));
         } catch (Exception ex) {
-            RequestResult reqResult = new RequestResult(false, null, null, ex.getMessage());
+            RequestResult<JsonObject> reqResult = new RequestResult<JsonObject>(false, null, null, ex.getMessage());
             return (new Gson().toJson(reqResult));
         }
     }
@@ -224,24 +203,21 @@ public class AdminUsersController extends BasicAPIRequestController {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
-        RequestResult reqResult = null;
+        ModelAndView view = null;
         try {
-            ModelAndView view = new ModelAndView("/admin/userAdd.html");
+            view = new ModelAndView("/admin/userAdd.html");
             view.addObject("action", "edit");
             view.addObject("id", id);
 
-            reqResult = getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
+                    new ArrayList<Integer>(Arrays.asList(2)));
             if (reqResult.getData() != null) {
                 view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
             } else {
                 view.addObject("name", "(Unknown)");
             }
 
-            Map<String, String> parameters = new HashMap<String, String>();
-            parameters.put("type", "user");
-            parameters.put("includedisabled", "true");
-            parameters.put("id", id.toString());
-            reqResult = getRequest("https://localhost:7053/api/users", parameters, header);
+            reqResult = _AdminUserRepository.getUser(header, id);
             if (!reqResult.getIsSuccessfulRequest()) {
                 // TODO: Check if not successful request here!
             }
@@ -253,12 +229,12 @@ public class AdminUsersController extends BasicAPIRequestController {
             } else {
                 view.addObject("user", null);
             }
-
-            return view;
+        } catch (NoInternetException niEx) {
+            // TODO: No internet connection
         } catch (Exception ex) {
-            ModelAndView view = new ModelAndView("redirect:/admin");
-            return view;
+            view = new ModelAndView("redirect:/admin");
         }
+        return view;
     }
 
     @PostMapping("/admin/users/update")
@@ -267,34 +243,16 @@ public class AdminUsersController extends BasicAPIRequestController {
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody UserAddDTO userAddDTO) {
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
         try {
             userAddDTO.validate("update");
 
-            Map<String, String> header = new HashMap<String, String>();
-            header.put("content-type", "application/json; charset=UTF-8");
-            header.put("cookie", request.getHeader("cookie"));
-
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode userAdd = mapper.createObjectNode();
-            userAdd.put("id", userAddDTO.getId());
-            userAdd.put("username", userAddDTO.getUsername());
-            userAdd.put("name", userAddDTO.getName());
-            if (userAddDTO.getEmail() != null)
-                userAdd.put("email", userAddDTO.getEmail());
-            if (userAddDTO.getPhone() != null)
-                userAdd.put("phone", userAddDTO.getPhone());
-            userAdd.put("usertype", userAddDTO.getUsertype());
-            ObjectNode bodyRoot = mapper.createObjectNode();
-            bodyRoot.put("type", "user");
-            bodyRoot.put("action", "update");
-            bodyRoot.set("data", userAdd);
-
-            String putData = mapper.writeValueAsString(bodyRoot);
-            RequestResult reqResult = postRequest("https://localhost:7053/api/users", null, header,
-                    putData);
+            RequestResult<JsonObject> reqResult = _AdminUserRepository.editUser(header, userAddDTO);
             return (new Gson().toJson(reqResult));
         } catch (Exception ex) {
-            RequestResult reqResult = new RequestResult(false, null, null, ex.getMessage());
+            RequestResult<JsonObject> reqResult = new RequestResult<JsonObject>(false, null, null, ex.getMessage());
             return (new Gson().toJson(reqResult));
         }
     }
@@ -307,23 +265,20 @@ public class AdminUsersController extends BasicAPIRequestController {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
-        RequestResult reqResult = null;
+        ModelAndView view = null;
         try {
-            ModelAndView view = new ModelAndView("/admin/userResetPassword.html");
+            view = new ModelAndView("/admin/userResetPassword.html");
             view.addObject("id", id);
 
-            reqResult = getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
+                    new ArrayList<Integer>(Arrays.asList(2)));
             if (reqResult.getData() != null) {
                 view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
             } else {
                 view.addObject("name", "(Unknown)");
             }
 
-            Map<String, String> parameters = new HashMap<String, String>();
-            parameters.put("type", "user");
-            parameters.put("includedisabled", "true");
-            parameters.put("id", id.toString());
-            reqResult = getRequest("https://localhost:7053/api/users", parameters, header);
+            reqResult = _AdminUserRepository.getUser(header, id);
             if (!reqResult.getIsSuccessfulRequest()) {
                 // TODO: Check if not successful request here!
             }
@@ -335,12 +290,12 @@ public class AdminUsersController extends BasicAPIRequestController {
             } else {
                 view.addObject("user", null);
             }
-
-            return view;
+        } catch (NoInternetException niEx) {
+            // TODO: No internet connection
         } catch (Exception ex) {
-            ModelAndView view = new ModelAndView("redirect:/admin");
-            return view;
+            view = new ModelAndView("redirect:/admin");
         }
+        return view;
     }
 
     @PostMapping("/admin/users/resetpassword")
@@ -349,28 +304,16 @@ public class AdminUsersController extends BasicAPIRequestController {
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody UserResetPassDTO userResetPassDTO) {
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
         try {
             userResetPassDTO.validate();
 
-            Map<String, String> header = new HashMap<String, String>();
-            header.put("content-type", "application/json; charset=UTF-8");
-            header.put("cookie", request.getHeader("cookie"));
-
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode userResetPass = mapper.createObjectNode();
-            userResetPass.put("id", userResetPassDTO.getId());
-            userResetPass.put("password", userResetPassDTO.getPassword());
-            ObjectNode bodyRoot = mapper.createObjectNode();
-            bodyRoot.put("type", "user");
-            bodyRoot.put("action", "changepassword");
-            bodyRoot.set("data", userResetPass);
-
-            String putData = mapper.writeValueAsString(bodyRoot);
-            RequestResult reqResult = postRequest("https://localhost:7053/api/users", null, header,
-                    putData);
+            RequestResult<JsonObject> reqResult = _AdminUserRepository.resetPassword(header, userResetPassDTO);
             return (new Gson().toJson(reqResult));
         } catch (Exception ex) {
-            RequestResult reqResult = new RequestResult(false, null, null, ex.getMessage());
+            RequestResult<JsonObject> reqResult = new RequestResult<JsonObject>(false, null, null, ex.getMessage());
             return (new Gson().toJson(reqResult));
         }
     }
