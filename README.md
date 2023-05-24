@@ -1,17 +1,18 @@
 # Capstone Project
 
-- Everything about final project in DUT.
+- Everything about my final project in DUT.
+- Project name: **Phone store manager**.
 
 # Used technologies
 
 - Database: Microsoft SQL Server Local Database
-- API: ASP.NET based on .NET Core 6
-- Web: Spring Boot
+- API: ASP.NET (based on .NET 6)
+- Web: Spring Boot (Java)
 
 # Used tools
 
 - IDE: Visual Studio 2022 (API) & Visual Studio Code (Text editor - Web)
-- SQL Management: Azure Data Studio
+- SQL management: Azure Data Studio
 
 # Roadmap
 
@@ -59,7 +60,3 @@
 | Bills                     | Manage all bills created by user when done submitting information.    | ----/--/--    | <ul><li>[ ] View</li><li>[ ] Mark as purchased</li><li>[ ] Mark as delivered</li><li>[ ] Update status</li></ul> |
 | Warranties                | Manage all warranties.                                                | ----/--/--    | <ul><li>[ ] View</li><li>[ ] Add</li><li>[ ] Update</li><li>[ ] Mark as disabled</li></ul> |
 | Statistics/Dashboard      | View all store states.                                                | ----/--/--    | <ul><li>[ ] View</li><li>[ ] List by date</li></ul> |
-
-## Mobile (optional)
-
-- Currently not started.
