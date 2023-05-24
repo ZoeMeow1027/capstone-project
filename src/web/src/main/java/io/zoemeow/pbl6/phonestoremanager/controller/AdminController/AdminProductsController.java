@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.JsonObject;
@@ -49,7 +50,7 @@ public class AdminProductsController {
 
             reqResult = _AdminProductRepository.getAllProducts(header, false);
             if (!reqResult.getIsSuccessfulRequest()) {
-                // TODO: Check if not successful request here!
+                throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
             }
             if (reqResult.getStatusCode() != 200) {
                 throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
@@ -88,7 +89,7 @@ public class AdminProductsController {
 
             reqResult = _AdminProductRepository.getAllProductCategories(header, false);
             if (!reqResult.getIsSuccessfulRequest()) {
-                // TODO: Check if not successful request here!
+                throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
             }
             if (reqResult.getStatusCode() != 200) {
                 throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
@@ -127,7 +128,7 @@ public class AdminProductsController {
 
             reqResult = _AdminProductRepository.getAllProductManufacturers(header, false);
             if (!reqResult.getIsSuccessfulRequest()) {
-                // TODO: Check if not successful request here!
+                throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
             }
             if (reqResult.getStatusCode() != 200) {
                 throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
@@ -144,4 +145,64 @@ public class AdminProductsController {
         }
         return view;
     }
+
+    @GetMapping("/admin/products/add")
+    public ModelAndView pageAddProduct(
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
+        ModelAndView view = null;
+        try {
+            view = new ModelAndView("/admin/productAdd");
+            view.addObject("action", "add");
+
+            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
+                    new ArrayList<Integer>(Arrays.asList(2)));
+            if (reqResult.getData() != null) {
+                view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
+            } else {
+                view.addObject("name", "(Unknown)");
+            }
+
+            reqResult = _AdminProductRepository.getAllProductCategories(header, false);
+            if (!reqResult.getIsSuccessfulRequest()) {
+                throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
+            }
+            if (reqResult.getStatusCode() != 200) {
+                throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
+            }
+            if (reqResult.getData() != null) {
+                view.addObject("productCategoryList", reqResult.getData().get("data").getAsJsonArray());
+            } else {
+                view.addObject("productCategoryList", null);
+            }
+
+            reqResult = _AdminProductRepository.getAllProductManufacturers(header, false);
+            if (!reqResult.getIsSuccessfulRequest()) {
+                throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
+            }
+            if (reqResult.getStatusCode() != 200) {
+                throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
+            }
+            if (reqResult.getData() != null) {
+                view.addObject("productManufacturerList", reqResult.getData().get("data").getAsJsonArray());
+            } else {
+                view.addObject("productManufacturerList", null);
+            }
+        } catch (NoInternetException niEx) {
+            // TODO: No internet connection
+        } catch (Exception ex) {
+            view = new ModelAndView("redirect:/admin");
+        }
+        return view;
+    }
+
+    // @PostMapping("/admin/products/add")
+    // public ModelAndView actionAddProduct(
+    //         HttpServletRequest request,
+    //         HttpServletResponse response) {
+        
+    // }
 }

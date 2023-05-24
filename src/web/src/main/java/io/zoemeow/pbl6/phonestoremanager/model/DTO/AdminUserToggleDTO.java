@@ -1,6 +1,6 @@
 package io.zoemeow.pbl6.phonestoremanager.model.DTO;
 
-public class UserToggleEnableDTO {
+public class AdminUserToggleDTO {
     private String enabled;
     private String id;
     public String getEnabled() {

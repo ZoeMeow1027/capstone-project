@@ -2,7 +2,7 @@ package io.zoemeow.pbl6.phonestoremanager.model.DTO;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UserResetPassDTO {
+public class AdminUserResetPassDTO {
     private String id;
     
     @SerializedName("newpassword")

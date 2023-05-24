@@ -20,9 +20,9 @@ import com.google.gson.JsonObject;
 
 import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
-import io.zoemeow.pbl6.phonestoremanager.model.DTO.UserAddDTO;
-import io.zoemeow.pbl6.phonestoremanager.model.DTO.UserResetPassDTO;
-import io.zoemeow.pbl6.phonestoremanager.model.DTO.UserToggleEnableDTO;
+import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserAddDTO;
+import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserResetPassDTO;
+import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserToggleDTO;
 import io.zoemeow.pbl6.phonestoremanager.repository.AdminUserRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.RequestRepository;
@@ -134,7 +134,7 @@ public class AdminUsersController extends RequestRepository {
     public Object actionToggleUser(
             HttpServletRequest request,
             HttpServletResponse response,
-            @RequestBody UserToggleEnableDTO userEnableDTO) {
+            @RequestBody AdminUserToggleDTO userEnableDTO) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
@@ -180,7 +180,7 @@ public class AdminUsersController extends RequestRepository {
     public Object actionAddUser(
             HttpServletRequest request,
             HttpServletResponse response,
-            @RequestBody UserAddDTO userAddDTO) {
+            @RequestBody AdminUserAddDTO userAddDTO) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
@@ -242,7 +242,7 @@ public class AdminUsersController extends RequestRepository {
     public Object actionEditUser(
             HttpServletRequest request,
             HttpServletResponse response,
-            @RequestBody UserAddDTO userAddDTO) {
+            @RequestBody AdminUserAddDTO userAddDTO) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
@@ -303,7 +303,7 @@ public class AdminUsersController extends RequestRepository {
     public Object actionResetPassword(
             HttpServletRequest request,
             HttpServletResponse response,
-            @RequestBody UserResetPassDTO userResetPassDTO) {
+            @RequestBody AdminUserResetPassDTO userResetPassDTO) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 

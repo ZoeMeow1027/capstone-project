@@ -9,9 +9,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
 
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
-import io.zoemeow.pbl6.phonestoremanager.model.DTO.UserAddDTO;
-import io.zoemeow.pbl6.phonestoremanager.model.DTO.UserResetPassDTO;
-import io.zoemeow.pbl6.phonestoremanager.model.DTO.UserToggleEnableDTO;
+import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserAddDTO;
+import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserResetPassDTO;
+import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserToggleDTO;
 
 public class AdminUserRepository extends RequestRepository {
     public RequestResult<JsonObject> getAllUsers(Map<String, String> header, Boolean includeHidden) {
@@ -29,7 +29,7 @@ public class AdminUserRepository extends RequestRepository {
         return getRequest("https://localhost:7053/api/users", parameters, header);
     }
 
-    public RequestResult<JsonObject> toggleUser(Map<String, String> header, UserToggleEnableDTO userToggleDTO) throws JsonProcessingException {
+    public RequestResult<JsonObject> toggleUser(Map<String, String> header, AdminUserToggleDTO userToggleDTO) throws JsonProcessingException {
         header.put("content-type", "application/json; charset=UTF-8");
 
         ObjectMapper mapper = new ObjectMapper();
@@ -44,7 +44,7 @@ public class AdminUserRepository extends RequestRepository {
         return postRequest("https://localhost:7053/api/users", null, header, postData);
     }
 
-    public RequestResult<JsonObject> resetPassword(Map<String, String> header, UserResetPassDTO userResetPassDTO) throws JsonProcessingException {
+    public RequestResult<JsonObject> resetPassword(Map<String, String> header, AdminUserResetPassDTO userResetPassDTO) throws JsonProcessingException {
         header.put("content-type", "application/json; charset=UTF-8");
 
         ObjectMapper mapper = new ObjectMapper();
@@ -60,7 +60,7 @@ public class AdminUserRepository extends RequestRepository {
         return postRequest("https://localhost:7053/api/users", null, header, postData);
     }
 
-    public RequestResult<JsonObject> addUser(Map<String, String> header, UserAddDTO userAddDTO)
+    public RequestResult<JsonObject> addUser(Map<String, String> header, AdminUserAddDTO userAddDTO)
             throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode userAdd = mapper.createObjectNode();
@@ -82,7 +82,7 @@ public class AdminUserRepository extends RequestRepository {
                 postData);
     }
 
-    public RequestResult<JsonObject> editUser(Map<String, String> header, UserAddDTO userEditDTO) throws JsonProcessingException {
+    public RequestResult<JsonObject> editUser(Map<String, String> header, AdminUserAddDTO userEditDTO) throws JsonProcessingException {
         header.put("content-type", "application/json; charset=UTF-8");
 
         ObjectMapper mapper = new ObjectMapper();
