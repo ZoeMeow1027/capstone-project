@@ -2,7 +2,7 @@ package io.zoemeow.pbl6.phonestoremanager.model.DTO;
 
 import java.util.Arrays;
 
-public class UserAddDTO {
+public class AdminUserAddDTO {
     private Integer id;
     private String type;
     private String username;

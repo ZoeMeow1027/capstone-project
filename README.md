@@ -20,6 +20,7 @@
 
 - Start date: 2023/04/18
 - Updated: 2023/05/20
+- Progress: ![https://progress-bar.dev/80/?scale=100&width=120](https://progress-bar.dev/80/?scale=100&width=120)
 
 ### Services (Start date: 2023/04/18)
 
@@ -50,6 +51,7 @@
 
 - Start date: 2023/05/16
 - Updated: 2023/05/24
+- Progress: ![https://progress-bar.dev/30/?scale=100&width=120](https://progress-bar.dev/30/?scale=100&width=120)
 
 ### Admin page (Start date: 2023/05/16)
 
