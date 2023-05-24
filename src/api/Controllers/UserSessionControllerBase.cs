@@ -47,5 +47,10 @@ namespace PhoneStoreManager.Controllers
         {
             _userSessionService.DeleteSessionByToken(token);
         }
+
+        public void DeleteAllSessionByUserID(int id)
+        {
+            _userSessionService.LogOutAllByUserID(id);
+        }
     }
 }

@@ -319,6 +319,8 @@ namespace PhoneStoreManager.Controllers
                     userService.EnableUser(dataTemp);
                     break;
                 case false:
+                    // If disable, will logout all user sessions.
+                    DeleteAllSessionByUserID(dataTemp.ID);
                     userService.DisableUser(dataTemp);
                     break;
             }
