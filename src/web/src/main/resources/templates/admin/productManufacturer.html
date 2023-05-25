@@ -28,8 +28,8 @@
                 </thead>
                 <tbody>
                     <tr th:each="item: ${productManufacturerList}">
-                        <td class="text-center" th:text="${item.get('id').getAsInt()}"></td>
-                        <td class="text-center" th:text="${item.get('name').getAsString()}"></td>
+                        <td class="text-center" th:text="${item.getId()}"></td>
+                        <td class="text-center" th:text="${item.getName()}"></td>
                         <td class="text-center">
                             <a href="#"><button type="button" class="btn btn-primary">Update</button></a>
                             <a href="#"><button type="button" class="btn btn-danger">Delete</button></a>

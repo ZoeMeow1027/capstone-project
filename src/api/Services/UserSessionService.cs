@@ -58,10 +58,6 @@ namespace PhoneStoreManager.Services
             {
                 _context.UserSessions.Remove(data);
                 int _rowAffected = _context.SaveChanges();
-                if (_rowAffected != 1)
-                {
-                    throw new Exception(string.Format("Affected rows: {0}!", _rowAffected));
-                }
             }
             else throw new Exception("Token is not exist!");
         }
@@ -118,10 +114,6 @@ namespace PhoneStoreManager.Services
             var data = _context.UserSessions.Where(p => p.User.ID == userId).ToList();
             _context.UserSessions.RemoveRange(data);
             int _rowAffected = _context.SaveChanges();
-            if (_rowAffected != 1)
-            {
-                throw new Exception(string.Format("Affected rows: {0}!", _rowAffected));
-            }
         }
     }
 }

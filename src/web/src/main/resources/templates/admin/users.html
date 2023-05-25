@@ -35,31 +35,34 @@
                 </thead>
                 <tbody>
                     <tr th:each="item: ${userList}">
-                        <td class="text-center" th:text="${item.get('id').getAsInt()}"></td>
-                        <td class="text-center" th:text="${item.get('username').getAsString()}"></td>
-                        <td class="text-center" th:text="${item.get('name').getAsString()}"></td>
-                        <td class="text-center" th:text="${!item.get('email').isJsonNull() ? item.get('email').getAsString() : ''}"></td>
-                        <td class="text-center" th:text="${!item.get('phone').isJsonNull() ? item.get('phone').getAsString() : ''}"></td>
+                        <td class="text-center" th:text="${item.getId()}"></td>
+                        <td class="text-center" th:text="${item.getUsername()}"></td>
+                        <td class="text-center" th:text="${item.getName()}"></td>
+                        <td class="text-center" th:text="${item.getEmail()}"></td>
+                        <td class="text-center" th:text="${item.getPhone()}"></td>
+                        <div th:with="conidtion=${item.getUserType()}" th:remove="tag">
+                            <td class="text-center" th:if="${item.getUserType() == 2}">Administrator</td>
+                            <td class="text-center" th:if="${item.getUserType() == 1}">Staff</td>
+                            <td class="text-center" th:if="${item.getUserType() == 0}">User</td>    
+                        </div>
                         <td class="text-center"
-                            th:text="${item.get('usertype').getAsInt() == 2 ? 'Administrator' : item.get('usertype').getAsInt() == 1 ? 'Staff' : 'User'}">
+                            th:text="${#calendars.format(new java.util.Date(item.getDateCreated()), 'dd/MM/yyyy HH:mm:ss')}">
                         </td>
                         <td class="text-center"
-                            th:text="${#calendars.format(new java.util.Date(item.get('datecreated').getAsLong()), 'dd/MM/yyyy HH:mm:ss')}"></td>
-                        <td class="text-center"
-                            th:text="${#calendars.format(new java.util.Date(item.get('datemodified').getAsLong()), 'dd/MM/yyyy HH:mm:ss')}">
+                            th:text="${#calendars.format(new java.util.Date(item.getDateModified()), 'dd/MM/yyyy HH:mm:ss')}">
                         </td>
-                        <div th:with="condition=${item.get('isenabled').getAsBoolean()}" th:remove="tag">
+                        <div th:with="condition=${item.getIsEnabled()}" th:remove="tag">
                             <td class="text-center" th:if="${condition}" th:text="Yes"></td>
                             <td class="text-center" th:unless="${condition}" th:text="No"></td>
                         </div>
                         
                         <td class="text-center">
-                            <a th:href="${'/admin/users/update?id=' + item.get('id').getAsInt()}"><button type="button" class="btn btn-primary">Update</button></a>
-                            <div th:with="condition=${item.get('isenabled').getAsBoolean()}" th:remove="tag">
-                                <a th:if="${condition}" th:href="${'/admin/users/toggle?enabled=0&id=' + item.get('id').getAsInt()}">
+                            <a th:href="${'/admin/users/update?id=' + item.getId()}"><button type="button" class="btn btn-primary">Update</button></a>
+                            <div th:with="condition=${item.getIsEnabled()}" th:remove="tag">
+                                <a th:if="${condition}" th:href="${'/admin/users/toggle?enabled=0&id=' + item.getId()}">
                                     <button type="button" class="btn btn-danger">Disable</button>
                                 </a>
-                                <a th:unless="${condition}" th:href="${'/admin/users/toggle?enabled=1&id=' + item.get('id').getAsInt()}">
+                                <a th:unless="${condition}" th:href="${'/admin/users/toggle?enabled=1&id=' + item.getId()}">
                                     <button type="button" class="btn btn-success">Enable</button>
                                 </a>
                             </div>

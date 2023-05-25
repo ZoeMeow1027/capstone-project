@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Configuration;
@@ -17,9 +18,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.model.User;
 import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserAddDTO;
 import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserResetPassDTO;
 import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserToggleDTO;
@@ -68,11 +71,16 @@ public class AdminUsersController extends RequestRepository {
                 throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
             }
             if (reqResult.getData() != null) {
-                view.addObject("userList", reqResult.getData().get("data").getAsJsonArray());
+                view.addObject(
+                    "userList",
+                    new Gson().fromJson(
+                        reqResult.getData().get("data").getAsJsonArray(),
+                        (new TypeToken<List<User>>() {}).getType()
+                    )
+                );
             } else {
                 view.addObject("userList", null);
             }
-
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {
@@ -117,7 +125,13 @@ public class AdminUsersController extends RequestRepository {
                 throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
             }
             if (reqResult.getData() != null) {
-                view.addObject("user", reqResult.getData().get("data").getAsJsonObject());
+                view.addObject(
+                    "user",
+                    new Gson().fromJson(
+                        reqResult.getData().get("data").getAsJsonObject(),
+                        (new TypeToken<User>() {}).getType()
+                    )
+                );
             } else {
                 view.addObject("user", null);
             }
@@ -225,7 +239,13 @@ public class AdminUsersController extends RequestRepository {
                 throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
             }
             if (reqResult.getData() != null) {
-                view.addObject("user", reqResult.getData().get("data").getAsJsonObject());
+                view.addObject(
+                    "user",
+                    new Gson().fromJson(
+                        reqResult.getData().get("data").getAsJsonObject(),
+                        (new TypeToken<User>() {}).getType()
+                    )
+                );
             } else {
                 view.addObject("user", null);
             }
@@ -286,7 +306,13 @@ public class AdminUsersController extends RequestRepository {
                 throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
             }
             if (reqResult.getData() != null) {
-                view.addObject("user", reqResult.getData().get("data").getAsJsonObject());
+                view.addObject(
+                    "user",
+                    new Gson().fromJson(
+                        reqResult.getData().get("data").getAsJsonObject(),
+                        (new TypeToken<User>() {}).getType()
+                    )
+                );
             } else {
                 view.addObject("user", null);
             }

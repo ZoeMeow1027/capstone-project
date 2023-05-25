@@ -3,17 +3,25 @@ package io.zoemeow.pbl6.phonestoremanager.controller.AdminController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.model.Product;
+import io.zoemeow.pbl6.phonestoremanager.model.ProductCategory;
+import io.zoemeow.pbl6.phonestoremanager.model.ProductManufacturer;
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminProductAddDTO;
 import io.zoemeow.pbl6.phonestoremanager.repository.AdminProductRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +40,9 @@ public class AdminProductsController {
     @GetMapping("/admin/products")
     public ModelAndView pageProducts(
             HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            String query,
+            Boolean includehidden) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
@@ -48,7 +58,7 @@ public class AdminProductsController {
                 view.addObject("name", "(Unknown)");
             }
 
-            reqResult = _AdminProductRepository.getAllProducts(header, false);
+            reqResult = _AdminProductRepository.getProducts(header, query, includehidden == null ? false : includehidden);
             if (!reqResult.getIsSuccessfulRequest()) {
                 throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
             }
@@ -56,7 +66,13 @@ public class AdminProductsController {
                 throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
             }
             if (reqResult.getData() != null) {
-                view.addObject("productList", reqResult.getData().get("data").getAsJsonArray());
+                view.addObject(
+                    "productList",
+                    new Gson().fromJson(
+                        reqResult.getData().get("data").getAsJsonArray(),
+                        (new TypeToken<List<Product>>() {}).getType()
+                    )
+                );
             } else {
                 view.addObject("productList", null);
             }
@@ -71,7 +87,9 @@ public class AdminProductsController {
     @GetMapping("/admin/products/categories")
     public ModelAndView pageProductCategories(
             HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            String query,
+            Boolean includehidden) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
@@ -87,7 +105,7 @@ public class AdminProductsController {
                 view.addObject("name", "(Unknown)");
             }
 
-            reqResult = _AdminProductRepository.getAllProductCategories(header, false);
+            reqResult = _AdminProductRepository.getProductCategories(header, query, includehidden == null ? false : includehidden);
             if (!reqResult.getIsSuccessfulRequest()) {
                 throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
             }
@@ -95,7 +113,13 @@ public class AdminProductsController {
                 throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
             }
             if (reqResult.getData() != null) {
-                view.addObject("productCategoryList", reqResult.getData().get("data").getAsJsonArray());
+                view.addObject(
+                    "productCategoryList",
+                    new Gson().fromJson(
+                        reqResult.getData().get("data").getAsJsonArray(),
+                        (new TypeToken<List<ProductCategory>>() {}).getType()
+                    )
+                );
             } else {
                 view.addObject("productCategoryList", null);
             }
@@ -110,7 +134,9 @@ public class AdminProductsController {
     @GetMapping("/admin/products/manufacturers")
     public ModelAndView pageProductManufacturers(
             HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            String query,
+            Boolean includehidden) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
@@ -126,7 +152,7 @@ public class AdminProductsController {
                 view.addObject("name", "(Unknown)");
             }
 
-            reqResult = _AdminProductRepository.getAllProductManufacturers(header, false);
+            reqResult = _AdminProductRepository.getProductManufacturers(header, query, includehidden == null ? false : includehidden);
             if (!reqResult.getIsSuccessfulRequest()) {
                 throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
             }
@@ -134,7 +160,13 @@ public class AdminProductsController {
                 throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
             }
             if (reqResult.getData() != null) {
-                view.addObject("productManufacturerList", reqResult.getData().get("data").getAsJsonArray());
+                view.addObject(
+                    "productManufacturerList",
+                    new Gson().fromJson(
+                        reqResult.getData().get("data").getAsJsonArray(),
+                        (new TypeToken<List<ProductManufacturer>>() {}).getType()
+                    )
+                );
             } else {
                 view.addObject("productManufacturerList", null);
             }
@@ -166,7 +198,7 @@ public class AdminProductsController {
                 view.addObject("name", "(Unknown)");
             }
 
-            reqResult = _AdminProductRepository.getAllProductCategories(header, false);
+            reqResult = _AdminProductRepository.getProductCategories(header, null, false);
             if (!reqResult.getIsSuccessfulRequest()) {
                 throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
             }
@@ -179,7 +211,7 @@ public class AdminProductsController {
                 view.addObject("productCategoryList", null);
             }
 
-            reqResult = _AdminProductRepository.getAllProductManufacturers(header, false);
+            reqResult = _AdminProductRepository.getProductManufacturers(header, null, false);
             if (!reqResult.getIsSuccessfulRequest()) {
                 throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
             }
@@ -199,10 +231,11 @@ public class AdminProductsController {
         return view;
     }
 
-    // @PostMapping("/admin/products/add")
-    // public ModelAndView actionAddProduct(
-    //         HttpServletRequest request,
-    //         HttpServletResponse response) {
-        
-    // }
+    @PostMapping("/admin/products/add")
+    public ModelAndView actionAddProduct(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestBody AdminProductAddDTO productDTO) {
+        return new ModelAndView("redirect:/admin/products/add");
+    }
 }
