@@ -18,7 +18,7 @@
         <div class="w-100 pb-2 d-flex justify-content-end">
             <a href="/admin/products/manufacturers" class="ps-2"><button type="button" class="btn btn-primary">Show all Product Manufacturers</button></a>
             <a href="/admin/products/categories" class="ps-2"><button type="button" class="btn btn-primary">Show all Product Categories</button></a>
-            <a href="#" class="ps-2"><button type="button" class="btn btn-success">Create new</button></a>
+            <a href="/admin/products/add" class="ps-2"><button type="button" class="btn btn-success">Create new</button></a>
         </div>
         <div class="table-responsive">
             <table class="table table-hover table-bordered border-primary">
@@ -30,7 +30,7 @@
                     <th class="text-center">Manufacturer</th>
                     <th class="text-center">Intentory Count</th>
                     <th class="text-center">Unit</th>
-                    <th class="text-center">Warranty (by Month)</th>
+                    <th class="text-center">Warranty</th>
                     <th class="text-center">Price</th>
                     <th class="text-center">Date Created</th>
                     <th class="text-center">Date Modified</th>
@@ -39,21 +39,21 @@
                 </thead>
                 <tbody>
                     <tr th:each="item: ${productList}">
-                        <td class="text-center" th:text="${item.get('id').getAsInt()}"></td>
-                        <td class="text-center" th:text="${item.get('name').getAsString()}"></td>
+                        <td class="text-center" th:text="${item.getId()}"></td>
+                        <td class="text-center" th:text="${item.getName()}"></td>
                         <div th:with="condition=${1 == 2}" th:remove="tag">
                             <td class="text-center" th:if="${condition}" th:text="${'...'}"></td>
                             <td class="text-center" th:unless="${condition}" th:text="${'(no image)'}"></td>
                         </div>
-                        <td class="text-center" th:text="${item.get('category').getAsJsonObject().get('name').getAsString()}"></td>
-                        <td class="text-center" th:text="${item.get('manufacturer').getAsJsonObject().get('name').getAsString()}"></td>
-                        <td class="text-center" th:text="${item.get('inventorycount').getAsInt()}"></td>
-                        <td class="text-center" th:text="${item.get('unit').getAsString()}"></td>
-                        <td class="text-center" th:text="${item.get('warrantymonth').getAsInt()}"></td>
-                        <td class="text-center" th:text="${item.get('price').getAsLong()}"></td>
-                        <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.get('datecreated').getAsLong()), 'dd/MM/yyyy HH:mm:ss')}"></td>
-                        <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.get('datemodified').getAsLong()), 'dd/MM/yyyy HH:mm:ss')}"></td>
-                        <td class="text-center" th:text="${item.get('showinpage').getAsBoolean() ? 'Yes' : 'No'}"></td>
+                        <td class="text-center" th:text="${item.getCategory().getName()}"></td>
+                        <td class="text-center" th:text="${item.getManufacturer().getName()}"></td>
+                        <td class="text-center" th:text="${item.getInventoryCount()}"></td>
+                        <td class="text-center" th:text="${item.getUnit()}"></td>
+                        <td class="text-center" th:text="${item.getWarrantyMonth() + ' month' + (item.getWarrantyMonth() != 1 ? 's' : '')}"></td>
+                        <td class="text-center" th:text="${item.getPrice()}"></td>
+                        <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.getDateCreated()), 'dd/MM/yyyy HH:mm:ss')}"></td>
+                        <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.getDateModified()), 'dd/MM/yyyy HH:mm:ss')}"></td>
+                        <td class="text-center" th:text="${item.getShowInPage()}"></td>
                         <td class="text-center">
                             <a href="#"><button type="button" class="btn btn-primary">Update</button></a>
                             <a href="#"><button type="button" class="btn btn-danger">Delete</button></a>

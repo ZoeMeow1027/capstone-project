@@ -78,8 +78,7 @@ public class AdminUserRepository extends RequestRepository {
         bodyRoot.set("data", userAdd);
 
         String postData = mapper.writeValueAsString(bodyRoot);
-        return postRequest("https://localhost:7053/api/users", null, header,
-                postData);
+        return postRequest("https://localhost:7053/api/users", null, header, postData);
     }
 
     public RequestResult<JsonObject> editUser(Map<String, String> header, AdminUserAddDTO userEditDTO) throws JsonProcessingException {

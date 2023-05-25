@@ -96,6 +96,7 @@ public class RequestRepository {
                     httppost.addHeader(key, header.get(key));
                 }
             }
+            httppost.addHeader("Content-Type", "application/json; charset=UTF-8");
 
             StringEntity jsonparam = new StringEntity(jsonString);
             httppost.setEntity(jsonparam);
