@@ -19,7 +19,7 @@
 ## API
 
 - Start date: 2023/04/18
-- Updated: 2023/05/20
+- Updated: 2023/05/27
 - Progress: ![https://progress-bar.dev/80/?scale=100&width=120](https://progress-bar.dev/80/?scale=100&width=120)
 
 ### Services (Start date: 2023/04/18)
@@ -28,7 +28,7 @@
 | -							| -																	| -				| -								|
 | Product Manuafaceturers	| Manage phone manufacturer.										| 2023/04/23	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li></ul> |
 | Product Categories		| Manage phone category (tablet, smartphone, feature phone,...).	| 2023/04/23	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li></ul> |
-| Product					| Manage phones in inventory.										| 2023/04/21	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Hide (or delete)</li><li>[x] Get (1 or list by query or all)</li></ul> |
+| Product					| Manage phones in inventory.										| 2023/05/27	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Hide (or delete)</li><li>[x] Get (1 or list by query or all)</li></ul> |
 | User						| Manage registered user, staff and administrator account.			| 2023/04/21	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Hide (or delete)</li><li>[x] Get (1 or list by query or all)</li><li>[x] Disable/Enable</li><li>[x] Change account type</li></ul> |
 | User Address				| Let user manage delivery address.									| 2023/04/21	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li></ul> |
 | User Session				| Manage logged in accounts.										| 2023/04/22	| <ul><li>[x] Add token</li><li>[x] Is Account locked</li><li>[x] Is enabled</li><li>[x] Log out by userId</li><li>[x] Get session by token</li><li>[x] Delete session by token</li></ul> |
@@ -50,7 +50,7 @@
 ## Web
 
 - Start date: 2023/05/16
-- Updated: 2023/05/24
+- Updated: 2023/05/27
 - Progress: ![https://progress-bar.dev/30/?scale=100&width=120](https://progress-bar.dev/30/?scale=100&width=120)
 
 ### Admin page (Start date: 2023/05/16)
@@ -58,7 +58,7 @@
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
 | Users                     | Manage user accounts.                                                 | 2023/05/24    | <ul><li>[x] View</li><li>[x] Add</li><li>[x] Update</li><li>[x] Disable/enable</li></ul> |
-| Products                  | Manage all imported products (include category and manufacturer).     | 2023/05/24    | <ul><li>[x] View</li><li>[ ] Add</li><li>[ ] Update</li><li>[ ] Hide/show/delete</li></ul> |
+| Products                  | Manage all imported products (include category and manufacturer).     | 2023/05/27    | <ul><li>[x] View</li><li>[x] Add</li><li>[x] Update</li><li>[ ] Hide/show/delete</li></ul> |
 | Bills                     | Manage all bills created by user when done submitting information.    | ----/--/--    | <ul><li>[ ] View</li><li>[ ] Mark as purchased</li><li>[ ] Mark as delivered</li><li>[ ] Update status</li></ul> |
 | Warranties                | Manage all warranties.                                                | ----/--/--    | <ul><li>[ ] View</li><li>[ ] Add</li><li>[ ] Update</li><li>[ ] Mark as disabled</li></ul> |
 | Statistics/Dashboard      | View all store states.                                                | ----/--/--    | <ul><li>[ ] View</li><li>[ ] List by date</li></ul> |

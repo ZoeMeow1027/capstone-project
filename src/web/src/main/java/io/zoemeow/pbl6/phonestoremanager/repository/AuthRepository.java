@@ -10,7 +10,7 @@ import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
 
 public class AuthRepository extends RequestRepository {
     public RequestResult<JsonObject> getUserInformation(Map<String, String> header, ArrayList<Integer> allowedUserType) throws Exception {
-        RequestResult<JsonObject> reqResult = getRequest("https://localhost:7053/api/account/my", null, header);
+        RequestResult<JsonObject> reqResult = getRequest("/api/account/my", null, header);
         
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");

@@ -176,7 +176,7 @@ namespace PhoneStoreManager.Controllers
                 result.Message = ex.Message;
             }
 
-            return StatusCode(result.StatusCode, Content(result.ToDynamicObject(), "application/json"));
+            return StatusCode(result.StatusCode, result.ToDynamicObject());
         }
 
         #region Product Manufacturer area

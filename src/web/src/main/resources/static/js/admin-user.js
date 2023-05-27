@@ -53,7 +53,7 @@ async function addNewUser() {
         return;
     }
 
-    enableFormControl($('#modal-user-addnew'), false);
+    enableFormControl($('#modal-user-modify'), false);
     setInfoBarText(document.getElementById('modal-info-bar'), "Adding user...", 0);
 
     await fetch('/admin/users/add', {
@@ -69,10 +69,10 @@ async function addNewUser() {
 
         if (!result["isSuccessfulRequest"]) {
             setInfoBarText(document.getElementById('modal-info-bar') , result["message"], -1);
-            enableFormControl($('#modal-user-addnew'), true);
+            enableFormControl($('#modal-user-modify'), true);
         } else if (result["statusCode"] != 200) {
             setInfoBarText(document.getElementById('modal-info-bar') , result["message"], -1);
-            enableFormControl($('#modal-user-addnew'), true);
+            enableFormControl($('#modal-user-modify'), true);
         } else {
             setInfoBarText(document.getElementById('modal-info-bar') , "Successfully added user! Returning to Users page...", 1);
             window.location.href = "/admin/users";
@@ -84,7 +84,7 @@ async function updateUser() {
     var data = getFormData($('#modal-user-modify'));
     data['type'] = 'user';
 
-    enableFormControl($('#modal-user-addnew'), false);
+    enableFormControl($('#modal-user-modify'), false);
     setInfoBarText(document.getElementById('modal-info-bar') , "Updating user...", 0);
 
     await fetch('/admin/users/update', {
@@ -100,10 +100,10 @@ async function updateUser() {
 
         if (!result["isSuccessfulRequest"]) {
             setInfoBarText(document.getElementById('modal-info-bar') , result["message"], -1);
-            enableFormControl($('#modal-user-addnew'), true);
+            enableFormControl($('#modal-user-modify'), true);
         } else if (result["statusCode"] != 200) {
             setInfoBarText(document.getElementById('modal-info-bar') , result["message"], -1);
-            enableFormControl($('#modal-user-addnew'), true);
+            enableFormControl($('#modal-user-modify'), true);
         } else {
             setInfoBarText(document.getElementById('modal-info-bar') , "Successfully updated user! Returning to Users page...", 1);
             window.location.href = "/admin/users";
