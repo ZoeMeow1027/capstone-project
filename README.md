@@ -16,11 +16,15 @@
 
 # Roadmap
 
-## API
+## Progress
 
-- Start date: 2023/04/18
-- Updated: 2023/05/27
-- Progress: ![https://progress-bar.dev/80/?scale=100&width=120](https://progress-bar.dev/80/?scale=100&width=120)
+| Group         | Components    | Start date    | Updated       | Progress          |
+| -             | -             | -             | -             | -                 |
+| [API](#api)   | [Services](#services-start-date-20230418), [Controllers](#controllers-start-date-20230424) | 2023/04/18    | 2023/05/27    | ![https://progress-bar.dev/80/?scale=100&width=120](https://progress-bar.dev/80/?scale=100&width=120) |
+| [Web](#web)   | [Admin Page](#admin-page-start-date-20230516) | 2023/05/16    | 2023/05/27    | ![https://progress-bar.dev/30/?scale=100&width=120](https://progress-bar.dev/30/?scale=100&width=120) |
+
+
+## API
 
 ### Services (Start date: 2023/04/18)
 
@@ -47,11 +51,9 @@
 
 (`**`): Administrator only
 
-## Web
+[Go to progress](#progress)
 
-- Start date: 2023/05/16
-- Updated: 2023/05/27
-- Progress: ![https://progress-bar.dev/30/?scale=100&width=120](https://progress-bar.dev/30/?scale=100&width=120)
+## Web
 
 ### Admin page (Start date: 2023/05/16)
 
@@ -62,3 +64,5 @@
 | Bills                     | Manage all bills created by user when done submitting information.    | ----/--/--    | <ul><li>[ ] View</li><li>[ ] Mark as purchased</li><li>[ ] Mark as delivered</li><li>[ ] Update status</li></ul> |
 | Warranties                | Manage all warranties.                                                | ----/--/--    | <ul><li>[ ] View</li><li>[ ] Add</li><li>[ ] Update</li><li>[ ] Mark as disabled</li></ul> |
 | Statistics/Dashboard      | View all store states.                                                | ----/--/--    | <ul><li>[ ] View</li><li>[ ] List by date</li></ul> |
+
+[Go to progress](#progress)
