@@ -55,8 +55,8 @@
                         <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.getDateModified()), 'dd/MM/yyyy HH:mm:ss')}"></td>
                         <td class="text-center" th:text="${item.getShowInPage()}"></td>
                         <td class="text-center">
-                            <a href="#"><button type="button" class="btn btn-primary">Update</button></a>
-                            <a href="#"><button type="button" class="btn btn-danger">Delete</button></a>
+                            <a th:href="${'/admin/products/update?id=' + item.getId()}"><button type="button" class="btn btn-primary">Update</button></a>
+                            <a th:href="${''}"><button type="button" class="btn btn-danger">Delete</button></a>
                         </td>
                     </tr>
                 </tbody>

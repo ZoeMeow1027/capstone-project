@@ -1,105 +1,135 @@
 package io.zoemeow.pbl6.phonestoremanager.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.model.RequestException;
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
-import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserAddDTO;
+import io.zoemeow.pbl6.phonestoremanager.model.User;
 import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserResetPassDTO;
 import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserToggleDTO;
 
 public class AdminUserRepository extends RequestRepository {
-    public RequestResult<JsonObject> getAllUsers(Map<String, String> header, Boolean includeHidden) {
+    public List<User> getAllUsers(Map<String, String> header, Boolean includeHidden) throws RequestException, NoInternetException {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("type", "user");
         parameters.put("includedisabled", includeHidden.toString());
-        return getRequest("https://localhost:7053/api/users", parameters, header);
+        
+        RequestResult<JsonObject> reqResult = getRequest("/api/users", parameters, header);
+                if (!reqResult.getIsSuccessfulRequest()) {
+            throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
+        }
+        if (reqResult.getStatusCode() != 200) {
+            throw new RequestException(
+                "/api/products",
+                reqResult.getStatusCode(),
+                reqResult.getMessage()
+            );
+        }
+
+        var data = reqResult.getData().get("data").getAsJsonArray();
+        if (data == null)
+            return new ArrayList<User>();
+        return new Gson().fromJson(
+            reqResult.getData().get("data").getAsJsonArray(),
+            (new TypeToken<List<User>>() {}).getType()
+        );
     }
 
-    public RequestResult<JsonObject> getUser(Map<String, String> header, Integer id) {
+    public User getUser(Map<String, String> header, Integer id) throws NoInternetException, RequestException {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("type", "user");
         parameters.put("includedisabled", "true");
         parameters.put("id", id.toString());
-        return getRequest("https://localhost:7053/api/users", parameters, header);
+
+        RequestResult<JsonObject> reqResult = getRequest("/api/users", parameters, header);
+        if (!reqResult.getIsSuccessfulRequest()) {
+            throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
+        }
+        if (reqResult.getStatusCode() != 200) {
+            throw new RequestException(
+                "/api/products",
+                reqResult.getStatusCode(),
+                reqResult.getMessage()
+            );
+        }
+
+        var data = reqResult.getData().get("data").getAsJsonObject();
+        if (data == null)
+            return null;
+        return new Gson().fromJson(
+            reqResult.getData().get("data").getAsJsonObject(),
+            (new TypeToken<User>() {}).getType()
+        );
     }
 
-    public RequestResult<JsonObject> toggleUser(Map<String, String> header, AdminUserToggleDTO userToggleDTO) throws JsonProcessingException {
-        header.put("content-type", "application/json; charset=UTF-8");
+    public RequestResult<JsonObject> toggleUser(Map<String, String> header, AdminUserToggleDTO userToggleDTO) {
+        JsonObject userToggle = new JsonObject();
+        userToggle.addProperty("id", userToggleDTO.getId());
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("type", "user");
+        bodyRoot.addProperty("action", userToggleDTO.getEnabled().compareTo("1") == 0 ? "enable" : "disable");
+        bodyRoot.add("data", userToggle);
 
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode userToggle = mapper.createObjectNode();
-        userToggle.put("id", userToggleDTO.getId());
-        ObjectNode bodyRoot = mapper.createObjectNode();
-        bodyRoot.put("type", "user");
-        bodyRoot.put("action", userToggleDTO.getEnabled().compareTo("1") == 0 ? "enable" : "disable");
-        bodyRoot.set("data", userToggle);
-
-        String postData = mapper.writeValueAsString(bodyRoot);
-        return postRequest("https://localhost:7053/api/users", null, header, postData);
+        String postData = bodyRoot.toString();
+        return postRequest("/api/users", null, header, postData);
     }
 
-    public RequestResult<JsonObject> resetPassword(Map<String, String> header, AdminUserResetPassDTO userResetPassDTO) throws JsonProcessingException {
-        header.put("content-type", "application/json; charset=UTF-8");
+    public RequestResult<JsonObject> resetPassword(Map<String, String> header, AdminUserResetPassDTO userResetPassDTO) {
+        JsonObject userResetPass = new JsonObject();
+        userResetPass.addProperty("id", userResetPassDTO.getId());
+        userResetPass.addProperty("password", userResetPassDTO.getPassword());
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("type", "user");
+        bodyRoot.addProperty("action", "changepassword");
+        bodyRoot.add("data", userResetPass);
 
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode userResetPass = mapper.createObjectNode();
-        userResetPass.put("id", userResetPassDTO.getId());
-        userResetPass.put("password", userResetPassDTO.getPassword());
-        ObjectNode bodyRoot = mapper.createObjectNode();
-        bodyRoot.put("type", "user");
-        bodyRoot.put("action", "changepassword");
-        bodyRoot.set("data", userResetPass);
-
-        String postData = mapper.writeValueAsString(bodyRoot);
-        return postRequest("https://localhost:7053/api/users", null, header, postData);
+        String postData = bodyRoot.toString();
+        return postRequest("/api/users", null, header, postData);
     }
 
-    public RequestResult<JsonObject> addUser(Map<String, String> header, AdminUserAddDTO userAddDTO)
-            throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode userAdd = mapper.createObjectNode();
-        userAdd.put("username", userAddDTO.getUsername());
-        userAdd.put("password", userAddDTO.getPassword());
-        userAdd.put("name", userAddDTO.getName());
-        if (userAddDTO.getEmail() != null)
-            userAdd.put("email", userAddDTO.getEmail());
-        if (userAddDTO.getPhone() != null)
-            userAdd.put("phone", userAddDTO.getPhone());
-        userAdd.put("usertype", userAddDTO.getUsertype());
-        ObjectNode bodyRoot = mapper.createObjectNode();
-        bodyRoot.put("type", "user");
-        bodyRoot.put("action", "add");
-        bodyRoot.set("data", userAdd);
+    public RequestResult<JsonObject> addUser(Map<String, String> header, User user) {
+        JsonObject userAdd = new JsonObject();
+        userAdd.addProperty("username", user.getUsername());
+        userAdd.addProperty("password", user.getPassword());
+        userAdd.addProperty("name", user.getName());
+        if (user.getEmail() != null)
+            userAdd.addProperty("email", user.getEmail());
+        if (user.getPhone() != null)
+            userAdd.addProperty("phone", user.getPhone());
+        userAdd.addProperty("usertype", user.getUserType());
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("type", "user");
+        bodyRoot.addProperty("action", "add");
+        bodyRoot.add("data", userAdd);
 
-        String postData = mapper.writeValueAsString(bodyRoot);
-        return postRequest("https://localhost:7053/api/users", null, header, postData);
+        String postData = bodyRoot.toString();
+        return postRequest("/api/users", null, header, postData);
     }
 
-    public RequestResult<JsonObject> editUser(Map<String, String> header, AdminUserAddDTO userEditDTO) throws JsonProcessingException {
-        header.put("content-type", "application/json; charset=UTF-8");
+    public RequestResult<JsonObject> editUser(Map<String, String> header, User user) {
+        JsonObject userAdd = new JsonObject();
+        userAdd.addProperty("id", user.getId());
+        userAdd.addProperty("username", user.getUsername());
+        userAdd.addProperty("name", user.getName());
+        if (user.getEmail() != null)
+            userAdd.addProperty("email", user.getEmail());
+        if (user.getPhone() != null)
+            userAdd.addProperty("phone", user.getPhone());
+        userAdd.addProperty("usertype", user.getUserType());
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("type", "user");
+        bodyRoot.addProperty("action", "update");
+        bodyRoot.add("data", userAdd);
 
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode userAdd = mapper.createObjectNode();
-        userAdd.put("id", userEditDTO.getId());
-        userAdd.put("username", userEditDTO.getUsername());
-        userAdd.put("name", userEditDTO.getName());
-        if (userEditDTO.getEmail() != null)
-            userAdd.put("email", userEditDTO.getEmail());
-        if (userEditDTO.getPhone() != null)
-            userAdd.put("phone", userEditDTO.getPhone());
-        userAdd.put("usertype", userEditDTO.getUsertype());
-        ObjectNode bodyRoot = mapper.createObjectNode();
-        bodyRoot.put("type", "user");
-        bodyRoot.put("action", "update");
-        bodyRoot.set("data", userAdd);
-
-        String postData = mapper.writeValueAsString(bodyRoot);
-        return postRequest("https://localhost:7053/api/users", null, header, postData);
+        String postData = bodyRoot.toString();
+        return postRequest("/api/users", null, header, postData);
     }
 }

@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
 
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
@@ -30,7 +28,7 @@ public class AuthController extends RequestRepository {
             Map<String, String> header = new HashMap<String, String>();
             header.put("cookie", request.getHeader("cookie"));
 
-            RequestResult<JsonObject> reqResult = getRequest("https://localhost:7053/api/account/my", null, header);
+            RequestResult<JsonObject> reqResult = getRequest("/api/account/my", null, header);
             if (!reqResult.getIsSuccessfulRequest()) {
                 // TODO: Check if not successful request here!
             }
@@ -63,17 +61,16 @@ public class AuthController extends RequestRepository {
         ModelAndView modelAndView;
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode auth = mapper.createObjectNode();
-            auth.put("username", username);
-            auth.put("password", password);
+            JsonObject auth = new JsonObject();
+            auth.addProperty("username", username);
+            auth.addProperty("password", password);
 
             Map<String, String> header = new HashMap<String, String>();
             header.put("content-type", "application/json; charset=UTF-8");
             header.put("cookie", request.getHeader("cookie"));
 
-            RequestResult<JsonObject> reqResult = postRequest("https://localhost:7053/api/auth/login", null,
-                    header, mapper.writeValueAsString(auth));
+            RequestResult<JsonObject> reqResult = postRequest("/api/auth/login", null,
+                    header, auth.toString());
 
             if (!reqResult.getIsSuccessfulRequest()) {
                 throw new Exception("Cannot receive information from API. Please try again.");
@@ -123,7 +120,7 @@ public class AuthController extends RequestRepository {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
         try {
-            postRequest("https://localhost:7053/api/account/logout", null, header, null);
+            postRequest("/api/account/logout", null, header, null);
         } catch (Exception ex) {
 
         } finally {

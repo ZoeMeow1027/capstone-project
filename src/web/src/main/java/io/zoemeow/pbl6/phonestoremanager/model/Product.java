@@ -2,6 +2,8 @@ package io.zoemeow.pbl6.phonestoremanager.model;
 
 import com.google.gson.annotations.SerializedName;
 
+
+
 public class Product {
     @SerializedName("id")
     Integer id;
@@ -10,39 +12,37 @@ public class Product {
     String name;
 
     @SerializedName("categoryid")
-    Integer categoryId;
+    Integer categoryid;
 
     @SerializedName("manufacturerid")
-    Integer manufacturerId;
+    Integer manufacturerid;
 
     @SerializedName("inventorycount")
-    Integer inventoryCount = 0;
+    Integer inventorycount = 0;
 
     @SerializedName("unit")
     String unit = "item";
 
     @SerializedName("warrantymonth")
-    Integer warrantyMonth = 12;
+    Integer warrantymonth = 12;
 
     @SerializedName("price")
     Long price;
     
     @SerializedName("datecreated")
-    Long dateCreated = 0L;
+    Long datecreated = 0L;
 
     @SerializedName("datemodified")
-    Long dateModified = 0L;
+    Long datemodified = 0L;
 
     @SerializedName("showinpage")
-    Boolean showInPage = true;
+    Boolean showinpage = true;
 
     @SerializedName("manufacturer")
     ProductManufacturer manufacturer;
 
     @SerializedName("category")
     ProductCategory category;
-
-    
 
     public Integer getId() {
         return id;
@@ -61,27 +61,27 @@ public class Product {
     }
 
     public Integer getCategoryId() {
-        return categoryId;
+        return categoryid;
     }
 
     public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
+        this.categoryid = categoryId;
     }
 
     public Integer getManufacturerId() {
-        return manufacturerId;
+        return manufacturerid;
     }
 
     public void setManufacturerId(Integer manufacturerId) {
-        this.manufacturerId = manufacturerId;
+        this.manufacturerid = manufacturerId;
     }
 
     public Integer getInventoryCount() {
-        return inventoryCount;
+        return inventorycount;
     }
 
     public void setInventoryCount(Integer inventoryCount) {
-        this.inventoryCount = inventoryCount;
+        this.inventorycount = inventoryCount;
     }
 
     public String getUnit() {
@@ -93,11 +93,11 @@ public class Product {
     }
 
     public Integer getWarrantyMonth() {
-        return warrantyMonth;
+        return warrantymonth;
     }
 
     public void setWarrantyMonth(Integer warrantyMonth) {
-        this.warrantyMonth = warrantyMonth;
+        this.warrantymonth = warrantyMonth;
     }
 
     public Long getPrice() {
@@ -109,28 +109,28 @@ public class Product {
     }
 
     public Long getDateCreated() {
-        return dateCreated;
+        return datecreated;
     }
 
     public void setDateCreated(Long dateCreated) {
-        this.dateCreated = dateCreated;
+        this.datecreated = dateCreated;
     }
 
     public Long getDateModified() {
-        return dateModified;
+        return datemodified;
     }
 
     public void setDateModified(Long dateModified) {
-        this.dateModified = dateModified;
+        this.datemodified = dateModified;
     }
 
 
     public Boolean getShowInPage() {
-        return showInPage;
+        return showinpage;
     }
 
     public void setShowInPage(Boolean showInPage) {
-        this.showInPage = showInPage;
+        this.showinpage = showInPage;
     }
 
     public ProductManufacturer getManufacturer() {
