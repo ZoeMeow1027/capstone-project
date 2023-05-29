@@ -169,4 +169,106 @@ public class AdminProductRepository extends RequestRepository {
         String postData = bodyRoot.toString();
         return postRequest("/api/products/", null, header, postData);
     }
+
+    public RequestResult<JsonObject> addProductCategory(Map<String, String> header, ProductCategory productCategory) {
+        JsonObject productUpdate = new JsonObject();
+        productUpdate.addProperty("name", productCategory.getName());
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("type", "category");
+        bodyRoot.addProperty("action", "add");
+        bodyRoot.add("data", productUpdate);
+
+        String postData = bodyRoot.toString();
+        return postRequest("/api/products/", null, header, postData);
+    }
+
+    public ProductCategory getProductCategoryById(Map<String, String> header, Integer id) throws NoInternetException, RequestException {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("type", "category");
+        parameters.put("id", id.toString());
+
+        RequestResult<JsonObject> reqResult = getRequest("/api/products", parameters, header);
+        if (!reqResult.getIsSuccessfulRequest()) {
+            throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
+        }
+        if (reqResult.getStatusCode() != 200) {
+            throw new RequestException(
+                "/api/products",
+                reqResult.getStatusCode(),
+                reqResult.getMessage()
+            );
+        }
+
+        var data = reqResult.getData().get("data").getAsJsonObject();
+        if (data == null)
+            return null;
+        return new Gson().fromJson(
+            reqResult.getData().get("data").getAsJsonObject(),
+            (new TypeToken<ProductCategory>() {}).getType()
+        );
+    }
+
+    public RequestResult<JsonObject> updateProductCategory(Map<String, String> header, ProductCategory productCategory) {
+        JsonObject productUpdate = new JsonObject();
+        productUpdate.addProperty("id", productCategory.getId());
+        productUpdate.addProperty("name", productCategory.getName());
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("type", "category");
+        bodyRoot.addProperty("action", "update");
+        bodyRoot.add("data", productUpdate);
+
+        String postData = bodyRoot.toString();
+        return postRequest("/api/products/", null, header, postData);
+    }
+
+    public RequestResult<JsonObject> addProductManufacturer(Map<String, String> header, ProductManufacturer productManufacturer) {
+        JsonObject productUpdate = new JsonObject();
+        productUpdate.addProperty("name", productManufacturer.getName());
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("type", "manufacturer");
+        bodyRoot.addProperty("action", "add");
+        bodyRoot.add("data", productUpdate);
+
+        String postData = bodyRoot.toString();
+        return postRequest("/api/products/", null, header, postData);
+    }
+
+    public ProductManufacturer getProductManufacturerById(Map<String, String> header, Integer id) throws NoInternetException, RequestException {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("type", "manufacturer");
+        parameters.put("id", id.toString());
+
+        RequestResult<JsonObject> reqResult = getRequest("/api/products", parameters, header);
+        if (!reqResult.getIsSuccessfulRequest()) {
+            throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
+        }
+        if (reqResult.getStatusCode() != 200) {
+            throw new RequestException(
+                "/api/products",
+                reqResult.getStatusCode(),
+                reqResult.getMessage()
+            );
+        }
+
+        var data = reqResult.getData().get("data").getAsJsonObject();
+        if (data == null)
+            return null;
+        return new Gson().fromJson(
+            reqResult.getData().get("data").getAsJsonObject(),
+            (new TypeToken<ProductManufacturer>() {}).getType()
+        );
+    }
+
+    public RequestResult<JsonObject> updateProductManufacturer(Map<String, String> header, ProductManufacturer productManufacturer) {
+        JsonObject productUpdate = new JsonObject();
+        productUpdate.addProperty("id", productManufacturer.getId());
+        productUpdate.addProperty("name", productManufacturer.getName());
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("type", "manufacturer");
+        bodyRoot.addProperty("action", "update");
+        bodyRoot.add("data", productUpdate);
+
+        String postData = bodyRoot.toString();
+        return postRequest("/api/products/", null, header, postData);
+    }
 }

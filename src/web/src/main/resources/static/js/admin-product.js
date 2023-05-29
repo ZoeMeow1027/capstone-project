@@ -111,3 +111,127 @@ async function updateProduct() {
         }
     });
 }
+
+async function addNewProductCategory() {
+    var data = getFormData($('#modal-product-category-modify'));
+
+    enableFormControl($('#modal-product-category-modify'), false);
+    setInfoBarText(document.getElementById('modal-info-bar'), "Adding product category...", 0);
+
+    await fetch('/admin/products/categories/add', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+        },
+        body: JSON.stringify(data)
+    })
+    .then(jsondata => jsondata.text())
+    .then(body => {
+        const result = JSON.parse(body);
+
+        if (!result["isSuccessfulRequest"]) {
+            setInfoBarText(document.getElementById('modal-info-bar') , result["message"], -1);
+            enableFormControl($('#modal-product-category-modify'), true);
+        } else if (result["statusCode"] != 200) {
+            setInfoBarText(document.getElementById('modal-info-bar') , result["message"], -1);
+            enableFormControl($('#modal-product-category-modify'), true);
+        } else {
+            setInfoBarText(document.getElementById('modal-info-bar') , "Successfully added product category! Returning to Product Category page...", 1);
+            window.location.href = "/admin/products/categories";
+        }
+    });
+    console.log(data);
+}
+
+async function updateProductCategory() {
+    var data = getFormData($('#modal-product-category-modify'));
+
+    enableFormControl($('#modal-product-category-modify'), false);
+    setInfoBarText(document.getElementById('modal-info-bar'), "Updating product category...", 0);
+
+    await fetch('/admin/products/categories/update', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+        },
+        body: JSON.stringify(data)
+    })
+    .then(jsondata => jsondata.text())
+    .then(body => {
+        const result = JSON.parse(body);
+
+        if (!result["isSuccessfulRequest"]) {
+            setInfoBarText(document.getElementById('modal-info-bar') , result["message"], -1);
+            enableFormControl($('#modal-product-category-modify'), true);
+        } else if (result["statusCode"] != 200) {
+            setInfoBarText(document.getElementById('modal-info-bar') , result["message"], -1);
+            enableFormControl($('#modal-product-category-modify'), true);
+        } else {
+            setInfoBarText(document.getElementById('modal-info-bar') , "Successfully updated product category! Returning to Product Category page...", 1);
+            window.location.href = "/admin/products/categories";
+        }
+    });
+    console.log(data);
+}
+
+async function addNewProductManufacturer() {
+    var data = getFormData($('#modal-product-manufacturer-modify'));
+
+    enableFormControl($('#modal-product-manufacturer-modify'), false);
+    setInfoBarText(document.getElementById('modal-info-bar'), "Adding product manufacturer...", 0);
+
+    await fetch('/admin/products/manufacturers/add', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+        },
+        body: JSON.stringify(data)
+    })
+    .then(jsondata => jsondata.text())
+    .then(body => {
+        const result = JSON.parse(body);
+
+        if (!result["isSuccessfulRequest"]) {
+            setInfoBarText(document.getElementById('modal-info-bar') , result["message"], -1);
+            enableFormControl($('#modal-product-manufacturer-modify'), true);
+        } else if (result["statusCode"] != 200) {
+            setInfoBarText(document.getElementById('modal-info-bar') , result["message"], -1);
+            enableFormControl($('#modal-product-manufacturer-modify'), true);
+        } else {
+            setInfoBarText(document.getElementById('modal-info-bar') , "Successfully added product manufacturer! Returning to Product Manufacturer page...", 1);
+            window.location.href = "/admin/products/manufacturers";
+        }
+    });
+    console.log(data);
+}
+
+async function updateProductManufacturer() {
+    var data = getFormData($('#modal-product-manufacturer-modify'));
+
+    enableFormControl($('#modal-product-manufacturer-modify'), false);
+    setInfoBarText(document.getElementById('modal-info-bar'), "Updating product manufacturer...", 0);
+
+    await fetch('/admin/products/manufacturers/update', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+        },
+        body: JSON.stringify(data)
+    })
+    .then(jsondata => jsondata.text())
+    .then(body => {
+        const result = JSON.parse(body);
+
+        if (!result["isSuccessfulRequest"]) {
+            setInfoBarText(document.getElementById('modal-info-bar') , result["message"], -1);
+            enableFormControl($('#modal-product-manufacturer-modify'), true);
+        } else if (result["statusCode"] != 200) {
+            setInfoBarText(document.getElementById('modal-info-bar') , result["message"], -1);
+            enableFormControl($('#modal-product-manufacturer-modify'), true);
+        } else {
+            setInfoBarText(document.getElementById('modal-info-bar') , "Successfully updated product manufacturer! Returning to Product Manufacturer page...", 1);
+            window.location.href = "/admin/products/manufacturers";
+        }
+    });
+    console.log(data);
+}
