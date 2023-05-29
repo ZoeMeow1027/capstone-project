@@ -17,7 +17,7 @@
         <h4>Manage product manufacturers</h4>
         <hr />
         <div class="w-100 pb-2 d-flex justify-content-end">
-            <a href="#" class="ps-2"><button type="button" class="btn btn-success">Create new</button></a>
+            <a href="/admin/products/manufacturers/add" class="ps-2"><button type="button" class="btn btn-success">Create new</button></a>
         </div>
         <div class="table-responsive">
             <table class="table table-hover table-bordered border-primary">
@@ -31,7 +31,7 @@
                         <td class="text-center" th:text="${item.getId()}"></td>
                         <td class="text-center" th:text="${item.getName()}"></td>
                         <td class="text-center">
-                            <a href="#"><button type="button" class="btn btn-primary">Update</button></a>
+                            <a th:href="${'/admin/products/manufacturers/update?id=' + item.getId()}"><button type="button" class="btn btn-primary">Update</button></a>
                             <a href="#"><button type="button" class="btn btn-danger">Delete</button></a>
                         </td>
                     </tr>

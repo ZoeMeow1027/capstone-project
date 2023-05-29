@@ -50,7 +50,7 @@ public class AdminUsersController extends RequestRepository {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/users");
+            view = new ModelAndView("/admin/users/index");
 
             RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
                     new ArrayList<Integer>(Arrays.asList(2)));
@@ -86,7 +86,7 @@ public class AdminUsersController extends RequestRepository {
             if (!(enabled == 0 || enabled == 1))
                 throw new Exception("Invalid 'enabled' value!");
 
-            view = new ModelAndView("/admin/userToggle");
+            view = new ModelAndView("/admin/users/toggle");
             view.addObject("action", enabled == 0 ? "disable" : "enable");
 
             RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
@@ -134,7 +134,7 @@ public class AdminUsersController extends RequestRepository {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/userAdd.html");
+            view = new ModelAndView("/admin/users/add");
             view.addObject("action", "add");
 
             RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
@@ -182,7 +182,7 @@ public class AdminUsersController extends RequestRepository {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/userAdd.html");
+            view = new ModelAndView("/admin/users/add");
             view.addObject("action", "edit");
             view.addObject("id", id);
 
@@ -233,7 +233,7 @@ public class AdminUsersController extends RequestRepository {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/userResetPassword.html");
+            view = new ModelAndView("/admin/users/resetPassword");
             view.addObject("id", id);
 
             RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,

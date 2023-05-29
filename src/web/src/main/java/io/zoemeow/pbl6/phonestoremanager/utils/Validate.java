@@ -3,6 +3,8 @@ package io.zoemeow.pbl6.phonestoremanager.utils;
 import java.util.Arrays;
 
 import io.zoemeow.pbl6.phonestoremanager.model.Product;
+import io.zoemeow.pbl6.phonestoremanager.model.ProductCategory;
+import io.zoemeow.pbl6.phonestoremanager.model.ProductManufacturer;
 import io.zoemeow.pbl6.phonestoremanager.model.User;
 
 public class Validate {
@@ -16,39 +18,79 @@ public class Validate {
         if (product.getPrice() < 0) {
             throw new Exception("Invalid Price value!");
         }
-        if (checkMethod.compareTo("edit") == 0 && product.getId() == null) {
+        if (checkMethod.compareTo("update") == 0 && product.getId() == null) {
             throw new Exception("Must submit ID value in update item!");
         }
     }
 
     public static void validateUser(User user, String checkMethod) throws Exception {
-        if (checkMethod.compareTo("add") == 0) {
-            if (user.getUsername() == null || user.getPassword() == null || user.getName() == null || user.getUserType() == null) {
-                throw new Exception("Missing parameters!");
+        // Check method is working in "update" action only.
+        if (checkMethod.compareTo("update") == 0) {
+            if (user.getId() == null) {
+                throw new Exception("ID is missing!");
             }
-            if (user.getPassword().length() < 6) {
-                throw new Exception("Password must be 6 characters or more!");
-            }
-            if (user.getUsername().length() < 5) {
-                throw new Exception("Username must be 5 characters or more!");
-            }
-        } else if (checkMethod.compareTo("update") == 0) {
-            if (user.getUsername() == null || user.getId() == null || user.getName() == null || user.getUserType() == null) {
-                throw new Exception("Missing parameters!");
-            }
-        } else {
-            throw new Exception("Invalid 'action' value (from server!)");
         }
-        if (user.getName().trim().length() < 3) {
-            throw new Exception("Name must be 6 characters or more!");
+        // Check username
+        if (user.getUsername() == null) {
+            throw new Exception("Username is missing!");
+        } else if (user.getUsername().length() < 6) {
+            throw new Exception("Username must be at least 5 characters!");
         }
+        // Check password
+        if (user.getPassword() == null) {
+            throw new Exception("Password is missing!");
+        } else if (user.getPassword().length() < 6) {
+            throw new Exception("Password must be at least 8 characters!");
+        }
+        // Check name
+        if (user.getName() == null) {
+            throw new Exception("Name is missing!");
+        } if (user.getName().trim().length() < 6) {
+            throw new Exception("Name must be at least 6 characters!");
+        }
+        // Check phone number
         if (user.getPhone() != null) {
             if (!user.getPhone().startsWith("0") || !(user.getPhone().length() >= 10 && user.getPhone().length() <= 11)) {
-                throw new Exception("Invalid 'phone' value!");
+                throw new Exception("Invalid Phone value!");
             }
         }
-        if (!Arrays.asList(0, 1, 2).contains(user.getUserType())) {
-            throw new Exception("Invalid 'usertype' value!");
+        // Check usertype
+        if (user.getUserType() == null) {
+            throw new Exception("UserType is missing!");
+        } else if (!Arrays.asList(0, 1, 2).contains(user.getUserType())) {
+            throw new Exception("Invalid UserType value!");
+        }
+    }
+
+    public static void validateProductCategory(ProductCategory productCategory, String checkMethod) throws Exception {
+        // Check id if update
+        if (checkMethod.compareTo("update") == 0) {
+            // Check id
+            if (productCategory.getId() == null) {
+                throw new Exception("ID is missing!");
+            }
+        }
+        // Check name
+        if (productCategory.getName() == null) {
+            throw new Exception("Name is missing!");
+        } if (productCategory.getName().trim().length() < 6) {
+            throw new Exception("Name must be at least 6 characters!");
+        }
+    }
+
+    public static void validateProductManufacturer(ProductManufacturer productManufacturer, String checkMethod) throws Exception {
+        // Check id if update
+        if (checkMethod.compareTo("update") == 0) {
+            // Check id
+            if (productManufacturer.getId() == null) {
+                throw new Exception("ID is missing!");
+            }
+        }
+        // Check name
+        if (productManufacturer.getName() == null) {
+            throw new Exception("Name is missing!");
+        } if (productManufacturer.getName().trim().length() < 6) {
+            throw new Exception("Name must be at least 6 characters!");
         }
     }
 }

@@ -29,12 +29,12 @@ import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
 
 @Repository
 public class RequestRepository {
-    private static final Boolean ignoreSSL = true;
+    private final Boolean ignoreSSL = true;
     
     @Value("${serverapi.baseurl}")
-    private static String baseUrl = "https://127.0.0.1:7053";
+    private String baseUrl = "https://127.0.0.1:7053";
 
-    public static RequestResult<JsonObject> getRequest(String uri, Map<String, String> parameters, Map<String, String> header) {
+    public RequestResult<JsonObject> getRequest(String uri, Map<String, String> parameters, Map<String, String> header) {
         RequestResult<JsonObject> result = new RequestResult<JsonObject>();
 
         try {
@@ -84,7 +84,7 @@ public class RequestRepository {
         return result;
     }
 
-    public static RequestResult<JsonObject> postRequest(String uri, Map<String, String> parameters,
+    public RequestResult<JsonObject> postRequest(String uri, Map<String, String> parameters,
             Map<String, String> header, String jsonString) {
         RequestResult<JsonObject> result = new RequestResult<JsonObject>();
 
@@ -141,7 +141,7 @@ public class RequestRepository {
         return result;
     }
 
-    private static CloseableHttpClient createHttpClient()
+    private CloseableHttpClient createHttpClient()
             throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
         CloseableHttpClient httpClient = null;
 
