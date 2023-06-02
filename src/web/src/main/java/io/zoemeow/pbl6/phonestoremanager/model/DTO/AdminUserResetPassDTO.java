@@ -1,4 +1,4 @@
-package io.zoemeow.pbl6.phonestoremanager.model.DTO;
+package io.zoemeow.pbl6.phonestoremanager.model.dto;
 
 import com.google.gson.annotations.SerializedName;
 

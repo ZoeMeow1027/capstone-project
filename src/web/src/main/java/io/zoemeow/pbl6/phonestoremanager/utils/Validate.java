@@ -2,10 +2,10 @@ package io.zoemeow.pbl6.phonestoremanager.utils;
 
 import java.util.Arrays;
 
-import io.zoemeow.pbl6.phonestoremanager.model.Product;
-import io.zoemeow.pbl6.phonestoremanager.model.ProductCategory;
-import io.zoemeow.pbl6.phonestoremanager.model.ProductManufacturer;
-import io.zoemeow.pbl6.phonestoremanager.model.User;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.Product;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.ProductCategory;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.ProductManufacturer;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 
 public class Validate {
     public static void validateProduct(Product product, String checkMethod) throws Exception {

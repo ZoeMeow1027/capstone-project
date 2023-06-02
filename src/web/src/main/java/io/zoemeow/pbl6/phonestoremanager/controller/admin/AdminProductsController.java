@@ -1,10 +1,11 @@
-package io.zoemeow.pbl6.phonestoremanager.controller.AdminController;
+package io.zoemeow.pbl6.phonestoremanager.controller.admin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,10 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
-import io.zoemeow.pbl6.phonestoremanager.model.Product;
-import io.zoemeow.pbl6.phonestoremanager.model.ProductCategory;
-import io.zoemeow.pbl6.phonestoremanager.model.ProductManufacturer;
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.Product;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.ProductCategory;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.ProductManufacturer;
 import io.zoemeow.pbl6.phonestoremanager.repository.AdminProductRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import io.zoemeow.pbl6.phonestoremanager.utils.Validate;
@@ -27,13 +28,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class AdminProductsController {
+    @Autowired
     AdminProductRepository _AdminProductRepository;
+    
+    @Autowired
     AuthRepository _AuthRepository;
-
-    public AdminProductsController() {
-        _AdminProductRepository = new AdminProductRepository();
-        _AuthRepository = new AuthRepository();
-    }
 
     @GetMapping("/admin/products")
     public ModelAndView pageProducts(

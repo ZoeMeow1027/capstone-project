@@ -1,13 +1,11 @@
-package io.zoemeow.pbl6.phonestoremanager.controller.AdminController;
+package io.zoemeow.pbl6.phonestoremanager.controller.admin;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +17,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
-import io.zoemeow.pbl6.phonestoremanager.model.User;
-import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserResetPassDTO;
-import io.zoemeow.pbl6.phonestoremanager.model.DTO.AdminUserToggleDTO;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
+import io.zoemeow.pbl6.phonestoremanager.model.dto.AdminUserResetPassDTO;
+import io.zoemeow.pbl6.phonestoremanager.model.dto.AdminUserToggleDTO;
 import io.zoemeow.pbl6.phonestoremanager.repository.AdminUserRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.RequestRepository;
@@ -30,16 +28,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-@Configuration
-@Import({ SimpleDateFormat.class })
 public class AdminUsersController extends RequestRepository {
+    @Autowired
     AdminUserRepository _AdminUserRepository;
-    AuthRepository _AuthRepository;
 
-    public AdminUsersController() {
-        _AdminUserRepository = new AdminUserRepository();
-        _AuthRepository = new AuthRepository();
-    }
+    @Autowired
+    AuthRepository _AuthRepository;
 
     @GetMapping("/admin/users")
     public ModelAndView pageViewAllUsers(
@@ -60,7 +54,7 @@ public class AdminUsersController extends RequestRepository {
                 view.addObject("name", "(Unknown)");
             }
 
-            view.addObject("userList", _AdminUserRepository.getAllUsers(header, true));
+            view.addObject("userList", _AdminUserRepository.getAllUsers(header, false));
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {

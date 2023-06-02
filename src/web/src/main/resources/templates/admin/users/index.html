@@ -1,16 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" th:href="@{/css/admin-page.css}">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
-    <title>Users - Phone Store Manager [Administrator]</title>
-</head>
+<head lang="en" th:replace="~{/admin/fragments/adminHead :: headtag(title=${'Users'})}"></head>
 <body>
-    <div lang="en" th:replace="~{/fragments/sidenavbar :: sidenavbar(tab='users', user=${name})}"></div>
+    <div lang="en" th:replace="~{/admin/fragments/adminSideNavBar :: sidenavbar(tab='users', user=${name})}"></div>
     <div id="admin-page-data" class="col-sm p-3 min-vh-100">
         <h2>Users</h2>
         <h4>Manage user accounts</h4>
@@ -71,53 +63,6 @@
                 </tbody>
             </table>    
         </div>
-        <div class="modal fade" role="dialog" id="modal-dialog" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 id="modal-dialog-title" class="modal-title" style="white-space: pre-wrap;"></h4>
-                        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal"></button> -->
-                    </div>        
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <div id="dialog-addnew-errline" class="text-left text-white bg-danger mb-1 p-2 rounded-1" style="visibility: hidden;"></div>
-                        <span id="modal-dialog-body" class="text-left" style="white-space: pre-wrap;"></span>
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button id="modal-dialog-btnadd" type="button" onclick="toggleUser()" class="btn btn-primary">Enable/disable</button>
-                        <button id="modal-dialog-btncancel" type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </body>
-<script>
-    function showToggleModel(id, name, value) {
-        var title = "", body = "";
-        if (value) {
-            title = `Enable account ${name}?`;
-            body = `You are about to enable user ${name}?\r\nThis user will able to login again.`;
-        } else {
-            title = `Disable account ${name}?`;
-            body = `You are about to disable user ${name}?\r\nThis user won't able to login.`;
-        }
-        body = `${body}\r\n\r\nAre you sure you want to continue?`;
-        document.getElementById('modal-dialog-title').textContent = title;
-        document.getElementById('modal-dialog-body').textContent = body;
-        var okBtn = document.getElementById("modal-dialog-btnadd");
-        if (value) {
-            okBtn.classList.remove("btn-danger");
-            okBtn.classList.add("btn-success");
-            okBtn.textContent = "Enable";
-        } else {
-            okBtn.classList.remove("btn-success");
-            okBtn.classList.add("btn-danger");
-            okBtn.textContent = "Disable";
-        }
-        $("#modal-dialog").modal("show");
-    }
-</script>
 </html>

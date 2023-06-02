@@ -11,6 +11,9 @@ namespace PhoneStoreManager.Model.DTO
         [JsonProperty("phone")]
         public string Phone { get; set; }
 
+        [JsonProperty("email")]
+        public string Email { get; set; }
+
         [JsonProperty("username")]
         public string Username { get; set; }
 

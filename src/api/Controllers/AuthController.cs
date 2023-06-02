@@ -96,9 +96,12 @@ namespace PhoneStoreManager.Controllers
 
                 User user = new User();
                 user.Username = registerDTO.Username;
-                user.Password = registerDTO.Password;
+                string pHash = Utils.RandomString(12);
+                user.PasswordHash = pHash;
+                user.Password = Utils.EncryptSHA256(string.Format("{0}{1}", registerDTO.Password, pHash));
                 user.Name = registerDTO.Name;
                 user.Phone = registerDTO.Phone;
+                user.Email = registerDTO.Email;
                 userService.AddUser(user);
 
                 var data = userService.FindAllUsersByUsername(registerDTO.Username, false).ToList();

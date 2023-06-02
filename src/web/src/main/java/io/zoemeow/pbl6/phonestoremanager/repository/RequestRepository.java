@@ -19,21 +19,18 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.net.URIBuilder;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import io.zoemeow.pbl6.phonestoremanager.model.RequestException;
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
 
-@Repository
 public class RequestRepository {
     private final Boolean ignoreSSL = true;
     
     @Value("${serverapi.baseurl}")
-    private String baseUrl = "https://127.0.0.1:7053";
-
+    private String baseUrl;
+    
     public RequestResult<JsonObject> getRequest(String uri, Map<String, String> parameters, Map<String, String> header) {
         RequestResult<JsonObject> result = new RequestResult<JsonObject>();
 
