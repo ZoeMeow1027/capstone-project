@@ -1,8 +1,8 @@
-package io.zoemeow.pbl6.phonestoremanager.model;
+package io.zoemeow.pbl6.phonestoremanager.model.bean;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProductCategory {
+public class ProductManufacturer {
     @SerializedName("id")
     Integer id;
     @SerializedName("name")

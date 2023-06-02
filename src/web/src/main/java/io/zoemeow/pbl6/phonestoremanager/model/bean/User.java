@@ -1,4 +1,4 @@
-package io.zoemeow.pbl6.phonestoremanager.model;
+package io.zoemeow.pbl6.phonestoremanager.model.bean;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -1,17 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" th:href="@{/css/admin-page.css}">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
-    <script th:src="@{/js/admin-product.js}"></script>
-    <title th:text="${(action.compareTo('edit') == 0 ? 'Edit' : 'Add') + ' a product manufacturer - Product Manufacturer - Phone Store Manager [Administrator]'}"></title>
-</head>
+<head lang="en" th:replace="~{/admin/fragments/adminHead :: headtag(title=${(action.compareTo('edit') == 0 ? 'Update' : 'Add') + ' a product manufacturer - Product Manufacturers'})}"></head>
 <body>
-    <div lang="en" th:replace="~{/fragments/sidenavbar :: sidenavbar(tab='products', user=${name})}"></div>
+    <div lang="en" th:replace="~{/admin/fragments/adminSideNavBar :: sidenavbar(tab='products', user=${name})}"></div>
     <section id="admin-page-data" class="col-sm p-3 min-vh-100" th:with="condition=${action == null ? true : action.compareTo('edit') == 0 ? false : true}">
         <a href="/admin/products/manufacturers"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
         <div th:if="${condition}" th:remove="tag">
@@ -19,7 +10,7 @@
             <h4>Add a product manufacturer</h4>        
         </div>
         <div th:unless="${condition}">
-            <h2>Edit product manufacturer</h2>
+            <h2>Update product manufacturer</h2>
             <h4 th:text="${'Product manufacturer' + (productManufacturer == null ? '' : productManufacturer.getName()) + ' with ID ' + (productManufacturer == null ? '' : productManufacturer.getId())}"></h4>
         </div>
         <hr />
