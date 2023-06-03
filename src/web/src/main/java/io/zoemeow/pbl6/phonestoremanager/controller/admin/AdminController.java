@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.model.NoPermissionException;
+import io.zoemeow.pbl6.phonestoremanager.model.SessionExpiredException;
 import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,14 +38,19 @@ public class AdminController {
             _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
-        } catch (Exception ex) {
+        } catch (NoPermissionException npEx) {
+            view = new ModelAndView("redirect:/");
+        } catch (SessionExpiredException seEx) {
             Cookie cookie = new Cookie("token", "");
             cookie.setPath("/");
             cookie.setMaxAge(0);
             response.addCookie(cookie);
 
             view = new ModelAndView("redirect:/auth/login");
+        } catch (Exception ex) {
+            // TODO: 500 error code here!
         }
+        
         return view;
     }
 }

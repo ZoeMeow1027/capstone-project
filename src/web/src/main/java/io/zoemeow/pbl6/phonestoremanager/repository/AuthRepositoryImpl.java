@@ -5,32 +5,45 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.model.NoPermissionException;
 import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.model.SessionExpiredException;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.dto.RegisterDTO;
 
 @Repository
 public class AuthRepositoryImpl extends RequestRepository implements AuthRepository {
 
     @Override
-    public RequestResult<JsonObject> getUserInformation(Map<String, String> header, ArrayList<Integer> allowedUserType)
+    public User getUserInformation(Map<String, String> header, ArrayList<Integer> allowedUserType)
             throws Exception {
         RequestResult<JsonObject> reqResult = getRequest("/api/account/my", null, header);
         
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         } else if (reqResult.getStatusCode() != 200) {
-            throw new Exception(String.format("API was returned with code %d. Maybe you wasn't logged in?", reqResult.getStatusCode()));
+            throw new SessionExpiredException(String.format("API was returned with code %d. Maybe your session has expired?", reqResult.getStatusCode()));
         } else if (allowedUserType != null) {
             if (!allowedUserType
                     .contains(reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt())) {
-                throw new Exception("This user isn't have enough permission to do that!");
+                throw new NoPermissionException("This user isn't have enough permission to do that!");
             }
         }
 
-        return reqResult;
+        var data = reqResult.getData().get("data").getAsJsonObject();
+        if (data == null) {
+            return null;
+        } else {
+            return new Gson().fromJson(
+                data,
+                (new TypeToken<User>() {}).getType()
+            );
+        }
     }
 
     @Override
@@ -46,7 +59,7 @@ public class AuthRepositoryImpl extends RequestRepository implements AuthReposit
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         } else if (reqResult.getStatusCode() != 200) {
-            throw new Exception(String.format("API was returned with code %d. Maybe you wasn't logged in?", reqResult.getStatusCode()));
+            throw new Exception(String.format("API was returned with code %d. Maybe your information is incorrect?", reqResult.getStatusCode()));
         }
 
         return reqResult;
