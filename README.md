@@ -20,13 +20,14 @@
 
 | Group         | Components    | Start date    | Updated       | Progress          |
 | -             | -             | -             | -             | -                 |
-| [API](#api)   | [Services](#services-start-date-20230418), [Controllers](#controllers-start-date-20230424) | 2023/04/18    | 2023/06/02    | ![https://progress-bar.dev/80/?scale=100&width=120](https://progress-bar.dev/80/?scale=100&width=120) |
-| [Web](#web)   | [Admin Page](#admin-page-start-date-20230516), [Auth Page](#auth-page-start-date-20230516) | 2023/05/16    | 2023/06/02    | ![https://progress-bar.dev/40/?scale=100&width=120](https://progress-bar.dev/40/?scale=100&width=120) |
-
+| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/02    | ![https://progress-bar.dev/80/?scale=100&width=120](https://progress-bar.dev/80/?scale=100&width=120) |
+| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/03    | ![https://progress-bar.dev/45/?scale=100&width=120](https://progress-bar.dev/45/?scale=100&width=120) |
 
 ## API
 
-### Services (Start date: 2023/04/18)
+### Services
+
+Start date: 2023/04/18
 
 | Group						| Description														| Updated		| Task (tick means completed)	|
 | -							| -																	| -				| -								|
@@ -40,7 +41,9 @@
 
 [Go to progress](#progress)
 
-### Controllers (Start date: 2023/04/24)
+### Controllers
+
+Start date: 2023/04/24
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
@@ -57,7 +60,9 @@
 
 ## Web
 
-### Admin page (Start date: 2023/05/16)
+### Admin page
+
+Start date: 2023/05/16
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
@@ -67,12 +72,26 @@
 | Warranties                | Manage all warranties.                                                | ----/--/--    | <ul><li>[ ] View</li><li>[ ] Add</li><li>[ ] Update</li><li>[ ] Mark as disabled</li></ul> |
 | Statistics/Dashboard      | View all store states.                                                | ----/--/--    | <ul><li>[ ] View</li><li>[ ] List by date</li></ul> |
 
-### Auth page (Start date: 2023/05/16)
+[Go to progress](#progress)
+
+### Auth page
+
+Start date: 2023/05/16
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
 | Login                     | Login page.                                                           | 2023/05/24    | <ul><li>[x]</li></ul>         |
 | Register                  | Register page.                                                        | 2023/06/02    | <ul><li>[x]</li></ul>         |
 
+[Go to progress](#progress)
+
+### Main page
+
+Start date: 2023/06/03
+
+| Group						| Description															| Updated		| Task (tick means completed)	|
+| -							| -																		| -				| -								|
+| Main page                 | Home web page                                                         | 2023/06/03    | <ul><li>[ ]</li></ul>         |
+| Your profile              | Edit your basic profile                                               | 2023/06/03    | <ul><li>[ ]</li></ul>         |
 
 [Go to progress](#progress)

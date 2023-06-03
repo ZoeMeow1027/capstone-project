@@ -10,10 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.gson.JsonObject;
-
 import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
-import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,12 +31,8 @@ public class AdminDashboardController {
         ModelAndView view = null;
         try {
             view = new ModelAndView("/admin/dashboard");
-            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
-            if (reqResult.getData() != null) {
-                view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
-            } else {
-                view.addObject("name", "(Unknown)");
-            }
+            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            view.addObject("name", user == null ? "(Unknown)" : user.getName());
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {

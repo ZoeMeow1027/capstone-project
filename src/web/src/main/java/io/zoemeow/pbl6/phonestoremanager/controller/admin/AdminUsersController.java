@@ -46,13 +46,8 @@ public class AdminUsersController extends RequestRepository {
         try {
             view = new ModelAndView("/admin/users/index");
 
-            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
-                    new ArrayList<Integer>(Arrays.asList(2)));
-            if (reqResult.getData() != null) {
-                view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
-            } else {
-                view.addObject("name", "(Unknown)");
-            }
+            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("userList", _AdminUserRepository.getAllUsers(header, false));
         } catch (NoInternetException niEx) {
@@ -83,13 +78,8 @@ public class AdminUsersController extends RequestRepository {
             view = new ModelAndView("/admin/users/toggle");
             view.addObject("action", enabled == 0 ? "disable" : "enable");
 
-            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
-                    new ArrayList<Integer>(Arrays.asList(2)));
-            if (reqResult.getData() != null) {
-                view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
-            } else {
-                view.addObject("name", "(Unknown)");
-            }
+            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("user", _AdminUserRepository.getUser(header, id));
         } catch (NoInternetException niEx) {
@@ -131,13 +121,8 @@ public class AdminUsersController extends RequestRepository {
             view = new ModelAndView("/admin/users/add");
             view.addObject("action", "add");
 
-            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
-                    new ArrayList<Integer>(Arrays.asList(2)));
-            if (reqResult.getData() != null) {
-                view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
-            } else {
-                view.addObject("name", "(Unknown)");
-            }
+            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            view.addObject("name", user == null ? "(Unknown)" : user.getName());
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {
@@ -180,13 +165,8 @@ public class AdminUsersController extends RequestRepository {
             view.addObject("action", "edit");
             view.addObject("id", id);
 
-            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
-                    new ArrayList<Integer>(Arrays.asList(2)));
-            if (reqResult.getData() != null) {
-                view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
-            } else {
-                view.addObject("name", "(Unknown)");
-            }
+            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("user", _AdminUserRepository.getUser(header, id));
         } catch (NoInternetException niEx) {
@@ -230,13 +210,8 @@ public class AdminUsersController extends RequestRepository {
             view = new ModelAndView("/admin/users/resetPassword");
             view.addObject("id", id);
 
-            RequestResult<JsonObject> reqResult = _AuthRepository.getUserInformation(header,
-                    new ArrayList<Integer>(Arrays.asList(2)));
-            if (reqResult.getData() != null) {
-                view.addObject("name", reqResult.getData().get("data").getAsJsonObject().get("name").getAsString());
-            } else {
-                view.addObject("name", "(Unknown)");
-            }
+            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("user", _AdminUserRepository.getUser(header, id));
         } catch (NoInternetException niEx) {

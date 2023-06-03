@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head lang="en" th:replace="~{/admin/fragments/adminHead :: headtag(title=${action == 'add' ? 'Add' : 'Update' + ' a user - Users'})}"></head>
+<head lang="en" th:replace="~{/admin/fragments/head :: headtag(title=${action == 'add' ? 'Add' : 'Update' + ' a user - Users'})}"></head>
 <body>
-    <div lang="en" th:replace="~{/admin/fragments/adminSideNavBar :: sidenavbar(tab='users', user=${name})}"></div>
+    <div lang="en" th:replace="~{/admin/fragments/sideNavBar :: sidenavbar(tab='users', user=${name})}"></div>
     <div id="admin-page-data" class="col-sm p-3 min-vh-100" th:with="condition=${action}">
         <a href="/admin/users"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
         <div th:if="${condition == 'add'}">
