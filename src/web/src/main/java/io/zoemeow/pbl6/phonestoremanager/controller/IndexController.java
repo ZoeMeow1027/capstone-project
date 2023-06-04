@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import io.zoemeow.pbl6.phonestoremanager.model.SessionExpiredException;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
 import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

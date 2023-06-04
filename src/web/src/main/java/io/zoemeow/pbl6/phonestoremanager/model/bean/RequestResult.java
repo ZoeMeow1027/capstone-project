@@ -1,4 +1,4 @@
-package io.zoemeow.pbl6.phonestoremanager.model;
+package io.zoemeow.pbl6.phonestoremanager.model.bean;
 
 public class RequestResult<T> {
     private T data = null;

@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.JsonObject;
-import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
-import io.zoemeow.pbl6.phonestoremanager.model.RequestException;
-import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
+
 import io.zoemeow.pbl6.phonestoremanager.model.bean.Product;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.ProductCategory;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.ProductManufacturer;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 
 public interface AdminProductRepository {
     public List<Product> getProducts(Map<String, String> header, String query, Boolean includehidden) throws NoInternetException, RequestException;

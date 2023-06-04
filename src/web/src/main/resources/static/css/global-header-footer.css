@@ -1,19 +1,11 @@
-body {
-    --main-color: rgb(250, 232, 210);
-}
-
-footer a {
-    text-decoration: none;
-    color: black;
-}
-
-footer a:hover {
-    color: rgb(118, 190, 9);
-}
-
 #nav-bar {
     background: var(--main-color);
     box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+#nav-bar .btn-search {
+    background: var(--main-color);
+    filter: brightness(85%);
 }
 
 .nav-item .active {
@@ -27,6 +19,16 @@ footer a:hover {
     background: linear-gradient(145deg, #ffe7ca, #f0b56d);
     box-shadow: 4px 4px 4px #ddc1a0, -4px -4px 8px #f7e5cc;
 }
+
+footer a {
+    text-decoration: none;
+    color: black;
+}
+
+footer a:hover {
+    color: rgb(118, 190, 9);
+}
+
 
 #footer-bar {
     background: var(--main-color);

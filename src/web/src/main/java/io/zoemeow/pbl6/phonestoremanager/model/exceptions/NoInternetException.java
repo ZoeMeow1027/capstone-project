@@ -1,4 +1,4 @@
-package io.zoemeow.pbl6.phonestoremanager.model;
+package io.zoemeow.pbl6.phonestoremanager.model.exceptions;
 
 public class NoInternetException extends Exception {
     private String message;

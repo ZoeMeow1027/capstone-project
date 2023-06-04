@@ -1,9 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head lang="en" th:replace="~{/global/fragments/headTag :: headtag(title=${'Your Profile'})}"></head>
+<head lang="en" th:replace="~{/global/fragments/tag-head :: headtag(title=${'Your profile - Account Settings'})}"></head>
 <body>
     <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
-    123
+    <div class="row w-100 d-flex justify-content-center">
+        <div lang="en" th:replace="~{/global/fragments/sidebar-account :: sidebar(type=1, tab=0)}" th:remove="tag"></div>
+        <section id="page-account-data" class="col-sm p-3">
+            <h2>Your Profile</h2>
+            <h4>View and update your basic information</h4>
+            <hr />
+            <form id="form-user-profile">
+                <div id="modal-info-bar" class="text-left text-white bg-danger mb-3 p-2 rounded-1" style="visibility: hidden;"></div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" readonly th:value="${user == null ? '' : user.getUsername()}">
+                    <label for="floatingInput">Username</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" name="name" class="form-control" th:value="${user == null ? '' : user.getName()}">
+                    <label for="floatingInput">Name</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" name="email" class="form-control" th:value="${user == null ? '' : user.getEmail()}">
+                    <label for="floatingInput">Email address</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="tel" name="phone" class="form-control" th:value="${user == null ? '' : user.getPhone()}">
+                    <label for="floatingInput">Phone</label>
+                </div>
+                <button id="form-btnok" onclick="" type="button" class="btn btn-primary px-5 py-3">Save Changes</button>
+            </form>
+        </section>
+    </div>
     <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
 </body>
 </html>

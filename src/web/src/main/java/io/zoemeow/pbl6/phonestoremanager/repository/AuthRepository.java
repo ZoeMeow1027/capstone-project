@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.google.gson.JsonObject;
 
-import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.dto.RegisterDTO;
 

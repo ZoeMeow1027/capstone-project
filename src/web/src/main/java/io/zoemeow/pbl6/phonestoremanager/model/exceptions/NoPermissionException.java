@@ -1,9 +1,9 @@
-package io.zoemeow.pbl6.phonestoremanager.model;
+package io.zoemeow.pbl6.phonestoremanager.model.exceptions;
 
-public class SessionExpiredException extends Exception {
+public class NoPermissionException extends Exception {
     private String message;
     
-    public SessionExpiredException(String message) {
+    public NoPermissionException(String message) {
         this.message = message;
     }
 

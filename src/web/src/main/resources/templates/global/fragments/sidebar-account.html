@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="sidebar" id="page-account-sidebar" class="d-flex flex-sm-column flex-row flex-nowrap align-items-left min-vh-100">
+        <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center justify-content-center w-100 align-items-left">
+            <li class="py-3 px-3 my-2">
+                <span class="nav-text align-middle h4">Delivery</span>
+            </li>
+            <li>
+                <a href="/account/delivery?type=0" class="nav-link py-3 px-3 mx-1 sidebar-account-item" th:classappend="${type == 0 && tab == 0} ? active : ''" title="Manage your current delivery" data-bs-toggle="tooltip" data-bs-placement="right">
+                    <span class="nav-text align-middle">Your current delivery</span>
+                </a>
+            </li>
+            <li>
+                <a href="/account/delivery?type=1" class="nav-link py-3 px-3 m-1 sidebar-account-item" th:classappend="${type == 0 && tab == 1} ? active : ''" title="View your purchase history" data-bs-toggle="tooltip" data-bs-placement="right">
+                    <span class="nav-text align-middle">Your purchase history</span>
+                </a>
+            </li>
+            <li class="py-3 px-3 my-2 mt-4">
+                <span class="nav-text align-middle h4">Account Settings</span>
+            </li>
+            <li>
+                <a href="/account/profile" class="nav-link py-3 px-3 mx-1 sidebar-account-item" th:classappend="${type == 1 && tab == 0} ? active : ''" title="Change your basic information" data-bs-toggle="tooltip" data-bs-placement="right">
+                    <span class="nav-text align-middle">Your Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="/account/address" class="nav-link py-3 px-3 m-1 sidebar-account-item" th:classappend="${type == 1 && tab == 1} ? active : ''" title="Manager your delivery address" data-bs-toggle="tooltip" data-bs-placement="right">
+                    <span class="nav-text align-middle">Your Delivery Address</span>
+                </a>
+            </li>
+            <li>
+                <a href="/account/change-password" class="nav-link py-3 px-3 m-1 sidebar-account-item" th:classappend="${type == 1 && tab == 2} ? active : ''" title="Change your password" data-bs-toggle="tooltip" data-bs-placement="right">
+                    <span class="nav-text align-middle">Change Your Password</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
