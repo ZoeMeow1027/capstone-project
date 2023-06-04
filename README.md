@@ -21,7 +21,7 @@
 | Group         | Components    | Start date    | Updated       | Progress          |
 | -             | -             | -             | -             | -                 |
 | [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/02    | ![https://progress-bar.dev/80/?scale=100&width=120](https://progress-bar.dev/80/?scale=100&width=120) |
-| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/03    | ![https://progress-bar.dev/45/?scale=100&width=120](https://progress-bar.dev/45/?scale=100&width=120) |
+| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/05    | ![https://progress-bar.dev/50/?scale=100&width=120](https://progress-bar.dev/50/?scale=100&width=120) |
 
 ## API
 
@@ -91,7 +91,9 @@ Start date: 2023/06/03
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
-| Main page                 | Home web page                                                         | 2023/06/03    | <ul><li>[ ]</li></ul>         |
-| Your profile              | Edit your basic profile                                               | 2023/06/03    | <ul><li>[ ]</li></ul>         |
+| Main page                 | Home web page                                                         | 2023/06/03    | <ul><li>[ ]</li></ul> |
+| Your profile              | Edit your basic profile                                               | 2023/06/05    | <ul><li>[x] View</li><li>[x] Profile data</li><li>[ ] Save changes</li></ul> |
+| Change your password      | Change your password                                                  | 2023/06/05    | <ul><li>[x] View</li><li>[ ] Change password</li></ul> |
+| Your cart                 | Manage your cart                                                      | 2023/06/05    | <ul><li>[x] View</li><li>[ ] List items in cart</li><li>[ ] Go to checkout</li></ul> |
 
 [Go to progress](#progress)

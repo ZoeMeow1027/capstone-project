@@ -11,12 +11,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
-import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
-import io.zoemeow.pbl6.phonestoremanager.model.RequestException;
-import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.Product;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.ProductCategory;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.ProductManufacturer;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 
 @Repository
 public class AdminProductRepositoryImpl extends RequestRepository implements AdminProductRepository {

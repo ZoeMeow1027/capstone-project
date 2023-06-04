@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.JsonObject;
-import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
-import io.zoemeow.pbl6.phonestoremanager.model.RequestException;
-import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
+
+import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.dto.AdminUserResetPassDTO;
 import io.zoemeow.pbl6.phonestoremanager.model.dto.AdminUserToggleDTO;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 
 public interface AdminUserRepository {
     public List<User> getAllUsers(Map<String, String> header, Boolean includeHidden) throws RequestException, NoInternetException;

@@ -1,0 +1,29 @@
+body {
+    --main-color: rgb(250, 217, 176);
+    --sidebar-width: 300px;
+}
+
+#page-account-sidebar {
+    width: var(--sidebar-width);
+    padding: 10px 14px;
+}
+
+#page-account-data {
+    max-width: calc(100% - 20% - var(--sidebar-width));
+}
+
+.sidebar-account-item {
+    color: black !important;
+}
+
+.sidebar-account-item.active,
+.sidebar-account-item:hover {
+    background-color: var(--main-color) !important;
+    color: black !important;
+}
+
+.btn {
+    background-color: var(--main-color) !important;
+    border: var(--main-color) !important;
+    color: rgb(82, 82, 82) !important;
+}

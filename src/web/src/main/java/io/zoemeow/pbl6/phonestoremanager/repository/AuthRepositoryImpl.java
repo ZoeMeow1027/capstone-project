@@ -9,12 +9,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
-import io.zoemeow.pbl6.phonestoremanager.model.NoInternetException;
-import io.zoemeow.pbl6.phonestoremanager.model.NoPermissionException;
-import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
-import io.zoemeow.pbl6.phonestoremanager.model.SessionExpiredException;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.dto.RegisterDTO;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoPermissionException;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
 
 @Repository
 public class AuthRepositoryImpl extends RequestRepository implements AuthRepository {

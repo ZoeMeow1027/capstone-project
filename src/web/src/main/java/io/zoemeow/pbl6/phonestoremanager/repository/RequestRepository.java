@@ -22,8 +22,8 @@ import org.springframework.beans.factory.annotation.Value;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import io.zoemeow.pbl6.phonestoremanager.model.RequestException;
-import io.zoemeow.pbl6.phonestoremanager.model.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 
 public class RequestRepository {
     private final Boolean ignoreSSL = true;
