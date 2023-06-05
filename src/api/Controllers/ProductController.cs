@@ -38,6 +38,21 @@ namespace PhoneStoreManager.Controllers
 
             try
             {
+                if (includehidden)
+                {
+                    try
+                    {
+                        CheckPermission(
+                           Request.Cookies["token"],
+                           new List<UserType>() { UserType.Administrator, UserType.Staff }
+                           );
+                    }
+                    catch
+                    {
+                        throw new UnauthorizedAccessException("IncludeHidden is not allowed for user!");
+                    }
+                }
+
                 switch (type.ToLower())
                 {
                     case "product":
@@ -64,6 +79,11 @@ namespace PhoneStoreManager.Controllers
                     default:
                         throw new BadHttpRequestException("Invalid \"type\" value!");
                 }
+            }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                result.StatusCode = 401;
+                result.Message = uaEx.Message;
             }
             catch (BadHttpRequestException bhrEx)
             {

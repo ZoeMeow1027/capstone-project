@@ -11,13 +11,13 @@
                         aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="input-group mx-5 my-1 px-3">
-                        <input type="text" class="form-control" id="search-query" placeholder="Search a product...">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text btn-search"><i class="bi bi-search text-black"></i></div>
-                        </div>
-                    </div>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                        <form class="input-group mx-5 my-1 px-3" action="/search" method="get">
+                            <input type="text" class="form-control" id="search-query" name="q" placeholder="Search a product..." required th:value="${query == null ? '' : query}">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text btn-search"><button class="btn btn-transparent"><i class="bi bi-search text-black"></i></button></div>
+                            </div>
+                        </form>
                         <ul class="navbar-nav ms-auto align-items-center">
                             <div th:with="conidtion=${name != null}" th:remove="tag">
                                 <li class="nav-item" th:if="${conidtion}">

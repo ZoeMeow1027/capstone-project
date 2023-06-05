@@ -5,7 +5,7 @@
 
 #nav-bar .btn-search {
     background: var(--main-color);
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .nav-item .active {
