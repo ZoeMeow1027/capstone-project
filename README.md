@@ -92,6 +92,7 @@ Start date: 2023/06/03
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
 | Main page                 | Home web page                                                         | 2023/06/03    | <ul><li>[ ]</li></ul> |
+| Search page               | Search result when you return a search query                          | 2023/06/05    | <ul><li>[x] View</li><li>[ ] Navigate to product detail</li><li>[ ] Product image</li></ul> |
 | Your profile              | Edit your basic profile                                               | 2023/06/05    | <ul><li>[x] View</li><li>[x] Profile data</li><li>[ ] Save changes</li></ul> |
 | Change your password      | Change your password                                                  | 2023/06/05    | <ul><li>[x] View</li><li>[ ] Change password</li></ul> |
 | Your cart                 | Manage your cart                                                      | 2023/06/05    | <ul><li>[x] View</li><li>[ ] List items in cart</li><li>[ ] Go to checkout</li></ul> |
