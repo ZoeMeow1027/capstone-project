@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhoneStoreManager.Model
 {
-    [Table("ImageMetadata")]
+    [Table("ProductImageMetadata")]
     public class ProductImageMetadata
     {
         [Key]

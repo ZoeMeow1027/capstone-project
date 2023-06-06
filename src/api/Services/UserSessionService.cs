@@ -77,7 +77,7 @@ namespace PhoneStoreManager.Services
             return data;
         }
 
-        public bool HasTokenPermission(string? token, List<UserType> allowedType)
+        public bool HasTokenPermission(string? token, List<UserType>? allowedType)
         {
             if (token == null)
                 return false;
@@ -86,7 +86,7 @@ namespace PhoneStoreManager.Services
             if (session == null)
                 return false;
 
-            return allowedType.Contains(session.User.UserType);
+            return allowedType == null ? true : allowedType.Contains(session.User.UserType);
         }
 
         public bool IsAccountLocked(string token)

@@ -11,7 +11,7 @@ namespace PhoneStoreManager.Services
 
         void DeleteSessionByToken(string token);
 
-        bool HasTokenPermission(string? token, List<UserType> allowedType);
+        bool HasTokenPermission(string? token, List<UserType>? allowedType);
 
         void LogOutAllByUserID(int userId);
 
