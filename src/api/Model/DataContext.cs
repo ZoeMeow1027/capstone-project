@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PhoneStoreManager.Model.Enums;
-using System.Diagnostics;
 
 namespace PhoneStoreManager.Model
 {
@@ -23,6 +21,7 @@ namespace PhoneStoreManager.Model
         public DbSet<UserSession> UserSessions { get; set; }
         public DbSet<Warranty> Warranties { get; set; }
         public DbSet<ProductImageMetadata> ImageMetadatas { get; set; }
+        public DbSet<UserCart> UserCarts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -44,6 +43,21 @@ namespace PhoneStoreManager.Model
                 p.HasIndex(e => e.Username).IsUnique();
             });
 
+            // Foreign key UserID in User and BillSummary
+            modelBuilder.Entity<BillSummary>()
+                .HasOne(p => p.User)
+                .WithMany(c => c.BillSummaries)
+                .HasForeignKey(p => p.UserID)
+                .HasPrincipalKey(c => c.ID);
+
+            // Foreign key ProductID in ProductImageMetadata and Product
+            modelBuilder.Entity<ProductImageMetadata>()
+                .HasOne(p => p.Product)
+                .WithMany(c => c.Images)
+                .HasForeignKey(p => p.ProductID)
+                .HasPrincipalKey(c => c.ID);
+
+            #region UserSession table
             // Foreign key UserID in User and UserSession
             modelBuilder.Entity<UserSession>()
                 .HasOne(p => p.User)
@@ -56,7 +70,9 @@ namespace PhoneStoreManager.Model
             {
                 p.HasIndex(e => e.Token).IsUnique();
             });
+            #endregion
 
+            #region Product table
             // Foreign key CategoryID in Product and ProductCategory
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
@@ -70,14 +86,9 @@ namespace PhoneStoreManager.Model
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.ManufacturerID)
                 .HasPrincipalKey(c => c.ID);
+            #endregion
 
-            // Foreign key UserID in User and BillSummary
-            modelBuilder.Entity<BillSummary>()
-                .HasOne(p => p.User)
-                .WithMany(c => c.BillSummaries)
-                .HasForeignKey(p => p.UserID)
-                .HasPrincipalKey(c => c.ID);
-
+            #region BillDetails table
             // Foreign key BillID in BillSummary and BillDetails
             modelBuilder.Entity<BillDetails>()
                 .HasOne(p => p.BillSummary)
@@ -91,7 +102,9 @@ namespace PhoneStoreManager.Model
                 .WithMany(c => c.BillDetails)
                 .HasForeignKey(p => p.ProductID)
                 .HasPrincipalKey(c => c.ID);
+            #endregion
 
+            #region Warranty table
             // Foreign key ProductID in Warranty and Products
             modelBuilder.Entity<Warranty>()
                 .HasOne(p => p.Product)
@@ -112,13 +125,23 @@ namespace PhoneStoreManager.Model
                 .WithMany(c => c.Warranties)
                 .HasForeignKey(p => p.UserID)
                 .HasPrincipalKey(c => c.ID);
+            #endregion
 
-            // Foreign key ProductID in ProductImageMetadata and Product
-            modelBuilder.Entity<ProductImageMetadata>()
-                .HasOne(p => p.Product)
-                .WithMany(c => c.Images)
-                .HasForeignKey(p => p.ProductID)
+            #region UserCart table
+            // Foreign key UserID in table User
+            modelBuilder.Entity<UserCart>()
+                .HasOne(p => p.User)
+                .WithMany(c => c.UserCart)
+                .HasForeignKey(p => p.UserID)
                 .HasPrincipalKey(c => c.ID);
+
+            // Foreign key ProductID in table Product
+            modelBuilder.Entity<UserCart>()
+                .HasOne(p => p.Product)
+                .WithOne(c => c.UserCart)
+                .HasForeignKey<UserCart>(p => p.ProductID)
+                .HasPrincipalKey<Product>(c => c.ID);
+            #endregion
 
             base.OnModelCreating(modelBuilder);
         }

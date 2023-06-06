@@ -39,6 +39,9 @@ namespace PhoneStoreManager.Model
         [JsonProperty("price")]
         public long Price { get; set; } = 0;
 
+        [JsonProperty("metadata")]
+        public string? Metadata { get; set; } = null;
+
         [Required]
         [JsonProperty("showinpage")]
         public bool ShowInPage { get; set; } = true;
@@ -71,6 +74,9 @@ namespace PhoneStoreManager.Model
 
         [JsonProperty("images")]
         public List<ProductImageMetadata> Images { get; set; }
+
+        [JsonIgnore]
+        public UserCart UserCart { get; set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         #endregion
     }
