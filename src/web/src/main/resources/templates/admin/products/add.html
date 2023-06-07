@@ -48,6 +48,14 @@
                 <input type="number" class="form-control" name="warrantymonth" min="0" th:value="${product == null ? '' : product.getWarrantyMonth()}">
                 <label for="floatingInput">Warranty Month</label>
             </div>
+            <div th:unless="${condition}" class="form-floating mb-3">
+                <input type="text" class="form-control" name="datecreated" min="0" disabled th:value="${#calendars.format(new java.util.Date(product.getDateCreated()), 'dd/MM/yyyy HH:mm:ss')}">
+                <label for="floatingInput">Date Created</label>
+            </div>
+            <div th:unless="${condition}" class="form-floating mb-3">
+                <input type="text" class="form-control" name="datemodified" min="0" disabled th:value="${#calendars.format(new java.util.Date(product.getDateModified()), 'dd/MM/yyyy HH:mm:ss')}">
+                <label for="floatingInput">Date Modified</label>
+            </div>
             <div class="form-floating mb-3">
                 <input type="number" class="form-control" name="price" min="0" th:value="${product == null ? '' : product.getPrice()}">
                 <label for="floatingInput">Price</label>

@@ -30,7 +30,7 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
         if (query != null) {
             parameters.put("query", query);
         }
-        RequestResult<JsonObject> reqResult = getRequest("/api/products", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/products", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
@@ -60,7 +60,7 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
         if (query != null) {
             parameters.put("query", query);
         }
-        RequestResult<JsonObject> reqResult = getRequest("/api/products", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/products", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
@@ -90,7 +90,7 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
         if (query != null) {
             parameters.put("query", query);
         }
-        RequestResult<JsonObject> reqResult = getRequest("/api/products", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/products", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
@@ -118,7 +118,7 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
         parameters.put("includehidden", "true");
         parameters.put("id", id.toString());
 
-        RequestResult<JsonObject> reqResult = getRequest("/api/products", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/products", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
@@ -156,7 +156,7 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequest("/api/products/", null, header, postData);
+        return postRequestWithResult("/api/products/", null, header, postData);
     }
 
     @Override
@@ -177,7 +177,7 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
         bodyRoot.add("data", productUpdate);
 
         String postData = bodyRoot.toString();
-        return postRequest("/api/products/", null, header, postData);
+        return postRequestWithResult("/api/products/", null, header, postData);
     }
 
     @Override
@@ -190,7 +190,7 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
         bodyRoot.add("data", productUpdate);
 
         String postData = bodyRoot.toString();
-        return postRequest("/api/products/", null, header, postData);
+        return postRequestWithResult("/api/products/", null, header, postData);
     }
 
     @Override
@@ -200,7 +200,7 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
         parameters.put("type", "category");
         parameters.put("id", id.toString());
 
-        RequestResult<JsonObject> reqResult = getRequest("/api/products", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/products", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
@@ -233,7 +233,7 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
         bodyRoot.add("data", productUpdate);
 
         String postData = bodyRoot.toString();
-        return postRequest("/api/products/", null, header, postData);
+        return postRequestWithResult("/api/products/", null, header, postData);
     }
 
     @Override
@@ -247,7 +247,7 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
         bodyRoot.add("data", productUpdate);
 
         String postData = bodyRoot.toString();
-        return postRequest("/api/products/", null, header, postData);
+        return postRequestWithResult("/api/products/", null, header, postData);
     }
 
     @Override
@@ -257,7 +257,7 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
         parameters.put("type", "manufacturer");
         parameters.put("id", id.toString());
 
-        RequestResult<JsonObject> reqResult = getRequest("/api/products", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/products", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
@@ -290,7 +290,7 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
         bodyRoot.add("data", productUpdate);
 
         String postData = bodyRoot.toString();
-        return postRequest("/api/products/", null, header, postData);
+        return postRequestWithResult("/api/products/", null, header, postData);
     }
     
 }

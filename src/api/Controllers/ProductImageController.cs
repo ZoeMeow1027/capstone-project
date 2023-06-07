@@ -11,7 +11,7 @@ namespace PhoneStoreManager.Controllers
     {
         private readonly string DIR_APPDATA;
         private readonly string DIR_ROOT;
-        private readonly string DIR_IMAGE;
+        private readonly string DIR_IMAGE;  
         private readonly string DIR_ROOTIMAGEPATH;
         private readonly IImageMetadataService _imageMetadataService;
 

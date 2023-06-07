@@ -28,7 +28,7 @@ public class AdminUserRepositoryImpl extends RequestRepository implements AdminU
         parameters.put("type", "user");
         parameters.put("includedisabled", includeHidden.toString());
         
-        RequestResult<JsonObject> reqResult = getRequest("/api/users", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/users", parameters, header);
                 if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
@@ -56,7 +56,7 @@ public class AdminUserRepositoryImpl extends RequestRepository implements AdminU
         parameters.put("includedisabled", "true");
         parameters.put("id", id.toString());
 
-        RequestResult<JsonObject> reqResult = getRequest("/api/users", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/users", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
@@ -87,7 +87,7 @@ public class AdminUserRepositoryImpl extends RequestRepository implements AdminU
         bodyRoot.add("data", userToggle);
 
         String postData = bodyRoot.toString();
-        return postRequest("/api/users", null, header, postData);
+        return postRequestWithResult("/api/users", null, header, postData);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class AdminUserRepositoryImpl extends RequestRepository implements AdminU
         bodyRoot.add("data", userResetPass);
 
         String postData = bodyRoot.toString();
-        return postRequest("/api/users", null, header, postData);
+        return postRequestWithResult("/api/users", null, header, postData);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class AdminUserRepositoryImpl extends RequestRepository implements AdminU
         bodyRoot.add("data", userAdd);
 
         String postData = bodyRoot.toString();
-        return postRequest("/api/users", null, header, postData);
+        return postRequestWithResult("/api/users", null, header, postData);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class AdminUserRepositoryImpl extends RequestRepository implements AdminU
         bodyRoot.add("data", userAdd);
 
         String postData = bodyRoot.toString();
-        return postRequest("/api/users", null, header, postData);
+        return postRequestWithResult("/api/users", null, header, postData);
     }
     
 }

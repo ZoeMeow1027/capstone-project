@@ -20,20 +20,28 @@
                         </form>
                         <ul class="navbar-nav ms-auto align-items-center">
                             <div th:with="conidtion=${name != null}" th:remove="tag">
-                                <li class="nav-item" th:if="${conidtion}">
-                                    <a class="nav-link mx-2 my-1 px-3 auth d-flex flex-md-row" href="/cart">
-                                        <i class="bi bi-cart text-center me-2"></i>
-                                        <span class="text-center text-nowrap">0 items</span>
-                                    </a>
-                                </li>
                                 <li class="nav-item dropdown" th:if="${conidtion}">
-                                    <a class="nav-link mx-2 my-1 px-3 auth dropdown-toggle" href="#"
+                                    <a class="nav-link my-1 auth dropdown" href="#"
                                         id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                                         aria-expanded="false">
-                                        <i class="bi bi-person-circle text-center me-2"></i>
-                                        <span class="text-center" th:text="${name}"></span>
+                                        <div class="container d-flex align-items-center">
+                                            <img class="bi-person-circle rounded-circle me-2" src="/account/avatar" width="36" height="36">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span class="text-nowrap" th:text="${name}"></span>
+                                                </div>
+                                                <div th:unless="${adminuser}" th:remove="tag">
+                                                    <div class="col">
+                                                        <div class="w-100"></div>
+                                                        <span class="text-nowrap"><i class="bi bi-cart me-2"></i>0 items</span>
+                                                    </div>
+                                                </div>    
+                                            </div>
+                                        </div>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                                        <h6 th:unless="${adminuser}" class="dropdown-header">Your cart</h6>
+                                        <li th:unless="${adminuser}"><a class="dropdown-item" href="/cart">View your cart</a></li>
                                         <h6 th:unless="${adminuser}" class="dropdown-header">Your delivery</h6>
                                         <li th:unless="${adminuser}"><a class="dropdown-item" href="/account/delivery?type=0">Current delivery</a></li>
                                         <li th:unless="${adminuser}"><a class="dropdown-item" href="/account/delivery?type=1">Purchase history</a></li>

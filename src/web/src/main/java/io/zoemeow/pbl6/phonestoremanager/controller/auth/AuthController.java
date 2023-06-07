@@ -37,7 +37,7 @@ public class AuthController extends RequestRepository {
             Map<String, String> header = new HashMap<String, String>();
             header.put("cookie", request.getHeader("cookie"));
 
-            RequestResult<JsonObject> reqResult = getRequest("/api/account/my", null, header);
+            RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/my", null, header);
             if (!reqResult.getIsSuccessfulRequest()) {
                 // TODO: Check if not successful request here!
             }
@@ -117,7 +117,7 @@ public class AuthController extends RequestRepository {
             Map<String, String> header = new HashMap<String, String>();
             header.put("cookie", request.getHeader("cookie"));
 
-            RequestResult<JsonObject> reqResult = getRequest("/api/account/my", null, header);
+            RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/my", null, header);
             if (!reqResult.getIsSuccessfulRequest()) {
                 // TODO: Check if not successful request here!
             }

@@ -51,8 +51,11 @@ namespace PhoneStoreManager.Services
             else throw new Exception(string.Format("User with ID {0} is not exist!", userId));
         }
 
-        public void DeleteSessionByToken(string token)
+        public void DeleteSessionByToken(string? token)
         {
+            if (token == null)
+                return;
+
             var data = GetUserSessionByToken(token);
             if (data != null)
             {

@@ -73,8 +73,8 @@ public class Validate {
         // Check name
         if (productCategory.getName() == null) {
             throw new Exception("Name is missing!");
-        } if (productCategory.getName().trim().length() < 6) {
-            throw new Exception("Name must be at least 6 characters!");
+        } if (productCategory.getName().trim().length() < 2) {
+            throw new Exception("Name must be at least 2 characters!");
         }
     }
 
@@ -89,8 +89,8 @@ public class Validate {
         // Check name
         if (productManufacturer.getName() == null) {
             throw new Exception("Name is missing!");
-        } if (productManufacturer.getName().trim().length() < 6) {
-            throw new Exception("Name must be at least 6 characters!");
+        } if (productManufacturer.getName().trim().length() < 2) {
+            throw new Exception("Name must be at least 2 characters!");
         }
     }
 }
