@@ -12,47 +12,60 @@
             <a href="/admin/products/categories" class="ps-2"><button type="button" class="btn btn-primary">Show all Product Categories</button></a>
             <a href="/admin/products/add" class="ps-2"><button type="button" class="btn btn-success">Create new</button></a>
         </div>
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered border-primary">
-                <thead>
-                    <th class="text-center">ID</th>
-                    <th class="text-center">Name</th>
-                    <th class="text-center">Image</th>
-                    <th class="text-center">Category</th>
-                    <th class="text-center">Manufacturer</th>
-                    <th class="text-center">Intentory Count</th>
-                    <th class="text-center">Unit</th>
-                    <th class="text-center">Warranty</th>
-                    <th class="text-center">Price</th>
-                    <th class="text-center">Date Created</th>
-                    <th class="text-center">Date Modified</th>
-                    <th class="text-center">Show in Homepage</th>
-                    <th class="text-center">Actions</th>
-                </thead>
-                <tbody>
-                    <tr th:each="item: ${productList}">
-                        <td class="text-center" th:text="${item.getId()}"></td>
-                        <td class="text-center" th:text="${item.getName()}"></td>
-                        <div th:with="condition=${1 == 2}" th:remove="tag">
-                            <td class="text-center" th:if="${condition}" th:text="${'...'}"></td>
-                            <td class="text-center" th:unless="${condition}" th:text="${'(no image)'}"></td>
+        <div class="container-fluid">
+            <div class="row">
+                <div th:each="item: ${productList}" th:remove="tag">
+                    <div class="col d-flex align-items-left flex-fill card my-1">
+                        <div class="row justify-content-between">
+                            <div class="col-md-auto mx-2 my-2">
+                                <img src="/" width="48" height="48" alt="image">
+                            </div>
+                            <div class="col-md-3 my-2 mx-1">
+                                <div class="col">
+                                    <span class="text" th:text="${'ID: ' + item.getId()}"></span>
+                                </div>
+                                <div class="col">
+                                    <span class="h5" th:text="${item.getName()}"></span>
+                                </div>
+                                <div class="col">
+                                    <span class="h6" th:text="${item.getManufacturer().getName()}"></span>
+                                </div>
+                                <div class="col">
+                                    <span class="h6" th:text="${'Category: ' + item.getCategory().getName()}"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 mx-1 my-2">
+                                <div class="col">
+                                    <span class="h6" th:text="${item.getPrice() + '$'}"></span>
+                                </div>
+                            </div>
+                            <div class="col mx-1 my-2">
+                                <div class="col">
+                                    <span class="h6" th:text="${'In stock: ' + item.getInventoryCount() + ' (' + item.getUnit() + (item.getInventoryCount() == 1 ? '' : 's') + ')'}"></span>
+                                </div>
+                                <div class="col">
+                                    <span class="h6" th:text="${'Warranty: ' + item.getWarrantyMonth() + ' month' + (item.getWarrantyMonth() == 1 ? '' : 's')}"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mx-1 my-2">
+                                <div class="col d-flex">
+                                    <button type="button" class="btn" th:classappend="${item.getShowInPage() ? 'bg-success' : 'bg-danger'}">
+                                        <span class="h6 text-white" th:text="${item.getShowInPage() ? 'In active' : 'Hidden'}"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-1 mx-1 my-2 justify-content-center align-items-center">
+                                <div class="col my-1">
+                                    <a th:href="${'/admin/products/update?id=' + item.getId()}"><button type="button" class="btn btn-primary">Update</button></a>
+                                </div>
+                                <div class="col my-1">
+                                    <a th:href="${''}"><button type="button" class="btn btn-danger">Delete</button></a>
+                                </div>
+                            </div>
                         </div>
-                        <td class="text-center" th:text="${item.getCategory().getName()}"></td>
-                        <td class="text-center" th:text="${item.getManufacturer().getName()}"></td>
-                        <td class="text-center" th:text="${item.getInventoryCount()}"></td>
-                        <td class="text-center" th:text="${item.getUnit()}"></td>
-                        <td class="text-center" th:text="${item.getWarrantyMonth() + ' month' + (item.getWarrantyMonth() != 1 ? 's' : '')}"></td>
-                        <td class="text-center" th:text="${item.getPrice()}"></td>
-                        <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.getDateCreated()), 'dd/MM/yyyy HH:mm:ss')}"></td>
-                        <td class="text-center" th:text="${#calendars.format(new java.util.Date(item.getDateModified()), 'dd/MM/yyyy HH:mm:ss')}"></td>
-                        <td class="text-center" th:text="${item.getShowInPage()}"></td>
-                        <td class="text-center">
-                            <a th:href="${'/admin/products/update?id=' + item.getId()}"><button type="button" class="btn btn-primary">Update</button></a>
-                            <a th:href="${''}"><button type="button" class="btn btn-danger">Delete</button></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>    
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </body>

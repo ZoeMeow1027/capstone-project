@@ -3,6 +3,7 @@ package io.zoemeow.pbl6.phonestoremanager.repository;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Repository;
 
 import com.google.gson.Gson;
@@ -22,7 +23,7 @@ public class AuthRepositoryImpl extends RequestRepository implements AuthReposit
     @Override
     public User getUserInformation(Map<String, String> header, ArrayList<Integer> allowedUserType)
             throws Exception {
-        RequestResult<JsonObject> reqResult = getRequest("/api/account/my", null, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/my", null, header);
         
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
@@ -54,7 +55,7 @@ public class AuthRepositoryImpl extends RequestRepository implements AuthReposit
         auth.addProperty("password", password);
 
         header.put("content-type", "application/json; charset=UTF-8");
-        RequestResult<JsonObject> reqResult = postRequest("/api/auth/login", null, header, auth.toString());
+        RequestResult<JsonObject> reqResult = postRequestWithResult("/api/auth/login", null, header, auth.toString());
 
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
@@ -67,7 +68,7 @@ public class AuthRepositoryImpl extends RequestRepository implements AuthReposit
 
     @Override
     public RequestResult<JsonObject> logout(Map<String, String> header) throws Exception {
-        return postRequest("/api/account/logout", null, header, null);
+        return postRequestWithResult("/api/account/logout", null, header, null);
     }
 
     @Override
@@ -80,7 +81,7 @@ public class AuthRepositoryImpl extends RequestRepository implements AuthReposit
         auth.addProperty("phone", registerDTO.getPhone());
 
         header.put("content-type", "application/json; charset=UTF-8");
-        RequestResult<JsonObject> reqResult = postRequest("/api/auth/register", null, header, auth.toString());
+        RequestResult<JsonObject> reqResult = postRequestWithResult("/api/auth/register", null, header, auth.toString());
 
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
@@ -90,5 +91,14 @@ public class AuthRepositoryImpl extends RequestRepository implements AuthReposit
 
         return reqResult;
     }
-    
+
+    @Override
+    public byte[] getAvatar(Map<String, String> header) throws Exception {
+        return getRequestToImage("/api/account/avatar", null, header);
+    }
+
+    @Override
+    public RequestResult<JsonObject> setAvatar(Map<String, String> header, Resource resource) throws Exception {
+        return postRequestFromImage("/api/account/avatar", null, header, resource);
+    }
 }

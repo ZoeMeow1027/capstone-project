@@ -2,12 +2,9 @@
 
 namespace PhoneStoreManager.Model.DTO
 {
-    public class ProductImageMetadataDTO
+    public class UserAvatarDTO
     {
         [JsonProperty("file")]
         public IFormFile File { get; set; }
-
-        [JsonProperty("productid")]
-        public int ProductID { get; set; }
     }
 }

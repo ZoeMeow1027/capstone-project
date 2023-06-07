@@ -8,11 +8,11 @@ namespace PhoneStoreManager.Controllers
     [Route("api/cart")]
     public class CartController : UserSessionControllerBase
     {
-        private readonly ICartService _cartService;
+        private readonly IUserCartService _cartService;
 
         public CartController(
             IUserSessionService userSessionService,
-            ICartService cartService
+            IUserCartService cartService
             ) : base(userSessionService)
         {
             _cartService = cartService;

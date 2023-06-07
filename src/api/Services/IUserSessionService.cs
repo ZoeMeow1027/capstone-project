@@ -9,7 +9,7 @@ namespace PhoneStoreManager.Services
 
         UserSession? GetUserSessionByToken(string token);
 
-        void DeleteSessionByToken(string token);
+        void DeleteSessionByToken(string? token);
 
         bool HasTokenPermission(string? token, List<UserType>? allowedType);
 

@@ -43,7 +43,7 @@ namespace PhoneStoreManager.Controllers
             return _userSessionService.CreateAndStoreAccountToken(ID, day);
         }
 
-        public void DeleteSession(string token)
+        public void DeleteSession(string? token)
         {
             _userSessionService.DeleteSessionByToken(token);
         }

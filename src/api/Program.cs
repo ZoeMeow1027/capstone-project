@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PhoneStoreManager.Model;
-using PhoneStoreManager.Model.Enums;
 using PhoneStoreManager.Services;
-using System.Diagnostics;
 
 namespace PhoneStoreManager
 {
@@ -24,14 +22,22 @@ namespace PhoneStoreManager
             builder.Services.AddScoped<IUserSessionService, UserSessionService>();
             builder.Services.AddScoped<IWarrantyService, WarrantyService>();
             builder.Services.AddScoped<IImageMetadataService, ImageMetadataService>();
-            builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<IUserCartService, UserCartService>();
+            builder.Services.AddScoped<IUserAvatarService, UserAvatarService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             // Add MSSQL
-            builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+            // builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+            // Add SqLite
+            string SQLITE_CSTRING = string.Format(
+                "Filename={0}",
+                System.IO.Path.Combine(new string[] { Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhoneStoreManager", "data.db" })
+                );
+            builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(SQLITE_CSTRING));
 
             builder.Services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
@@ -42,11 +48,12 @@ namespace PhoneStoreManager
 #pragma warning disable CS8604 // Possible null reference argument.
             if (builder.Configuration.GetConnectionString("Default") == null)
             {
-                throw new Exception("ConnectionString for connect to database hasn't been defined! Please config them in appsettings.json");
+                throw new Exception("ConnectionString for connect to SQL Server database hasn't been defined! Please config them in appsettings.json");
             }
             else
             {
-                Utils.InitialDb(builder.Configuration.GetConnectionString("Default"));
+                // Utils.InitialDb(builder.Configuration.GetConnectionString("Default"));
+                Utils.InitialDbSqLite(SQLITE_CSTRING);
             }
 #pragma warning restore CS8604 // Possible null reference argument.
 
