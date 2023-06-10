@@ -113,7 +113,7 @@ namespace PhoneStoreManager.Controllers
 
                 CheckPermission(
                     Request.Cookies["token"],
-                    new List<UserType>() { UserType.Administrator, UserType.Staff }
+                    new List<UserType>() { UserType.Administrator }
                     );
 
                 if (productDTO.Type == null || productDTO.Action == null || productDTO.Data == null)

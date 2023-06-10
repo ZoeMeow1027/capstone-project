@@ -1,40 +1,20 @@
 ﻿using PhoneStoreManager.Model;
-using System.Drawing;
 
 namespace PhoneStoreManager.Services
 {
     public class UserAvatarService : IUserAvatarService
     {
-        private readonly string PATH_BASE;
-        private readonly string PATH_AVATARFOLDER;
+        private readonly IVariableService _variableService;
 
-        public UserAvatarService()
+        public UserAvatarService(IVariableService variableService)
         {
-            PATH_BASE = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            PATH_AVATARFOLDER = Path.Combine(new string[] { "PhoneStoreManager", "img_useravt" });
-
-            if (!Directory.Exists(GetFullAppDataPath()))
-            {
-                Directory.CreateDirectory(GetFullAppDataPath());
-            }
-        }
-
-        private string GetFullAppDataPath()
-        {
-            return Path.Combine(new string[] { PATH_BASE, PATH_AVATARFOLDER });
-        }
-
-        private string GetFullAvatarPath(int userId, string? extBak = null)
-        {
-            return Path.Combine(new string[] {
-                GetFullAppDataPath(),
-                string.Format("{0}{1}", userId, extBak == null ? ".jpg" : extBak)
-            });
+            _variableService = variableService;
+            _variableService.CreateAppDirIfNotExist();
         }
 
         public byte[]? GetAvatar(int userid)
         {
-            string PATH_FULLAVT = GetFullAvatarPath(userid);
+            string PATH_FULLAVT = _variableService.GetAvatarFilePath(userid);
 
             if (!File.Exists(PATH_FULLAVT))
                 return null;
@@ -49,7 +29,7 @@ namespace PhoneStoreManager.Services
 
         public void RemoveAvatar(int userid)
         {
-            string PATH_FULLAVT = GetFullAvatarPath(userid);
+            string PATH_FULLAVT = _variableService.GetAvatarFilePath(userid);
 
             if (File.Exists(PATH_FULLAVT))
             {
@@ -64,8 +44,8 @@ namespace PhoneStoreManager.Services
 
         public void SetAvatar(int userid, IFormFile avatar)
         {
-            string PATH_FULLAVT = GetFullAvatarPath(userid);
-            string PATH_FULLAVT_BAK = GetFullAvatarPath(userid, ".jpg.bak");
+            string PATH_FULLAVT = _variableService.GetAvatarFilePath(userid);
+            string PATH_FULLAVT_BAK = _variableService.GetAvatarFilePath(userid, ".jpg.bak");
 
             bool OVERWRITE_MODE = File.Exists(PATH_FULLAVT);
 

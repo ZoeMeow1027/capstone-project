@@ -8,6 +8,6 @@ namespace PhoneStoreManager.Model.DTO
         public IFormFile File { get; set; }
 
         [JsonProperty("productid")]
-        public int ProductID { get; set; }
+        public int? ProductID { get; set; } = null;
     }
 }
