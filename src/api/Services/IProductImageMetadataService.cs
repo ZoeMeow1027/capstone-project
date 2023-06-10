@@ -2,7 +2,7 @@
 
 namespace PhoneStoreManager.Services
 {
-    public interface IImageMetadataService
+    public interface IProductImageMetadataService
     {
         List<ProductImageMetadata> GetAll();
 

@@ -5,14 +5,14 @@
 
 # Used technologies
 
-- Database: Microsoft SQL Server Local Database
+- Database: SQLite 3
 - API: ASP.NET (based on .NET 6)
 - Web: Spring Boot (Java)
 
 # Used tools
 
 - IDE: Visual Studio 2022 (API) & Visual Studio Code (Text editor - Web)
-- SQL management: Azure Data Studio
+- SQL management: SQLite Studio
 
 # Roadmap
 
@@ -20,7 +20,7 @@
 
 | Group         | Components    | Start date    | Updated       | Progress          |
 | -             | -             | -             | -             | -                 |
-| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/07    | ![https://progress-bar.dev/85/?scale=100&width=120](https://progress-bar.dev/85/?scale=100&width=120) |
+| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/11    | ![https://progress-bar.dev/87/?scale=100&width=120](https://progress-bar.dev/87/?scale=100&width=120) |
 | [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/07    | ![https://progress-bar.dev/50/?scale=100&width=120](https://progress-bar.dev/50/?scale=100&width=120) |
 
 ## API
@@ -31,11 +31,12 @@ Start date: 2023/04/18
 
 | Group						| Description														| Updated		| Task (tick means completed)	|
 | -							| -																	| -				| -								|
-| Product Manuafaceturers	| Manage phone manufacturer.										| 2023/04/23	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li></ul> |
-| Product Categories		| Manage phone category (tablet, smartphone, feature phone,...).	| 2023/04/23	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li></ul> |
-| Product					| Manage phones in inventory.										| 2023/05/27	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Hide (or delete)</li><li>[x] Get (1 or list by query or all)</li></ul> |
+| Product Manuafaceturers	| Manage product manufacturer.										| 2023/04/23	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li></ul> |
+| Product Categories		| Manage product category (tablet, smartphone, feature phone,...).	| 2023/04/23	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li></ul> |
+| Product					| Manage product in inventory.										| 2023/05/27	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Hide (or delete)</li><li>[x] Get (1 or list by query or all)</li></ul> |
+| Product Images			| Manage product images per product.    							| 2023/06/11	| <ul><li>[x] Add</li><li>[x] Get image blob</li><li>[x] Get image metadata</li><li>[ ] Delete image</li></ul> |
 | User						| Manage registered user, staff and administrator account.			| 2023/04/21	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Hide (or delete)</li><li>[x] Get (1 or list by query or all)</li><li>[x] Disable/Enable</li><li>[x] Change account type</li></ul> |
-| User Avatar			    | Manage user avatar.										        | 2023/06/07	| <ul><li>[x] Set avatar</li><li>[x] Get avatar</li><li>[x] Get all avatars</li><li>[x] Remove avatar</li></ul> |
+| User Avatar			    | Manage user avatar.										        | 2023/06/11	| <ul><li>[x] Set avatar</li><li>[x] Get avatar</li><li>[x] Get all avatars</li><li>[x] Remove avatar</li></ul> |
 | User Address				| Let user manage delivery address.									| 2023/04/21	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li></ul> |
 | User Session				| Manage logged in accounts.										| 2023/04/22	| <ul><li>[x] Add token</li><li>[x] Is Account locked</li><li>[x] Is enabled</li><li>[x] Log out by userId</li><li>[x] Get session by token</li><li>[x] Delete session by token</li></ul> |
 | User Cart				    | Manage user carts.        										| 2023/06/06	| <ul><li>[x] Add item</li><li>[x] Subtract item</li><li>[x] Remove item</li><li>[x] Get all items</li></ul> |

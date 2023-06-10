@@ -14,6 +14,7 @@ namespace PhoneStoreManager
             builder.Services.AddControllers();
 
             // Add scopes
+            builder.Services.AddScoped<IVariableService, VariableService>();
             builder.Services.AddScoped<IProductManufacturerService, ProductManufacturerService>();
             builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
@@ -21,7 +22,7 @@ namespace PhoneStoreManager
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserSessionService, UserSessionService>();
             builder.Services.AddScoped<IWarrantyService, WarrantyService>();
-            builder.Services.AddScoped<IImageMetadataService, ImageMetadataService>();
+            builder.Services.AddScoped<IProductImageMetadataService, ProductImageMetadataService>();
             builder.Services.AddScoped<IUserCartService, UserCartService>();
             builder.Services.AddScoped<IUserAvatarService, UserAvatarService>();
 

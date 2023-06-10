@@ -2,11 +2,11 @@
 
 namespace PhoneStoreManager.Services
 {
-    public class ImageMetadataService : IImageMetadataService
+    public class ProductImageMetadataService : IProductImageMetadataService
     {
         private readonly DataContext _context;
 
-        public ImageMetadataService(DataContext context)
+        public ProductImageMetadataService(DataContext context)
         {
             _context = context;
         }
