@@ -24,22 +24,37 @@ namespace PhoneStoreManager.Services
 
         public List<Product> FindAllProductsByName(string name, bool includeHidden)
         {
-            return _context.Products.Include(p => p.Category).Include(p => p.Manufacturer).Include(p => p.Warranties).Where(p =>
-                // Include hidden. This is ignored by default.
-                (includeHidden ? true : p.ShowInPage == true) &&
-                // Filter by name
-                p.Name.ToLower().Contains(name.ToLower())
-            ).ToList();
+            return _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Manufacturer)
+                .Include(p => p.Warranties)
+                .Include(p => p.Images)
+                .Where(p =>
+                    // Include hidden. This is ignored by default.
+                    (includeHidden ? true : p.ShowInPage == true) &&
+                    // Filter by name
+                    p.Name.ToLower().Contains(name.ToLower())
+                ).ToList();
         }
 
         public List<Product> GetAllProducts(bool includeHidden)
         {
-            return _context.Products.Include(p => p.Category).Include(p => p.Manufacturer).Include(p => p.Warranties).Where(p => (includeHidden ? true : p.ShowInPage == true)).ToList();
+            return _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Manufacturer)
+                .Include(p => p.Warranties)
+                .Include(p => p.Images)
+                .Where(p => (includeHidden ? true : p.ShowInPage == true))
+                .ToList();
         }
 
         public Product? GetProductById(int id)
         {
-            return _context.Products.Include(p => p.Category).Include(p => p.Manufacturer).Include(p => p.Warranties).Where(p => p.ID == id).FirstOrDefault();
+            return _context.Products.Include(p => p.Category)
+                .Include(p => p.Manufacturer)
+                .Include(p => p.Warranties)
+                .Where(p => p.ID == id)
+                .FirstOrDefault();
         }
 
         public void HideProduct(Product item)

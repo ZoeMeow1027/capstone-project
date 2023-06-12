@@ -4,11 +4,11 @@ namespace PhoneStoreManager.Services
 {
     public interface IUserAddressService
     {
-        List<UserAddress> GetAllUserAddresses();
+        List<UserAddress> GetUserAddresses(int? userId = null);
 
-        List<UserAddress> FindAllUserAddressesByAddress(string address);
+        List<UserAddress> FindAllUserAddressesByAddress(string address, int? userId = null);
 
-        UserAddress? GetUserAddressById(int id);
+        UserAddress? GetUserAddressById(int id, int? userId = null);
 
         void AddUserAddress(UserAddress item);
 

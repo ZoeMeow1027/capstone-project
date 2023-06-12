@@ -31,10 +31,14 @@ namespace PhoneStoreManager.Services
         {
             string PATH_FULLAVT = _variableService.GetAvatarFilePath(userid);
 
-            if (File.Exists(PATH_FULLAVT))
+            try
             {
-                File.Delete(PATH_FULLAVT);
+                if (File.Exists(PATH_FULLAVT))
+                {
+                    File.Delete(PATH_FULLAVT);
+                }
             }
+            catch { }
         }
 
         public void RemoveAvatar(User user)

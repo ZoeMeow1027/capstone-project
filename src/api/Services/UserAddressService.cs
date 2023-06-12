@@ -36,7 +36,7 @@ namespace PhoneStoreManager.Services
             }
             else
             {
-                throw new Exception(string.Format("UserAddress with ID {0} is not exist!", item.ID));
+                throw new ArgumentException(string.Format("UserAddress with ID {0} is not exist!", item.ID));
             }
         }
 
@@ -49,23 +49,36 @@ namespace PhoneStoreManager.Services
             }
             else
             {
-                throw new Exception(string.Format("UserAddress with ID {0} is not exist!", id));
+                throw new ArgumentException(string.Format("UserAddress with ID {0} is not exist!", id));
             }
         }
 
-        public List<UserAddress> FindAllUserAddressesByAddress(string address)
+        public List<UserAddress> FindAllUserAddressesByAddress(string address, int? userId = null)
         {
-            return _context.UserAddresses.Include(p => p.User).Where(p => p.Address.ToLower().Contains(address)).ToList();
+            return _context.UserAddresses
+                .Include(p => p.User)
+                .Where(p =>
+                    p.Address.ToLower().Contains(address) &&
+                    (userId == null ? true : p.UserID == userId.Value)
+                ).ToList();
         }
 
-        public List<UserAddress> GetAllUserAddresses()
+        public List<UserAddress> GetUserAddresses(int? userId = null)
         {
-            return _context.UserAddresses.Include(p => p.User).ToList();
+            return _context.UserAddresses
+                .Include(p => p.User)
+                .Where(p => userId == null ? true : p.UserID == userId.Value)
+                .ToList();
         }
 
-        public UserAddress? GetUserAddressById(int id)
+        public UserAddress? GetUserAddressById(int id, int? userId = null)
         {
-            return _context.UserAddresses.Include(p => p.User).Where(p => p.ID == id).FirstOrDefault();
+            return _context.UserAddresses
+                .Include(p => p.User)
+                .Where(
+                    p => p.ID == id &&
+                    (userId == null ? true : p.UserID == userId.Value)
+                ).FirstOrDefault();
         }
 
         public void UpdateUserAddress(UserAddress item)
@@ -73,6 +86,7 @@ namespace PhoneStoreManager.Services
             var data = GetUserAddressById(item.ID);
             if (data != null)
             {
+                data.Name = item.Name;
                 data.Address = item.Address;
                 data.Phone = item.Phone;
 
@@ -85,7 +99,7 @@ namespace PhoneStoreManager.Services
             }
             else
             {
-                throw new Exception(string.Format("UserAddress with ID {0} is not exist!", item.ID));
+                throw new ArgumentException(string.Format("UserAddress with ID {0} is not exist!", item.ID));
             }
         }
     }

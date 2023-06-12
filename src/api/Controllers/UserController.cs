@@ -53,7 +53,7 @@ namespace PhoneStoreManager.Controllers
                         result.Data = query != null
                             ? userAddressService.FindAllUserAddressesByAddress(query)
                             : id == null
-                                ? userAddressService.GetAllUserAddresses()
+                                ? userAddressService.GetUserAddresses()
                                 : userAddressService.GetUserAddressById(id.Value);
                         break;
                     default:
