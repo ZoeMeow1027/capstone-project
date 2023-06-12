@@ -36,7 +36,7 @@ namespace PhoneStoreManager.Controllers
 
             try
             {
-                // TODO: Check auth before continue!
+                // Check auth before continue.
                 CheckPermission(
                     Request.Cookies["token"],
                     new List<UserType>() { UserType.Administrator }
@@ -143,6 +143,59 @@ namespace PhoneStoreManager.Controllers
 
                     result.StatusCode = 200;
                     result.Data = data;
+                }
+                else
+                {
+                    result.StatusCode = 200;
+                    result.Data = _imageMetadataService.GetAll();
+                }
+            }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                result.StatusCode = 403;
+                result.Message = uaEx.Message;
+            }
+            catch (BadHttpRequestException bhrEx)
+            {
+                result.StatusCode = 400;
+                result.Message = bhrEx.Message;
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.Message = ex.Message;
+            }
+
+            return StatusCode(result.StatusCode, result.ToDynamicObject());
+        }
+
+        [HttpPost("delete")]
+        public ActionResult DeleteImageMetadata(int? id)
+        {
+            ReturnResultTemplate result = new ReturnResultTemplate();
+            result.StatusCode = 200;
+
+            try
+            {
+                // Check auth before continue.
+                CheckPermission(
+                    Request.Cookies["token"],
+                    new List<UserType>() { UserType.Administrator }
+                    );
+
+                if (id != null)
+                {
+                    var data = _imageMetadataService.Get(id.Value);
+                    if (data == null)
+                        throw new BadHttpRequestException(string.Format("Image with ID {0} is not exist!", id));
+                    _imageMetadataService.Delete(data);
+
+                    try { System.IO.File.Delete(_variableService.GetProductImageFilePath(data.FilePath)); }
+                    catch { }
+
+                    result.StatusCode = 200;
+                    result.Message = "Successful!";
+                    result.Data = null;
                 }
                 else
                 {

@@ -20,7 +20,7 @@
 
 | Group         | Components    | Start date    | Updated       | Progress          |
 | -             | -             | -             | -             | -                 |
-| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/11    | ![https://progress-bar.dev/87/?scale=100&width=120](https://progress-bar.dev/87/?scale=100&width=120) |
+| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/12    | ![https://progress-bar.dev/88/?scale=100&width=120](https://progress-bar.dev/88/?scale=100&width=120) |
 | [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/07    | ![https://progress-bar.dev/50/?scale=100&width=120](https://progress-bar.dev/50/?scale=100&width=120) |
 
 ## API
@@ -34,7 +34,7 @@ Start date: 2023/04/18
 | Product Manuafaceturers	| Manage product manufacturer.										| 2023/04/23	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li></ul> |
 | Product Categories		| Manage product category (tablet, smartphone, feature phone,...).	| 2023/04/23	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li></ul> |
 | Product					| Manage product in inventory.										| 2023/05/27	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Hide (or delete)</li><li>[x] Get (1 or list by query or all)</li></ul> |
-| Product Images			| Manage product images per product.    							| 2023/06/11	| <ul><li>[x] Add</li><li>[x] Get image blob</li><li>[x] Get image metadata</li><li>[ ] Delete image</li></ul> |
+| Product Images			| Manage product images per product.    							| 2023/06/12	| <ul><li>[x] Add</li><li>[x] Get image blob</li><li>[x] Get image metadata</li><li>[x] Delete image</li></ul> |
 | User						| Manage registered user, staff and administrator account.			| 2023/04/21	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Hide (or delete)</li><li>[x] Get (1 or list by query or all)</li><li>[x] Disable/Enable</li><li>[x] Change account type</li></ul> |
 | User Avatar			    | Manage user avatar.										        | 2023/06/11	| <ul><li>[x] Set avatar</li><li>[x] Get avatar</li><li>[x] Get all avatars</li><li>[x] Remove avatar</li></ul> |
 | User Address				| Let user manage delivery address.									| 2023/04/21	| <ul><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li><li>[x] Get (1 or list by query or all)</li></ul> |
@@ -55,7 +55,7 @@ Start date: 2023/04/24
 | Login/Logout              | Account Authorization.                                                | 2023/06/02    | <ul><li>[x] Login</li><li>[x] Logout</li><li>[x] Register</li><li>[ ] Forgot your password?</li><li>[x] Include auth to Product/User controllers</li></ul> |
 | Cart                      | User cart.                                                            | 2023/06/06    | <ul><li>[x] Get all items</li><li>[ ] Add item</li><li>[ ] Subtract item</li><li>[ ] Remove item</li><li>[ ] Remove all</li></ul> |
 | Warranty                  | Manage all warranties.                                                | 2023/05/18    | <ul><li>[x] Get (all (`**`)/by ID(`*`))</li></ul> |
-| Account                   | Logged in account information.                                        | 2023/06/07    | <ul><li>[x] My information</li><li>[x] Avatar (get/set/remove)</li></ul> |
+| Account                   | Logged in account information.                                        | 2023/06/07    | <ul><li>[x] My information</li><li>[x] Avatar (get/set/remove)</li><li>[x] User address</li></ul> |
 
 
 (`*`): Owner account or administrator only
