@@ -15,7 +15,7 @@
                     <img class="rounded-circle" src="/account/avatar" width="128" height="128">
                     <form action="/account/avatar/upload" method="post" id="set-avt-form" enctype="multipart/form-data">
                         <input type="file" name="file" id="avt-upload" onchange="this.form.submit();" hidden>
-                        <button id="form-btnsubmit" type="button" class="btn btn-primary px-5 py-3 ms-3"><label for="avt-upload">Change avatar</label></button>
+                        <button id="form-btnsubmit" type="button" class="btn btn-action-color px-5 py-3 ms-3"><label for="avt-upload">Change avatar</label></button>
                     </form>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                     <input type="tel" name="phone" class="form-control" th:value="${user == null ? '' : user.getPhone()}">
                     <label for="floatingInput">Phone</label>
                 </div>
-                <button id="form-btnok" onclick="" type="button" class="btn btn-primary px-5 py-3">Save Information</button>
+                <button id="form-btnok" onclick="" type="button" class="btn px-5 py-3 btn-action-color">Save Information</button>
             </form>
         </section>
     </div>

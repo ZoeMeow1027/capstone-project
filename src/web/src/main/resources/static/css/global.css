@@ -1,5 +1,6 @@
 body {
     --main-color: rgb(250, 217, 176);
+    --main-color-inactive: rgb(250, 217, 176, 0.1);
     --sidebar-width: 300px;
 }
 
@@ -13,6 +14,7 @@ body {
 }
 
 .sidebar-account-item {
+    background-color: var(--main-color-inactive) !important;
     color: black !important;
 }
 
@@ -22,8 +24,13 @@ body {
     color: black !important;
 }
 
-.btn {
+.btn-action-color {
     background-color: var(--main-color) !important;
     border: var(--main-color) !important;
     color: rgb(82, 82, 82) !important;
+}
+
+.btn-action-account {
+    width: 110px;
+    height: 45px;
 }
