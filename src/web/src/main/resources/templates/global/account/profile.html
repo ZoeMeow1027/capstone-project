@@ -19,7 +19,7 @@
                     </form>
                 </div>
             </div>
-            <form id="form-user-profile">
+            <form id="form-user-profile" action="/account/profile" method="post">
                 <div id="modal-info-bar" class="text-left text-white bg-danger mb-3 p-2 rounded-1" style="visibility: hidden;"></div>
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" readonly th:value="${user == null ? '' : user.getUsername()}">
@@ -37,7 +37,7 @@
                     <input type="tel" name="phone" class="form-control" th:value="${user == null ? '' : user.getPhone()}">
                     <label for="floatingInput">Phone</label>
                 </div>
-                <button id="form-btnok" onclick="" type="button" class="btn px-5 py-3 btn-action-color">Save Information</button>
+                <button id="form-btnok" type="submit" class="btn px-5 py-3 btn-action-color">Save Information</button>
             </form>
         </section>
     </div>

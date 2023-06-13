@@ -21,8 +21,8 @@ import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.dto.AdminUserResetPassDTO;
 import io.zoemeow.pbl6.phonestoremanager.model.dto.AdminUserToggleDTO;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.AdminUserRepository;
-import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.RequestRepository;
 import io.zoemeow.pbl6.phonestoremanager.utils.Validate;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +34,7 @@ public class AdminUsersController extends RequestRepository {
     AdminUserRepository _AdminUserRepository;
 
     @Autowired
-    AuthRepository _AuthRepository;
+    AccountRepository _AccountRepository;
 
     @GetMapping("/admin/users")
     public ModelAndView pageViewAllUsers(
@@ -47,7 +47,7 @@ public class AdminUsersController extends RequestRepository {
         try {
             view = new ModelAndView("/admin/users/index");
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("userList", _AdminUserRepository.getAllUsers(header, false));
@@ -79,7 +79,7 @@ public class AdminUsersController extends RequestRepository {
             view = new ModelAndView("/admin/users/toggle");
             view.addObject("action", enabled == 0 ? "disable" : "enable");
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("user", _AdminUserRepository.getUser(header, id));
@@ -122,7 +122,7 @@ public class AdminUsersController extends RequestRepository {
             view = new ModelAndView("/admin/users/add");
             view.addObject("action", "add");
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
@@ -166,7 +166,7 @@ public class AdminUsersController extends RequestRepository {
             view.addObject("action", "edit");
             view.addObject("id", id);
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("user", _AdminUserRepository.getUser(header, id));
@@ -211,7 +211,7 @@ public class AdminUsersController extends RequestRepository {
             view = new ModelAndView("/admin/users/resetPassword");
             view.addObject("id", id);
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("user", _AdminUserRepository.getUser(header, id));

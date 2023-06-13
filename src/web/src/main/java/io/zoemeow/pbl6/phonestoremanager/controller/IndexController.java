@@ -7,8 +7,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
+import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.AdminProductRepository;
-import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import io.zoemeow.pbl6.phonestoremanager.utils.RequestAndResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Controller
 public class IndexController {
     @Autowired
-    AuthRepository _AuthRepository;
+    AccountRepository _AccountRepository;
 
     @Autowired
     AdminProductRepository _AdminProductRepository;
@@ -30,7 +30,7 @@ public class IndexController {
         ModelAndView view = new ModelAndView("/global/index");
 
         try {
-            User user = _AuthRepository.getUserInformation(header, null);
+            User user = _AccountRepository.getUserInformation(header, null);
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
             view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
         } catch (SessionExpiredException seEx) {
@@ -61,7 +61,7 @@ public class IndexController {
         ModelAndView view = new ModelAndView("/global/search");
 
         try {
-            User user = _AuthRepository.getUserInformation(header, null);
+            User user = _AccountRepository.getUserInformation(header, null);
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
             view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
             view.addObject("productfilter", _AdminProductRepository.getProducts(header, q, false));

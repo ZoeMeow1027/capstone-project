@@ -20,8 +20,8 @@
 
 | Group         | Components    | Start date    | Updated       | Progress          |
 | -             | -             | -             | -             | -                 |
-| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/12    | ![https://progress-bar.dev/88/?scale=100&width=120](https://progress-bar.dev/88/?scale=100&width=120) |
-| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/13    | ![https://progress-bar.dev/52/?scale=100&width=120](https://progress-bar.dev/52/?scale=100&width=120) |
+| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/12    | ![https://progress-bar.dev/90/?scale=100&width=120](https://progress-bar.dev/90/?scale=100&width=120) |
+| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/13    | ![https://progress-bar.dev/58/?scale=100&width=120](https://progress-bar.dev/58/?scale=100&width=120) |
 
 ## API
 
@@ -55,7 +55,7 @@ Start date: 2023/04/24
 | Login/Logout              | Account Authorization.                                                | 2023/06/02    | <ul><li>[x] Login</li><li>[x] Logout</li><li>[x] Register</li><li>[ ] Forgot your password?</li><li>[x] Include auth to Product/User controllers</li></ul> |
 | Cart                      | User cart.                                                            | 2023/06/06    | <ul><li>[x] Get all items</li><li>[ ] Add item</li><li>[ ] Subtract item</li><li>[ ] Remove item</li><li>[ ] Remove all</li></ul> |
 | Warranty                  | Manage all warranties.                                                | 2023/05/18    | <ul><li>[x] Get (all (`**`)/by ID(`*`))</li></ul> |
-| Account                   | Logged in account information.                                        | 2023/06/07    | <ul><li>[x] My information</li><li>[x] Avatar (get/set/remove)</li><li>[x] User address</li></ul> |
+| Account                   | Logged in account information.                                        | 2023/06/07    | <ul><li>[x] My information</li><li>[x] Avatar (get/set/remove)</li><li>[x] User address</li><li>[x] Change Password</li></ul> |
 
 
 (`*`): Owner account or administrator only
@@ -99,9 +99,9 @@ Start date: 2023/06/03
 | -							| -																		| -				| -								|
 | Main page                 | Home web page                                                         | 2023/06/03    | <ul><li>[ ]</li></ul> |
 | Search page               | Search result when you return a search query                          | 2023/06/05    | <ul><li>[x] View</li><li>[ ] Navigate to product detail</li><li>[ ] Product image</li></ul> |
-| Your profile              | Edit your basic profile                                               | 2023/06/07    | <ul><li>[x] View</li><li>[x] Profile data</li><li>[ ] Save changes</li><li>[x] Get/set avatar</li></ul> |
+| Your profile              | Edit your basic profile                                               | 2023/06/13    | <ul><li>[x] View</li><li>[x] Profile data</li><li>[x] Save changes</li><li>[x] Get/set avatar</li></ul> |
 | Your address              | Edit your added address                                               | 2023/06/13    | <ul><li>[x] View</li><li>[ ] Add</li><li>[ ] Update</li><li>[ ] Delete</li></ul> |
-| Change your password      | Change your password                                                  | 2023/06/05    | <ul><li>[x] View</li><li>[ ] Change password</li></ul> |
+| Change your password      | Change your password                                                  | 2023/06/13    | <ul><li>[x] View</li><li>[x] Change password</li></ul> |
 | Your cart                 | Manage your cart                                                      | 2023/06/05    | <ul><li>[x] View</li><li>[ ] List items in cart</li><li>[ ] Go to checkout</li></ul> |
 
 [Go to progress](#progress)
