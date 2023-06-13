@@ -12,14 +12,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
-import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class AdminDashboardController {
     @Autowired
-    AuthRepository _AuthRepository;
+    AccountRepository _AccountRepository;
 
     @GetMapping("/admin/dashboard")
     public ModelAndView index(
@@ -31,7 +31,7 @@ public class AdminDashboardController {
         ModelAndView view = null;
         try {
             view = new ModelAndView("/admin/dashboard");
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
         } catch (NoInternetException niEx) {
             // TODO: No internet connection

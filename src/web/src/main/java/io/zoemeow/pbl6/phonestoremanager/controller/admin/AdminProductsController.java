@@ -22,8 +22,8 @@ import io.zoemeow.pbl6.phonestoremanager.model.bean.ProductManufacturer;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.AdminProductRepository;
-import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import io.zoemeow.pbl6.phonestoremanager.utils.Validate;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,7 +34,7 @@ public class AdminProductsController {
     AdminProductRepository _AdminProductRepository;
     
     @Autowired
-    AuthRepository _AuthRepository;
+    AccountRepository _AccountRepository;
 
     @GetMapping("/admin/products")
     public ModelAndView pageProducts(
@@ -49,7 +49,7 @@ public class AdminProductsController {
         try {
             view = new ModelAndView("/admin/products/index");
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("productList", _AdminProductRepository.getProducts(header, query, includehidden == null ? false : includehidden));
@@ -73,7 +73,7 @@ public class AdminProductsController {
             view = new ModelAndView("/admin/products/add");
             view.addObject("action", "add");
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("productCategoryList", _AdminProductRepository.getProductCategories(header, null, false));
@@ -119,7 +119,7 @@ public class AdminProductsController {
             view = new ModelAndView("/admin/products/add");
             view.addObject("action", "edit");
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("productCategoryList", _AdminProductRepository.getProductCategories(header, null, false));
@@ -166,7 +166,7 @@ public class AdminProductsController {
         try {
             view = new ModelAndView("/admin/productCategory/index");
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("productCategoryList", _AdminProductRepository.getProductCategories(header, null, false));
@@ -190,7 +190,7 @@ public class AdminProductsController {
             view = new ModelAndView("/admin/productCategory/add");
             view.addObject("action", "add");
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
@@ -233,7 +233,7 @@ public class AdminProductsController {
             view = new ModelAndView("/admin/productCategory/add");
             view.addObject("action", "edit");
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("productCategory", _AdminProductRepository.getProductCategoryById(header, id));
@@ -278,7 +278,7 @@ public class AdminProductsController {
         try {
             view = new ModelAndView("/admin/productManufacturer/index");
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("productManufacturerList", _AdminProductRepository.getProductManufacturers(header, null, false));
@@ -302,7 +302,7 @@ public class AdminProductsController {
             view = new ModelAndView("/admin/productManufacturer/add");
             view.addObject("action", "add");
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
@@ -345,7 +345,7 @@ public class AdminProductsController {
             view = new ModelAndView("/admin/productManufacturer/add");
             view.addObject("action", "edit");
 
-            User user = _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("productManufacturer", _AdminProductRepository.getProductManufacturerById(header, id));

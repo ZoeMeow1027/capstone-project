@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoPermissionException;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
-import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class AdminController {
 
     @Autowired
-    AuthRepository _AuthRepository;
+    AccountRepository _AccountRepository;
 
     @GetMapping("/admin")
     public ModelAndView index(
@@ -35,7 +35,7 @@ public class AdminController {
         ModelAndView view = null;
         try {
             view = new ModelAndView("redirect:/admin/dashboard");
-            _AuthRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (NoPermissionException npEx) {
