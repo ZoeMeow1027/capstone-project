@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="~{/global/fragments/tag-head :: headtag(title=${product.getManufacturer().getName() + ' ' + product.getName()})}"></head>
+<body>
+    <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div class="container">
+        <div class="product-summary-area">
+            <div class="container-fliud">
+                <div class="wrapper row">
+                    <div class="preview col-md-6">
+                        <div class="row preview-pic tab-content">
+                            <div th:each="urlItem,iter: ${product.getImages()}" th:remove="tag">
+                                <div class="tab-pane fade" th:id="${'pic-' + iter.index}" th:classappend="${iter.index == 0 ? 'show active' : ''}" role="tabpanel" th:attr="aria-labelledby=${'pic-' + iter.index}">
+                                    <img style="margin-left: auto; margin-right: auto;" th:src="${baseurl + '/products/img/blob?id=' + urlItem.getId()}" />
+                                </div>    
+                            </div>
+                        </div>
+                        <ul class="row preview-thumbnail nav nav-tabs d-flex justify-content-center" id="item-preview" role="tablist">
+                            <div th:each="urlItem,iter: ${product.getImages()}" th:remove="tag">
+                                <li class="nav-item item-preview-thumb" role="presentation">
+                                    <a class="nav-link" th:classappend="${iter.index == 0 ? 'active' : ''}" th:href="${'#pic-' + iter.index}" th:attr="data-target=${'pic-' + iter.index}" data-bs-toggle="tab">
+                                        <img th:src="${baseurl + '/products/img/blob?id=' + urlItem.getId()}" />
+                                    </a>
+                                </li>
+                            </div>
+                        </ul>
+                    </div>
+                    <div class="details col-md-6">
+                        <h3 class="product-title mb-5px" th:text="${product.getName()}"></h3>
+                        <h5 class="product-manufacturer mb-4" th:text="${product.getManufacturer().getName()}"></h5>
+                        <h4 class="price"><span th:text="${'$' + product.getPrice()}"></span></h4>
+                        <div class="action mb-4">
+                            <button class="add-to-cart btn btn-default" type="button">Add to cart</button>
+                            <button class="like btn btn-default" type="button"><i class="bi bi-heart"></i></button>
+                        </div>
+                        <div class="mb-1">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star"></i>
+                            <i class="bi bi-star"></i>
+                            <span class="review-no" th:text="${(product.getComments().size() == 0 ? 'No' : product.getComments().size()) + ' review' + (product.getComments().size() == 1 ? '' : 's')}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="product-detail-area">
+            <ul class="nav nav-tabs nav-fill mb-3" id="ex2" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="ex2-tab-1" data-bs-toggle="tab" href="#ex2-tabs-1" role="tab"
+                        aria-controls="ex2-tabs-1" aria-selected="true">Specifications</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="ex2-tab-2" data-bs-toggle="tab" href="#ex2-tabs-2" role="tab" aria-controls="ex2-tabs-2"
+                        aria-selected="false">Rating & reviews</a>
+                </li>
+            </ul>
+            <div class="tab-content mb-5" id="ex2-content">
+                <div class="tab-pane fade show active" id="ex2-tabs-1" role="tabpanel" aria-labelledby="ex2-tab-1">
+                    Tab 1 content
+                </div>
+                <div class="tab-pane fade" id="ex2-tabs-2" role="tabpanel" aria-labelledby="ex2-tab-2">
+                    Tab 2 content
+                </div>
+            </div>
+        </div>
+    </div>
+    <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
+</body>
+</html>

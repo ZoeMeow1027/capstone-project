@@ -12,7 +12,7 @@ import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 
-public interface AdminProductRepository {
+public interface ProductRepository {
     public List<Product> getProducts(Map<String, String> header, String query, Boolean includehidden) throws NoInternetException, RequestException;
 
     public List<ProductCategory> getProductCategories(Map<String, String> header, String query, Boolean includehidden) throws NoInternetException, RequestException;
@@ -36,4 +36,6 @@ public interface AdminProductRepository {
     public ProductManufacturer getProductManufacturerById(Map<String, String> header, Integer id) throws NoInternetException, RequestException;
 
     public RequestResult<JsonObject> updateProductManufacturer(Map<String, String> header, ProductManufacturer productManufacturer);
+
+    public byte[] getProductImage(Map<String, String> header, Integer id) throws Exception;
 }

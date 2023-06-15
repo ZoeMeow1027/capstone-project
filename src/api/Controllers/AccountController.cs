@@ -3,7 +3,6 @@ using Newtonsoft.Json.Linq;
 using PhoneStoreManager.Model;
 using PhoneStoreManager.Model.DTO;
 using PhoneStoreManager.Services;
-using System.IO;
 
 namespace PhoneStoreManager.Controllers
 {

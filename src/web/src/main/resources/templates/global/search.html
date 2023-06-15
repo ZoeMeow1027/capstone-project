@@ -1,30 +1,29 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head lang="en" th:replace="~{/global/fragments/tag-head :: headtag(title=${'You searched for ' + query})}"></head>
+<head lang="en" th:replace="~{/global/fragments/tag-head :: headtag(title=${'You searched ' + query})}"></head>
 <body>
     <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser}, query=${query})}"></div>
     <div class="container w-100">
         <div class="row d-flex w-100">
             <div class="col-md-6 mb-4 mb-md-0 w-100">
                 <section id="page-search-data" class="col-sm px-2 py-3">
-                    <h2 th:text="${'Product matches with ' + query}"></h2>
+                    <h2 th:text="${'All products matches with ' + query}"></h2>
                     <h4>View and select your favorite products below.</h4>
                     <hr />
                     <div class="row">
-                        <div class="col-xl-4 d-flex justify-content-center text-center" th:each="item : ${productfilter}">
-                            <a class="text-decoration-none text-black" href="#">
+                        <div class="col-xl-4 d-flex justify-content-center text-left" th:each="item : ${productfilter}">
+                            <a class="text-decoration-none text-black" th:href="${'/product?id=' + item.getId()}">
                                 <div class="card my-3" style="width: 18rem;">
-                                    <img src="..." class="card-img-top" alt="...">
-                                    <div class="card-body">
+                                    <img style="max-height: 320px;" th:src="${item.getImages().size() == 0 ? '#' : (baseurl + '/products/img/blob?id=' + item.getImages().get(0).getId())}" class="card-img-top text-center" alt="...">
+                                    <div class="card-body text-center">
                                         <h5 class="card-title" th:text="${item.getName()}"></h5>
                                         <h6 class="card-title" th:text="${item.getManufacturer().getName()}"></h6>
                                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
                                             content.</p>
                                     </div>
                                     <ul class="list-group list-group-flush">
-                                        <li class="list-group-item">Detail 1</li>
-                                        <li class="list-group-item">Detail 2</li>
-                                        <li class="list-group-item">Detail 3</li>
+                                        <li class="list-group-item" th:text="${'Available: ' + item.getInventoryCount()}"></li>
+                                        <li class="list-group-item" th:text="${'Price: $' + item.getPrice()}"></li>
                                     </ul>
                                 </div>
                             </a>

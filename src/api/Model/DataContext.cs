@@ -22,6 +22,7 @@ namespace PhoneStoreManager.Model
         public DbSet<Warranty> Warranties { get; set; }
         public DbSet<ProductImageMetadata> ImageMetadatas { get; set; }
         public DbSet<UserCart> UserCarts { get; set; }
+        public DbSet<ProductComment> ProductComments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -56,6 +57,22 @@ namespace PhoneStoreManager.Model
                 .WithMany(c => c.Images)
                 .HasForeignKey(p => p.ProductID)
                 .HasPrincipalKey(c => c.ID);
+
+            #region ProductComment table
+            // Foreign key UserID in ProductComments and User
+            modelBuilder.Entity<ProductComment>()
+                .HasOne(p => p.User)
+                .WithMany(c => c.ProductComments)
+                .HasForeignKey(p => p.UserID)
+                .HasPrincipalKey(c => c.ID);
+
+            // Foreign key ProductID in ProductComments and Product
+            modelBuilder.Entity<ProductComment>()
+                .HasOne(p => p.Product)
+                .WithMany(c => c.Comments)
+                .HasForeignKey(p => p.ProductID)
+                .HasPrincipalKey(c => c.ID);
+            #endregion
 
             #region UserSession table
             // Foreign key UserID in User and UserSession

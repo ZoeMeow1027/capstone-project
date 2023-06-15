@@ -19,7 +19,7 @@ import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 
 @Repository
-public class AdminProductRepositoryImpl extends RequestRepository implements AdminProductRepository {
+public class ProductRepositoryImpl extends RequestRepository implements ProductRepository {
 
     @Override
     public List<Product> getProducts(Map<String, String> header, String query, Boolean includehidden)
@@ -291,6 +291,13 @@ public class AdminProductRepositoryImpl extends RequestRepository implements Adm
 
         String postData = bodyRoot.toString();
         return postRequestWithResult("/api/products/", null, header, postData);
+    }
+
+    @Override
+    public byte[] getProductImage(Map<String, String> header, Integer id) throws Exception {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("id", id.toString());
+        return getRequestToImage("/api/products/img/blob", parameters, header);
     }
     
 }

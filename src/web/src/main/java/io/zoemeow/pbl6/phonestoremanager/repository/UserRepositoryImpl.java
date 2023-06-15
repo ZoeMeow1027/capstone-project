@@ -19,7 +19,7 @@ import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 
 @Repository
-public class AdminUserRepositoryImpl extends RequestRepository implements AdminUserRepository {
+public class UserRepositoryImpl extends RequestRepository implements UserRepository {
 
     @Override
     public List<User> getAllUsers(Map<String, String> header, Boolean includeHidden)

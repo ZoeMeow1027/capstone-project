@@ -1,5 +1,7 @@
 package io.zoemeow.pbl6.phonestoremanager.model.bean;
 
+import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
 
 public class Product {
@@ -41,6 +43,28 @@ public class Product {
 
     @SerializedName("category")
     ProductCategory category;
+
+    @SerializedName("comments")
+    List<ProductComment> comments;
+
+    @SerializedName("images")
+    List<ProductImageMetadata> images;
+
+    public List<ProductImageMetadata> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ProductImageMetadata> images) {
+        this.images = images;
+    }
+
+    public List<ProductComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<ProductComment> comments) {
+        this.comments = comments;
+    }
 
     public Integer getId() {
         return id;

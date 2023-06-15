@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
 import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
-import io.zoemeow.pbl6.phonestoremanager.repository.AdminProductRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.ProductRepository;
 import io.zoemeow.pbl6.phonestoremanager.utils.RequestAndResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +19,7 @@ public class IndexController {
     AccountRepository _AccountRepository;
 
     @Autowired
-    AdminProductRepository _AdminProductRepository;
+    ProductRepository _AdminProductRepository;
 
     @GetMapping("/")
     public ModelAndView index(
@@ -64,6 +64,7 @@ public class IndexController {
             User user = _AccountRepository.getUserInformation(header, null);
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
             view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
+            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
             view.addObject("productfilter", _AdminProductRepository.getProducts(header, q, false));
         } catch (SessionExpiredException seEx) {
             view.addObject("name", null);

@@ -38,21 +38,6 @@ namespace PhoneStoreManager.Controllers
 
             try
             {
-                if (includehidden)
-                {
-                    try
-                    {
-                        CheckPermission(
-                           Request.Cookies["token"],
-                           new List<UserType>() { UserType.Administrator, UserType.Staff }
-                           );
-                    }
-                    catch
-                    {
-                        throw new UnauthorizedAccessException("IncludeHidden is not allowed for user!");
-                    }
-                }
-
                 switch (type.ToLower())
                 {
                     case "product":

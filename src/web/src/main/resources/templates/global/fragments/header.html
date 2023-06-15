@@ -3,7 +3,10 @@
 <body>
     <div th:fragment="header" th:remove="tag">
         <header class="sticky-top">
-            <nav class="navbar navbar-expand-sm navbar-light" id="nav-bar">
+            <div class="announcement-bar text-white bg-danger" th:if="${adminuser}">
+                <span class="text-left mx-3">You are browing website as Administrator. Some features aren't available for you. <a class="text-white" href="/admin">Go to Adminisrator web</a></span>
+            </div>
+            <nav class="navbar navbar-expand-sm navbar-light navheader-bar">
                 <div class="container">
                     <a class="navbar-brand" href="/"><img src="/static_files/images/logos/logo_2.png" height="60" /></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -20,15 +23,15 @@
                         </form>
                         <ul class="navbar-nav ms-auto align-items-center">
                             <div th:with="conidtion=${name != null}" th:remove="tag">
-                                <li class="nav-item dropdown" th:if="${conidtion}">
+                                <li class="nav-item dropdown navheader-item" th:if="${conidtion}">
                                     <a class="nav-link my-1 auth dropdown" href="#"
                                         id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                                         aria-expanded="false">
-                                        <div class="container d-flex align-items-center">
+                                        <div class="container d-flex align-items-center justify-content-center mx-2">
                                             <img class="bi-person-circle rounded-circle me-2" src="/account/avatar" width="36" height="36">
                                             <div class="row">
                                                 <div class="col">
-                                                    <span class="text-nowrap" th:text="${name}"></span>
+                                                    <span class="text-nowrap me-3" th:text="${name}"></span>
                                                 </div>
                                                 <div th:unless="${adminuser}" th:remove="tag">
                                                     <div class="col">

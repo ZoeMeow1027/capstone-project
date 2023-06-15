@@ -29,11 +29,13 @@ namespace PhoneStoreManager.Services
                 .Include(p => p.Manufacturer)
                 .Include(p => p.Warranties)
                 .Include(p => p.Images)
+                .Include(p => p.Comments)
                 .Where(p =>
                     // Include hidden. This is ignored by default.
                     (includeHidden ? true : p.ShowInPage == true) &&
                     // Filter by name
-                    p.Name.ToLower().Contains(name.ToLower())
+                    (p.Name.ToLower().Contains(name.ToLower()) ||
+                    p.Manufacturer.Name.ToLower().Contains(name.ToLower()))
                 ).ToList();
         }
 
@@ -44,15 +46,19 @@ namespace PhoneStoreManager.Services
                 .Include(p => p.Manufacturer)
                 .Include(p => p.Warranties)
                 .Include(p => p.Images)
+                .Include(p => p.Comments)
                 .Where(p => (includeHidden ? true : p.ShowInPage == true))
                 .ToList();
         }
 
         public Product? GetProductById(int id)
         {
-            return _context.Products.Include(p => p.Category)
+            return _context.Products
+                .Include(p => p.Category)
                 .Include(p => p.Manufacturer)
                 .Include(p => p.Warranties)
+                .Include(p => p.Images)
+                .Include(p => p.Comments)
                 .Where(p => p.ID == id)
                 .FirstOrDefault();
         }

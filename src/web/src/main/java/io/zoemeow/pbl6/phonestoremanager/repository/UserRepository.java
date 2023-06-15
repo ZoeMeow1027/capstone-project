@@ -12,7 +12,7 @@ import io.zoemeow.pbl6.phonestoremanager.model.dto.AdminUserToggleDTO;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 
-public interface AdminUserRepository {
+public interface UserRepository {
     public List<User> getAllUsers(Map<String, String> header, Boolean includeHidden) throws RequestException, NoInternetException;
 
     public User getUser(Map<String, String> header, Integer id) throws NoInternetException, RequestException;

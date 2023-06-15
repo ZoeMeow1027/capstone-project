@@ -10,6 +10,38 @@ namespace PhoneStoreManager
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add MSSQL
+            // builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+            // Add SqLite
+            string SQLITE_CSTRING = string.Format(
+                "Filename={0}",
+                System.IO.Path.Combine(new string[] { Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhoneStoreManager", "data.db" })
+                );
+            builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(SQLITE_CSTRING));
+
+            builder.Services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
+            // Initialize Database and create admin account if not exist.
+#pragma warning disable CS8604 // Possible null reference argument.
+            bool isInit = true;
+            if (isInit)
+            {
+                if (builder.Configuration.GetConnectionString("Default") == null)
+                {
+                    throw new Exception("ConnectionString for connect to SQL Server database hasn't been defined! Please config them in appsettings.json");
+                }
+                else
+                {
+                    // Utils.InitialDb(builder.Configuration.GetConnectionString("Default"));
+                    Utils.InitialDbSqLite(SQLITE_CSTRING);
+                }
+            }
+#pragma warning restore CS8604 // Possible null reference argument.
+
             // Add services to the container.
             builder.Services.AddControllers();
 
@@ -29,34 +61,6 @@ namespace PhoneStoreManager
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
-            // Add MSSQL
-            // builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-
-            // Add SqLite
-            string SQLITE_CSTRING = string.Format(
-                "Filename={0}",
-                System.IO.Path.Combine(new string[] { Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhoneStoreManager", "data.db" })
-                );
-            builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(SQLITE_CSTRING));
-
-            builder.Services.AddControllersWithViews()
-                .AddNewtonsoftJson(options =>
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                );
-
-            // Initialize Database and create admin account if not exist.
-#pragma warning disable CS8604 // Possible null reference argument.
-            if (builder.Configuration.GetConnectionString("Default") == null)
-            {
-                throw new Exception("ConnectionString for connect to SQL Server database hasn't been defined! Please config them in appsettings.json");
-            }
-            else
-            {
-                // Utils.InitialDb(builder.Configuration.GetConnectionString("Default"));
-                Utils.InitialDbSqLite(SQLITE_CSTRING);
-            }
-#pragma warning restore CS8604 // Possible null reference argument.
 
             // TODO: Temporary ignore CORS. Remember to delete below line in release
             #region Ignore CORS
