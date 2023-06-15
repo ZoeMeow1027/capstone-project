@@ -23,7 +23,7 @@ import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
-import io.zoemeow.pbl6.phonestoremanager.repository.AdminProductRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.ProductRepository;
 import io.zoemeow.pbl6.phonestoremanager.utils.Validate;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,7 +31,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Controller
 public class AdminProductsController {
     @Autowired
-    AdminProductRepository _AdminProductRepository;
+    ProductRepository _AdminProductRepository;
     
     @Autowired
     AccountRepository _AccountRepository;

@@ -11,7 +11,8 @@ namespace PhoneStoreManager
         {
             using (var sqlDataContext = new DataContext(new DbContextOptionsBuilder<DataContext>().UseSqlServer(cString).Options))
             {
-                sqlDataContext.Database.EnsureCreated();
+                // sqlDataContext.Database.EnsureCreated();
+                sqlDataContext.Database.Migrate();
                 if (sqlDataContext.Users.Where(p => p.Username.ToLower() == "admin").FirstOrDefault() == null)
                 {
                     Debug.WriteLine("Default admin account is not exist! Creating one...");
@@ -38,7 +39,8 @@ namespace PhoneStoreManager
         {
             using (var sqlDataContext = new DataContext(new DbContextOptionsBuilder<DataContext>().UseSqlite(cString).Options))
             {
-                sqlDataContext.Database.EnsureCreated();
+                // sqlDataContext.Database.EnsureCreated();
+                sqlDataContext.Database.Migrate();
                 if (sqlDataContext.Users.Where(p => p.Username.ToLower() == "admin").FirstOrDefault() == null)
                 {
                     Debug.WriteLine("Default admin account is not exist! Creating one...");

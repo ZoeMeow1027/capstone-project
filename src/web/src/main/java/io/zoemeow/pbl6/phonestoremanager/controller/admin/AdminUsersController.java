@@ -22,7 +22,7 @@ import io.zoemeow.pbl6.phonestoremanager.model.dto.AdminUserResetPassDTO;
 import io.zoemeow.pbl6.phonestoremanager.model.dto.AdminUserToggleDTO;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
-import io.zoemeow.pbl6.phonestoremanager.repository.AdminUserRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.UserRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.RequestRepository;
 import io.zoemeow.pbl6.phonestoremanager.utils.Validate;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Controller
 public class AdminUsersController extends RequestRepository {
     @Autowired
-    AdminUserRepository _AdminUserRepository;
+    UserRepository _AdminUserRepository;
 
     @Autowired
     AccountRepository _AccountRepository;

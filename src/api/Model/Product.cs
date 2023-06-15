@@ -77,6 +77,9 @@ namespace PhoneStoreManager.Model
 
         [JsonIgnore]
         public UserCart UserCart { get; set; }
+
+        [JsonProperty("comments")]
+        public List<ProductComment> Comments { get; set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         #endregion
     }
