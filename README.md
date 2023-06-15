@@ -21,7 +21,7 @@
 | Group         | Components    | Start date    | Updated       | Progress          |
 | -             | -             | -             | -             | -                 |
 | [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/16    | ![https://progress-bar.dev/90/?scale=100&width=120](https://progress-bar.dev/90/?scale=100&width=120) |
-| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/16    | ![https://progress-bar.dev/58/?scale=100&width=120](https://progress-bar.dev/58/?scale=100&width=120) |
+| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/16    | ![https://progress-bar.dev/65/?scale=100&width=120](https://progress-bar.dev/65/?scale=100&width=120) |
 
 ## API
 
@@ -50,7 +50,7 @@ Start date: 2023/04/24
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
-| Products					| Manage phone categories, phone manufacturers and phone in intentory.	| 2023/05/20	| <ul><li>[x] Get</li><li>[x] Add (`**`)</li><li>[x] Modify (`**`)</li><li>[x] Delete or hide (`**`)</li></ul> |
+| Products					| Manage phone categories, phone manufacturers and phone in intentory.	| 2023/06/16	| <ul><li>[x] Get</li><li>[x] Add (`**`)</li><li>[x] Modify (`**`)</li><li>[x] Delete or hide (`**`)</li></ul> |
 | Users and user addresses	| Manage all users and user addresses (administrator account).			| 2023/05/20	| <ul><li>[x] Get (`*`)</li><li>[x] Add (`**`)</li><li>[x] Modify (`**`)</li><li>[x] Delete or hide (`**`)</li><li>[x] Enable/disable user (`**`)</li><li>[x] Change user type (`**`)</li><li>[x] Change password (`*`)</li></ul> |
 | Login/Logout              | Account Authorization.                                                | 2023/06/02    | <ul><li>[x] Login</li><li>[x] Logout</li><li>[x] Register</li><li>[ ] Forgot your password?</li><li>[x] Include auth to Product/User controllers</li></ul> |
 | Cart                      | User cart.                                                            | 2023/06/06    | <ul><li>[x] Get all items</li><li>[ ] Add item</li><li>[ ] Subtract item</li><li>[ ] Remove item</li><li>[ ] Remove all</li></ul> |
