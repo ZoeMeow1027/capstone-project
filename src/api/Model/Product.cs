@@ -37,7 +37,7 @@ namespace PhoneStoreManager.Model
 
         [Required]
         [JsonProperty("price")]
-        public long Price { get; set; } = 0;
+        public double Price { get; set; } = 0;
 
         [JsonProperty("metadata")]
         public string? Metadata { get; set; } = null;

@@ -1,4 +1,5 @@
-﻿using PhoneStoreManager.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using PhoneStoreManager.Model;
 using System.Diagnostics;
 
 namespace PhoneStoreManager.Services
@@ -14,24 +15,35 @@ namespace PhoneStoreManager.Services
 
         public void AddItem(int userid, int productid, int count)
         {
-            var item = _context.UserCarts.Where(p => p.UserID == userid && p.ProductID == p.ProductID).FirstOrDefault();
+            var product = _context.Products.Where(p => p.ID == productid && p.ShowInPage == true).FirstOrDefault();
+            if (product == null)
+            {
+                throw new ArgumentException(string.Format("Product with ID {0} is not exist!", productid));
+            }
+
+            var item = _context.UserCarts.Where(p => p.UserID == userid && p.ProductID == product.ID).FirstOrDefault();
             if (item != null)
             {
                 item.Count += count;
-                _context.Update(item);
+                _context.UserCarts.Update(item);
+            }
+            else if (product.InventoryCount < count)
+            {
+                throw new ArgumentException(string.Format("Product with ID {0} has not enough for {1}!", productid, count));
             }
             else
             {
                 item = new UserCart();
                 item.UserID = userid;
-                item.ProductID = productid;
-                _context.Add(item);
+                item.ProductID = product.ID;
+                item.Count = count;
+                _context.UserCarts.Add(item);
             }
 
             var _rowAffected = _context.SaveChanges();
             if (_rowAffected != 1)
             {
-                throw new Exception(string.Format("We ran a problem while adding item for you!"));
+                throw new Exception(string.Format("We ran into a problem while adding item for you!"));
             }
             ClearItemZeroCount();
         }
@@ -53,7 +65,13 @@ namespace PhoneStoreManager.Services
 
         public List<UserCart> GetAllItems(int userid)
         {
-            return _context.UserCarts.Where(p => p.UserID == userid).ToList();
+            return _context.UserCarts
+                .Include(p => p.Product)
+                .Include(p => p.Product.Images)
+                .Include(p => p.Product.Category)
+                .Include(p => p.Product.Manufacturer)
+                .Where(p => p.UserID == userid)
+                .ToList();
         }
 
         public List<UserCart> GetAllItems(User user)
@@ -61,53 +79,29 @@ namespace PhoneStoreManager.Services
             return GetAllItems(user.ID);
         }
 
-        public void RemoveItem(int userid, int productid)
+        public void RemoveItem(int userId, int cartId)
         {
-            var dataToDel = _context.UserCarts.Where(p => p.UserID == userid && p.ProductID == productid).FirstOrDefault();
-            if (dataToDel != null)
+            var dataToDel = _context.UserCarts
+                .Where(p => p.UserID == userId && p.ID == p.ID)
+                .FirstOrDefault();
+
+            if (dataToDel == null)
             {
-                _context.UserCarts.Remove(dataToDel);
-                var _rowAffected = _context.SaveChanges();
-                if (_rowAffected != 1)
-                {
-                    throw new Exception(string.Format("We ran a problem while removing item for you!"));
-                }
+                throw new ArgumentException(string.Format("Cart item with ID {0} is not exist or you don't have permission with this cart!", cartId));
             }
+
+            _context.UserCarts.Remove(dataToDel);
+            var _rowAffected = _context.SaveChanges();
+            if (_rowAffected != 1)
+            {
+                throw new Exception(string.Format("We ran into a problem while removing item for you!"));
+            }
+            ClearItemZeroCount();
         }
 
-        public void RemoveItem(User user, int productid)
+        public void RemoveItem(User user, int cartId)
         {
-            RemoveItem(user.ID, productid);
-        }
-
-        public void RemoveItem(int userid, Product product)
-        {
-            RemoveItem(userid, product.ID);
-        }
-
-        public void RemoveItem(User user, Product product)
-        {
-            RemoveItem(user.ID, product.ID);
-        }
-
-        public void SubtractItemCount(int userid, int productid, int count)
-        {
-            AddItem(userid, productid, -count);
-        }
-
-        public void SubtractItemCount(User user, int productid, int count)
-        {
-            SubtractItemCount(user.ID, productid, count);
-        }
-
-        public void SubtractItemCount(int userid, Product product, int count)
-        {
-            SubtractItemCount(userid, product.ID, count);
-        }
-
-        public void SubtractItemCount(User user, Product product, int count)
-        {
-            SubtractItemCount(user.ID, product.ID, count);
+            RemoveItem(user.ID, cartId);
         }
 
         public void ClearItemZeroCount()
@@ -115,6 +109,9 @@ namespace PhoneStoreManager.Services
             var dataToDel = _context.UserCarts.Where(p => p.Count <= 0).ToList();
             try
             {
+                if (dataToDel.Count < 0)
+                    return;
+
                 _context.UserCarts.RemoveRange(dataToDel);
                 var _affectedRows = _context.SaveChanges();
 
@@ -127,6 +124,60 @@ namespace PhoneStoreManager.Services
             {
                 Debug.WriteLine(string.Format("Some items were not removed from UserCart table. You can check them in Administrator site.\n\nMessage: {0}", ex.Message));
             }
+        }
+
+        public void ClearCart(int userId)
+        {
+            var data = _context.UserCarts
+                .Where(p => p.UserID == userId)
+                .ToList();
+            _context.UserCarts.RemoveRange(data);
+            var _rowAffected = _context.SaveChanges();
+            if (_rowAffected != 1)
+            {
+                throw new Exception(string.Format("We ran into a problem while removing item for you!"));
+            }
+            ClearItemZeroCount();
+        }
+
+        public void ClearCart(User user)
+        {
+            ClearCart(user.ID);
+        }
+
+        public void UpdateItem(int userid, int id, int count)
+        {
+            var item = _context.UserCarts
+                .Include(p => p.Product)
+                .Where(p => p.UserID == userid && p.ID == id)
+                .FirstOrDefault();
+            if (item == null)
+            {
+                throw new ArgumentException(string.Format("Cart item with ID {0} is not exist or you don't have permission with this cart!", id));
+            }
+            if (count <= 0)
+            {
+                throw new ArgumentException("Invalid 'count' value!");
+            }
+            else if (item.Product.InventoryCount < count)
+            {
+                throw new ArgumentException(string.Format("Product with ID {0} has not enough for {1}!", item.ProductID, count));
+            }
+
+            item.Count = count;
+            _context.UserCarts.Update(item);
+
+            var _rowAffected = _context.SaveChanges();
+            if (_rowAffected != 1)
+            {
+                throw new Exception(string.Format("We ran into a problem while updating item for you!"));
+            }
+            ClearItemZeroCount();
+        }
+
+        public void UpdateItem(User user, int id, int count)
+        {
+            UpdateItem(user.ID, id, count);
         }
     }
 }

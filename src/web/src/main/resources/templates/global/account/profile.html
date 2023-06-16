@@ -12,7 +12,7 @@
             <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left text-white bg-primary mb-3 p-2 rounded-1" th:utext="${barMsg}"></div>
             <div class="w-100 d-flex justify-content-center">
                 <div class="d-flex align-items-center">
-                    <img class="rounded-circle" src="/account/avatar" width="128" height="128">
+                    <img class="rounded-circle" src="/account/avatar" width="128" height="128" alt="User profile picture">
                     <form action="/account/avatar/upload" method="post" id="set-avt-form" enctype="multipart/form-data">
                         <input type="file" name="file" id="avt-upload" onchange="this.form.submit();" hidden>
                         <button id="form-btnsubmit" type="button" class="btn btn-action-color px-5 py-3 ms-3"><label for="avt-upload">Change avatar</label></button>

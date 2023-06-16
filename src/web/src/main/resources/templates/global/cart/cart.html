@@ -3,6 +3,115 @@
 <head lang="en" th:replace="~{/global/fragments/tag-head :: headtag(title=${'Your cart'})}"></head>
 <body>
     <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div class="container w-100">
+        <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left bg-primary my-3 p-2 rounded-1">
+            <span class="text-white" th:utext="${barMsg}"></span>
+        </div>
+        <div class="mb-4 mb-md-0 w-100 px-2 py-3">
+            <h2>Your cart</h2>
+            <h4>View your cart and start delivering now.</h4>
+            <hr />
+            <div class="row d-flex">
+                <div class="col-md-8">
+                    <div class="row d-flex justify-content-center align-items-center mb-1">
+                        <div class="col-md-8">
+                            <h5 class="mb-1">Shopping cart</h5>
+                            <p
+                                class="mb-1"
+                                th:text="${
+                                    'You have ' + (cartCount == null ? 'no' : cartCount == 0 ? 'no' : cartCount) +
+                                    ' item' + (cartCount == null ? '' : cartCount == 1 ? '' : 's') +
+                                    ' in your cart.'
+                                }">
+                            </p>
+                        </div>
+                        <div class="col-md-4 justify-content-end">
+                            <div class="w-100 mb-1 d-flex justify-content-end">
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAllConfirm">Remove all items</button>
+                            </div>        
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col d-flex" th:each="item : ${cartList}">
+                            <div class="card w-100 my-1">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div>
+                                                <div th:if="${item.getProduct().getImages().size() > 0}" th:remove="tag">
+                                                    <img th:src="${baseurl + '/products/img/blob?id=' + item.getProduct().getImages().get(0).getId()}"
+                                                        class="img-fluid rounded-3" alt="Shopping item" style="width: 65px; height: 65px;">
+                                                </div>
+                                                <div th:unless="${item.getProduct().getImages().size() > 0}" th:remove="tag">
+                                                    <img src="#" class="img-fluid rounded-3" alt="No images" style="width: 65px; height: 65px;">
+                                                </div>
+                                            </div>
+                                            <div class="ms-3">
+                                                <h5 class="mb-0 text-default" th:text="${item.getProduct().getName()}"></h5>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div class="me-5 d-flex justify-content-center">
+                                                <form action="/cart/update" method="post">
+                                                    <input type="text" name="id" th:value="${item.getId()}" readonly hidden>
+                                                    <div class="input-group">
+                                                        <div class="form-floating">
+                                                            <input type="number" class="form-control" name="count" min="1" th:attr="max=${item.getProduct().getInventoryCount()}" th:value="${item.getCount() == null ? 0 : item.getCount()}">
+                                                            <label for="count">Count</label>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary text-white"><i class="bi bi-check-lg"></i></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="me-4">
+                                                <h5 class="mb-0 text-nowrap" th:text="${'$' + #numbers.formatDecimal(item.getProduct().getPrice() * item.getCount(), 2, 2, 'COMMA')}"></h5>
+                                            </div>
+                                            <div class="me-1">
+                                                <form action="/cart/remove" method="post">
+                                                    <input type="text" name="id" th:value="${item.getId()}" readonly hidden>
+                                                    <button type="submit" class="btn btn-danger text-white">
+                                                        <i class="bi bi-trash fs-5"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>        
+                </div>
+                <div class="col-md-4">
+                    <span class="text-default">data</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteAllConfirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete all items in your cart?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <span class="text-center">
+                        Continue action will delete all items in your cart and can't be undone.
+                        You'll need to re-add your product if you change your mind.<br>
+                        <br>
+                        Are you sure you want to continue?
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <form action="/cart/remove-all" method="post">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No. Take me back</button>
+                        <button type="submit" class="btn btn-danger">CONTINUE REMOVE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
 </body>
 </html>

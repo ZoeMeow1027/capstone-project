@@ -1,4 +1,4 @@
-package io.zoemeow.pbl6.phonestoremanager.controller.admin;
+package io.zoemeow.pbl6.phonestoremanager.controller.global;
 
 import java.io.IOException;
 import java.io.InputStream;

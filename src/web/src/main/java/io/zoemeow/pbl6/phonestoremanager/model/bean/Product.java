@@ -27,7 +27,7 @@ public class Product {
     Integer warrantymonth = 12;
 
     @SerializedName("price")
-    Long price;
+    Double price;
     
     @SerializedName("datecreated")
     Long datecreated = 0L;
@@ -122,11 +122,11 @@ public class Product {
         this.warrantymonth = warrantyMonth;
     }
 
-    public Long getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
