@@ -27,6 +27,7 @@ import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
 import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.CartRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -37,6 +38,9 @@ public class ProfileController {
 
     @Autowired
     AccountRepository _AccountRepository;
+
+    @Autowired
+    CartRepository _CartRepository;
 
     @GetMapping("/account/profile")
     public ModelAndView pageProfile(
@@ -53,6 +57,7 @@ public class ProfileController {
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
             view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
             view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
+            view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
@@ -85,7 +90,7 @@ public class ProfileController {
             _AccountRepository.setUserInformation(header, user);
             redirectAttributes.addFlashAttribute("barMsg", "Successfully set your profile.");
         } catch (Exception ex) {
-            redirectAttributes.addFlashAttribute("barMsg", "A problem prevent you to save your profile informationl.");
+            redirectAttributes.addFlashAttribute("barMsg", "A problem prevent you to save your profile information.");
         }
 
         return "redirect:/account/profile";

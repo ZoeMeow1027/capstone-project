@@ -7,7 +7,7 @@
         <div class="row d-flex w-100">
             <div class="col-md-6 mb-4 mb-md-0 w-100">
                 <section id="page-search-data" class="col-sm px-2 py-3">
-                    <h2 th:text="${'All products matches with ' + query}"></h2>
+                    <h2 th:text="${'All products matches with ' + (query == null ? '(unknown query)' : query)}"></h2>
                     <h4>View and select your favorite products below.</h4>
                     <hr />
                     <div class="row">

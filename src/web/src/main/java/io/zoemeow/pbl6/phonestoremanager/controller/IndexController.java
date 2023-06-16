@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
 import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.CartRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.ProductRepository;
 import io.zoemeow.pbl6.phonestoremanager.utils.RequestAndResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,9 @@ public class IndexController {
     @Autowired
     ProductRepository _AdminProductRepository;
 
+    @Autowired
+    CartRepository _CartRepository;
+
     @GetMapping("/")
     public ModelAndView index(
             HttpServletRequest request,
@@ -33,6 +37,7 @@ public class IndexController {
             User user = _AccountRepository.getUserInformation(header, null);
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
             view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
+            view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
         } catch (SessionExpiredException seEx) {
             view.addObject("name", null);
             view.addObject("adminuser", false);
@@ -65,6 +70,7 @@ public class IndexController {
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
             view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
             view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
+            view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
             view.addObject("productfilter", _AdminProductRepository.getProducts(header, q, false));
         } catch (SessionExpiredException seEx) {
             view.addObject("name", null);

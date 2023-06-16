@@ -4,6 +4,9 @@
 <body>
     <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
     <div class="container">
+        <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left bg-primary my-3 p-2 rounded-1">
+            <span class="text-white" th:utext="${barMsg}"></span>
+        </div>
         <div class="product-summary-area">
             <div class="container-fliud">
                 <div class="wrapper row">
@@ -29,10 +32,14 @@
                         <h3 class="product-title mb-5px" th:text="${product.getName()}"></h3>
                         <h5 class="product-manufacturer mb-4" th:text="${product.getManufacturer().getName()}"></h5>
                         <h4 class="price"><span th:text="${'$' + product.getPrice()}"></span></h4>
-                        <div class="action mb-4">
-                            <button class="add-to-cart btn btn-default" type="button">Add to cart</button>
-                            <button class="like btn btn-default" type="button"><i class="bi bi-heart"></i></button>
-                        </div>
+                        <form action="/product/add-to-cart" method="post">
+                            <div class="action mb-4">
+                                <input type="text" name="productid" th:value="${product.getId()}" readonly hidden>
+                                <input type="text" name="count" th:value="1" readonly hidden>
+                                <button class="add-to-cart btn btn-default" type="submit">Add to cart</button>
+                                <!-- <button class="like btn btn-default" type="button"><i class="bi bi-heart"></i></button> -->
+                            </div>
+                        </form>
                         <div class="mb-1">
                             <i class="bi bi-star-fill"></i>
                             <i class="bi bi-star-fill"></i>

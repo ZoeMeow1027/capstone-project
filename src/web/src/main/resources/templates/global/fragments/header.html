@@ -8,7 +8,8 @@
             </div>
             <nav class="navbar navbar-expand-sm navbar-light navheader-bar">
                 <div class="container">
-                    <a class="navbar-brand" href="/"><img src="/static_files/images/logos/logo_2.png" height="60" /></a>
+                    <!-- https://stackoverflow.com/questions/51083414/cant-load-image-with-spring-boot-thymeleaf -->
+                    <a class="navbar-brand" href="/"><img th:src="@{'/img/logo.jpg'}" style="width: 60px; height: 60px;" /></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                         aria-label="Toggle navigation">
@@ -36,7 +37,7 @@
                                                 <div th:unless="${adminuser}" th:remove="tag">
                                                     <div class="col">
                                                         <div class="w-100"></div>
-                                                        <span class="text-nowrap"><i class="bi bi-cart me-2"></i>0 items</span>
+                                                        <span class="text-nowrap"><i class="bi bi-cart me-2"></i><span class="text-nowrap" th:utext="${cartCount + ' item' + (cartCount == 1 ? '' : 's')}"></span></span>
                                                     </div>
                                                 </div>    
                                             </div>
@@ -59,11 +60,11 @@
                                     </ul>
                                 </li>
                                 <div th:unless="${conidtion}" th:remove="tag">
-                                    <li class="nav-item">
-                                        <a class="nav-link mx-2 px-3 auth" href="/auth/login">Login</a>
+                                    <li class="nav-item navheader-item">
+                                        <a class="nav-link ms-2 px-3 auth" href="/auth/login">Login</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link mx-2 px-3 auth" href="/auth/register">Register</a>
+                                    <li class="nav-item navheader-item">
+                                        <a class="nav-link ms-2 px-3 auth" href="/auth/register">Register</a>
                                     </li>
                                 </div>
                             </div>
