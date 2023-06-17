@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="~{/global/fragments/tag-head :: headtag(title=${'Checkout'})}"></head>
+<body>
+    <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div class="container w-100">
+        <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left bg-primary my-3 p-2 rounded-1">
+            <span class="text-white" th:utext="${barMsg}"></span>
+        </div>
+        <div class="mb-4 mb-md-0 w-100 px-2 py-3">
+            <h2>Checkout</h2>
+            <h4>Check your cart again and completing this dialog for final step</h4>
+            <hr />
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="h4">Delivery address</span>
+                    </div>
+                    <select class="selectpicker selector-multiline w-100" name="id" id="id" aria-label="Default select example">
+                        <div th:each="addressItem: ${userAddressList}">
+                            <option th:value="${addressItem.getId()}" th:attr="data-content=${addressItem.getName() + '<br>' + addressItem.getAddress() + '<br>' + addressItem.getPhone()}">
+                            </option>
+                        </div>
+                    </select>
+                    <div class="mt-2">
+                        <a class="text-decoration-none" href="/account/address" target="_blank"><span>Not found your address in selector? Manage your address in new tab</span></a><br>
+                        <span>After modifing your address, please refresh this page to refresh your address.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card my-3">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="h4">Your cart</span>
+                    </div>
+                    <div class="row">
+                        <div class="col d-flex" th:each="item : ${cartList}">
+                            <div class="card w-100 my-1">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div>
+                                                <div th:if="${item.getProduct().getImages().size() > 0}" th:remove="tag">
+                                                    <img th:src="${baseurl + '/products/img/blob?id=' + item.getProduct().getImages().get(0).getId()}"
+                                                        class="img-fluid rounded-3" alt="Shopping item" style="width: 65px; height: 65px;">
+                                                </div>
+                                                <div th:unless="${item.getProduct().getImages().size() > 0}" th:remove="tag">
+                                                    <img src="#" class="img-fluid rounded-3" alt="No images" style="width: 65px; height: 65px;">
+                                                </div>
+                                            </div>
+                                            <div class="ms-3">
+                                                <h5 class="mb-0 text-default" th:text="${item.getProduct().getName()}"></h5>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div class="me-5 d-flex justify-content-center">
+                                                <form action="/cart/update" method="post">
+                                                    <input type="text" name="id" th:value="${item.getId()}" readonly hidden>
+                                                    <div class="input-group">
+                                                        <div class="form-floating">
+                                                            <input type="number" class="form-control" readonly name="count" min="1" th:attr="max=${item.getProduct().getInventoryCount()}" th:value="${item.getCount() == null ? 0 : item.getCount()}">
+                                                            <label for="count">Count</label>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="me-4">
+                                                <h5 class="mb-0 text-nowrap" th:text="${'$' + #numbers.formatDecimal(item.getProduct().getPrice() * item.getCount(), 2, 2, 'COMMA')}"></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card my-3">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="h4">Total price and start delivering</span>
+                    </div>
+                    <div class="container mb-3">
+                        <div class="row d-flex">
+                            <div class="col-sm-4"><span class="text-nowrap">Total price in your cart:</span></div>
+                            <div class="col-sm-8"><span th:text="${'$' + #numbers.formatDecimal(cartTotal,1,2,'COMMA')}"></span></div>
+                            <div class="w-100"></div>
+                            <div class="col-sm-4"><span class="text-nowrap">Shipping:</span></div>
+                            <div class="col-sm-8"><span th:text="${'$' + #numbers.formatDecimal(shippingPrice,1,2,'COMMA')}"></span></div>
+                            <div class="w-100"></div>
+                            <div class="col-sm-4"><span class="text-nowrap">Total amount (final price you will purchase):</span></div>
+                            <div class="col-sm-8"><span th:text="${'$' + #numbers.formatDecimal(cartTotal + shippingPrice,1,2,'COMMA')}"></span></div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-lg btn-block btn-place-order mb-2">Place order</button>
+                    <div>
+                        <span>
+                            Clicking "Place Order" means that you agree the
+                            <a class="text-decoration-none" href="#">PhoneStore Term or service</a>
+                            and
+                            <a class="text-decoration-none" href="#">PhoneStore Privacy notice</a>.
+                        </span><br>
+                        <span>
+                            After that, you will choose Payment Method on next page. You can access this later in your current order page.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
+    <script>
+            $('.selector-multiline').selectpicker({
+                size: 4
+            });
+    </script>
+</body>
+</html>

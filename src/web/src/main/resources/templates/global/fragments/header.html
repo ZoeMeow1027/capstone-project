@@ -9,7 +9,7 @@
             <nav class="navbar navbar-expand-sm navbar-light navheader-bar">
                 <div class="container">
                     <!-- https://stackoverflow.com/questions/51083414/cant-load-image-with-spring-boot-thymeleaf -->
-                    <a class="navbar-brand" href="/"><img th:src="@{'/img/logo.jpg'}" style="width: 60px; height: 60px;" /></a>
+                    <a class="navbar-brand" href="/"><img th:src="@{'/img/logo.jpg'}" class="rounded-1" style="width: 60px; height: 60px;" /></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                         aria-label="Toggle navigation">
@@ -47,8 +47,8 @@
                                         <h6 th:unless="${adminuser}" class="dropdown-header">Your cart</h6>
                                         <li th:unless="${adminuser}"><a class="dropdown-item" href="/cart">View your cart</a></li>
                                         <h6 th:unless="${adminuser}" class="dropdown-header">Your delivery</h6>
-                                        <li th:unless="${adminuser}"><a class="dropdown-item" href="/account/delivery?type=0">Current delivery</a></li>
-                                        <li th:unless="${adminuser}"><a class="dropdown-item" href="/account/delivery?type=1">Purchase history</a></li>
+                                        <li th:unless="${adminuser}"><a class="dropdown-item" href="/account/delivery?type=0">Current order</a></li>
+                                        <li th:unless="${adminuser}"><a class="dropdown-item" href="/account/delivery?type=1">Order history</a></li>
                                         <h6 th:if="${adminuser}" class="dropdown-header">Administrator area</h6>
                                         <li th:if="${adminuser}"><a class="dropdown-item" href="/admin/dashboard">Go to admin dashboard</a></li>
                                         <h6 class="dropdown-header">Your account settings</h6>
