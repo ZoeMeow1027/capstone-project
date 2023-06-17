@@ -1,0 +1,15 @@
+.btn-place-order {
+    background: var(--main-color);
+    padding: 1em 1em;
+    border: none;
+    text-transform: UPPERCASE;
+    font-weight: bold;
+    color: black;
+    -webkit-transition: background .3s ease;
+    transition: background .3s ease;
+}
+
+.btn-place-order:hover {
+    background: #b36800;
+    color: #fff;
+}

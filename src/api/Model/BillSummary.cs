@@ -44,7 +44,10 @@ namespace PhoneStoreManager.Model
         public DeliverStatus Status { get; set; } = DeliverStatus.WaitingForConfirm;
 
         [JsonProperty("statusaddress")]
-        public string StatusAddress { get; set; } = string.Empty;
+        public string? StatusAddress { get; set; }
+
+        [JsonProperty("statusadditional")]
+        public string? StatusAdditional { get; set; }
 
         [Required]
         [JsonProperty("paymentmethod")]
@@ -59,6 +62,9 @@ namespace PhoneStoreManager.Model
         [Required]
         [JsonProperty("paymentcompleted")]
         public bool PaymentCompleted { get; set; } = false;
+
+        [JsonProperty("usermessage")]
+        public string? UserMessage { get; set; } = null;
 
         #region Entity
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

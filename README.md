@@ -5,14 +5,20 @@
 
 # Used technologies
 
-- Database: SQLite 3
+- Database: SQLite
 - API: ASP.NET (based on .NET 6)
 - Web: Spring Boot (Java)
 
 # Used tools
 
-- IDE: Visual Studio 2022 (API) & Visual Studio Code (Text editor - Web)
-- SQL management: SQLite Studio
+- IDE or text editor:
+  - [Visual Studio IDE (currently using 2022)](https://visualstudio.microsoft.com/vs/)
+  - [Visual Studio Code](https://code.visualstudio.com/) with [Java extension pack for VS Code](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack)
+  - [IntelliJ IDEA](https://www.jetbrains.com/idea/)
+- SQL management:
+  - [SQLite Studio](https://sqlitestudio.pl/) (for SQLite)
+- Others
+  - [Spring Initializr](https://start.spring.io/)
 
 # Roadmap
 
@@ -21,7 +27,7 @@
 | Group         | Components    | Start date    | Updated       | Progress          |
 | -             | -             | -             | -             | -                 |
 | [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/17    | ![https://progress-bar.dev/92/?scale=100&width=120](https://progress-bar.dev/92/?scale=100&width=120) |
-| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/17    | ![https://progress-bar.dev/72/?scale=100&width=120](https://progress-bar.dev/72/?scale=100&width=120) |
+| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/17    | ![https://progress-bar.dev/77/?scale=100&width=120](https://progress-bar.dev/77/?scale=100&width=120) |
 
 ## API
 
@@ -86,8 +92,8 @@ Start date: 2023/05/16
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
-| Login                     | Login page.                                                           | 2023/05/24    | <ul><li>[x]</li></ul>         |
-| Register                  | Register page.                                                        | 2023/06/02    | <ul><li>[x]</li></ul>         |
+| Login                     | Login page.                                                           | 2023/05/24    | <ul><li>[x] View</li><li>[x] Login</li></ul> |
+| Register                  | Register page.                                                        | 2023/06/02    | <ul><li>[x] View</li><li>[x] Register</li></ul> |
 
 [Go to progress](#progress)
 
@@ -97,12 +103,13 @@ Start date: 2023/06/17
 
 | Group						| Description															| Updated		| Task (tick means completed)	|
 | -							| -																		| -				| -								|
-| Main page                 | Home web page                                                         | 2023/06/03    | <ul><li>[ ]</li></ul> |
+| Main page                 | Home web page                                                         | 2023/06/03    | <ul><li>[ ] View</li></ul> |
 | Search page               | Search result when you return a search query                          | 2023/06/17    | <ul><li>[x] View</li><li>[x] Navigate to product detail</li><li>[x] Product image</li></ul> |
-| Product detail            | Detail of a product (specifications, price, image preview, ...)       | 2023/06/17    | <ul><li>[x] View</li><li>[x] Add to cart</li><li>[ ] Comments</li></ul> |
+| Product detail            | Detail of a product (specifications, price, image preview, ...)       | 2023/06/17    | <ul><li>[x] View</li><li>[x] Add to cart</li><li>[ ] Specifications</li><li>[ ] Comments</li></ul> |
 | Your profile              | Edit your basic profile                                               | 2023/06/13    | <ul><li>[x] View</li><li>[x] Profile data</li><li>[x] Save changes</li><li>[x] Get/set avatar</li></ul> |
 | Your address              | Edit your added address                                               | 2023/06/17    | <ul><li>[x] View</li><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li></ul> |
 | Change your password      | Change your password                                                  | 2023/06/13    | <ul><li>[x] View</li><li>[x] Change password</li></ul> |
-| Your cart                 | Manage your cart                                                      | 2023/06/17    | <ul><li>[x] View</li><li>[x] List items in cart</li><li>[x] Update a item</li><li>[x] Remove a item</li><li>[x] Remove all items</li><li>[ ] Go to checkout</li></ul> |
+| Your cart                 | Manage your cart                                                      | 2023/06/17    | <ul><li>[x] View</li><li>[x] List items in cart</li><li>[x] Update a item</li><li>[x] Remove a item</li><li>[x] Remove all items</li><li>[x] Go to checkout</li></ul> |
+| Checkout                  | Checkout before place order                                           | 2023/06/17    | <ul><li>[x] View</li><li>[x] Change delivery address</li><li>[ ] Place order</li></ul> |
 
 [Go to progress](#progress)
