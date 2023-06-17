@@ -422,13 +422,13 @@ namespace PhoneStoreManager.Controllers
                 switch (userDTO.Action.ToLower())
                 {
                     case "add":
-                        AddressAdd(userDTO.Data.ToObject<UserAddress>(), user.ID);
+                        AddressAdd(userDTO.Data.ToObject<UserAddressDTO>(), user.ID);
                         break;
                     case "update":
-                        AddressUpdate(userDTO.Data.ToObject<UserAddress>(), user.ID);
+                        AddressUpdate(userDTO.Data.ToObject<UserAddressDTO>(), user.ID);
                         break;
                     case "delete":
-                        AddressDelete(userDTO.Data.ToObject<UserAddress>(), user.ID);
+                        AddressDelete(userDTO.Data.ToObject<UserAddressDTO>(), user.ID);
                         break;
                     default:
                         throw new BadHttpRequestException("Invalid \"type\" value!");
@@ -460,7 +460,7 @@ namespace PhoneStoreManager.Controllers
 
 
         #region User Address area
-        private void AddressAdd(UserAddress userAddress, int userID)
+        private void AddressAdd(UserAddressDTO userAddress, int userID)
         {
             List<string> reqArgList = new List<string>() { "name", "address", "phone" };
             Utils.CheckRequiredArguments(userAddress, reqArgList);
@@ -477,12 +477,16 @@ namespace PhoneStoreManager.Controllers
             {
                 throw new BadHttpRequestException("Failed while validating Phone parameter!");
             }
-            userAddress.UserID = userID;
 
-            _userAddressService.AddUserAddress(userAddress);
+            UserAddress dataTemp = new UserAddress();
+            dataTemp.Name = userAddress.Name;
+            dataTemp.Address = userAddress.Address;
+            dataTemp.Phone = userAddress.Phone;
+            dataTemp.UserID = userID;
+            _userAddressService.AddUserAddress(dataTemp);
         }
 
-        private void AddressUpdate(UserAddress userAddress, int userID)
+        private void AddressUpdate(UserAddressDTO userAddress, int userID)
         {
             List<string> reqArgList = new List<string>() { "id" };
             Utils.CheckRequiredArguments(userAddress, reqArgList);
@@ -500,7 +504,7 @@ namespace PhoneStoreManager.Controllers
                 throw new BadHttpRequestException("Failed while validating Phone parameter!");
             }
 
-            var dataTemp = _userAddressService.GetUserAddressById(userAddress.ID, userID);
+            var dataTemp = _userAddressService.GetUserAddressById(userAddress.ID.Value, userID);
             // Address - Check if exist
             if (dataTemp == null)
             {
@@ -519,12 +523,12 @@ namespace PhoneStoreManager.Controllers
             _userAddressService.UpdateUserAddress(dataTemp);
         }
 
-        private void AddressDelete(UserAddress userAddress, int userID)
+        private void AddressDelete(UserAddressDTO userAddress, int userID)
         {
             List<string> reqArgList = new List<string>() { "id" };
             Utils.CheckRequiredArguments(userAddress, reqArgList);
 
-            var dataTemp = _userAddressService.GetUserAddressById(userAddress.ID, userID);
+            var dataTemp = _userAddressService.GetUserAddressById(userAddress.ID.Value, userID);
             // Address - Check if exist
             if (dataTemp == null)
             {
@@ -536,7 +540,7 @@ namespace PhoneStoreManager.Controllers
                 throw new UnauthorizedAccessException(string.Format("You have not permission to access address with ID {0}!", userAddress.ID));
             }
 
-            _userAddressService.DeleteUserAddress(userAddress);
+            _userAddressService.DeleteUserAddressById(userAddress.ID.Value);
         }
         #endregion
     }

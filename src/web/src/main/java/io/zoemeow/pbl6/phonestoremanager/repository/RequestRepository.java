@@ -1,6 +1,7 @@
 package io.zoemeow.pbl6.phonestoremanager.repository;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -107,7 +108,7 @@ public class RequestRepository {
             }
             httppost.addHeader("Content-Type", "application/json; charset=UTF-8");
 
-            StringEntity jsonparam = new StringEntity(jsonString);
+            HttpEntity jsonparam = new StringEntity(jsonString, Charset.forName("UTF-8"));
             httppost.setEntity(jsonparam);
 
             CloseableHttpClient httpClient = createHttpClient();

@@ -2,7 +2,7 @@
 
 namespace PhoneStoreManager.Model.DTO
 {
-    public class UserAddressDataDTO
+    public class UserAddressDTO
     {
         [JsonProperty("id")]
         public int? ID { get; set; }

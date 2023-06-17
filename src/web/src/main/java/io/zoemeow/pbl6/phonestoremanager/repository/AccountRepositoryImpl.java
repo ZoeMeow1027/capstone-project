@@ -52,7 +52,7 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("id", Integer.toString(id));
 
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/address", null, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/address", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
@@ -113,26 +113,48 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
 
     @Override
     public RequestResult<JsonObject> addAddress(Map<String, String> header, UserAddress userAddress) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addAddress'");
+        JsonObject productAdd = new JsonObject();
+        productAdd.addProperty("name", userAddress.getName());
+        productAdd.addProperty("phone", userAddress.getPhone());
+        productAdd.addProperty("address", userAddress.getAddress());
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("action", "add");
+        bodyRoot.add("data", productAdd);
+
+        String postData = bodyRoot.toString();
+        return postRequestWithResult("/api/account/address", null, header, postData);
     }
 
     @Override
     public RequestResult<JsonObject> updateAddress(Map<String, String> header, UserAddress userAddress) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateAddress'");
+        JsonObject productAdd = new JsonObject();
+        productAdd.addProperty("id", userAddress.getId());
+        productAdd.addProperty("name", userAddress.getName());
+        productAdd.addProperty("phone", userAddress.getPhone());
+        productAdd.addProperty("address", userAddress.getAddress());
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("action", "update");
+        bodyRoot.add("data", productAdd);
+
+        String postData = bodyRoot.toString();
+        return postRequestWithResult("/api/account/address", null, header, postData);
     }
 
     @Override
     public RequestResult<JsonObject> deleteAddress(Map<String, String> header, UserAddress userAddress) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteAddress'");
+        return deleteAddress(header, userAddress.getId());
     }
 
     @Override
     public RequestResult<JsonObject> deleteAddress(Map<String, String> header, int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteAddress'");
+        JsonObject productAdd = new JsonObject();
+        productAdd.addProperty("id", id);
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("action", "delete");
+        bodyRoot.add("data", productAdd);
+
+        String postData = bodyRoot.toString();
+        return postRequestWithResult("/api/account/address", null, header, postData);
     }
 
     @Override

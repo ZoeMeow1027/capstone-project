@@ -51,7 +51,7 @@ public class CartController {
             view.addObject("cartCount", cartList.size());
 
             view.addObject("cartList", cartList);
-            
+            view.addObject("cartTotal", cartList.stream().mapToDouble(o -> o.getProduct().getPrice() * o.getCount()).sum());
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
