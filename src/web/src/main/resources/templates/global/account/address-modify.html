@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="~{/global/fragments/tag-head :: headtag(title=${(action == 'update' ? 'Update' : 'Add') + ' delivery address - Account Settings'})}"></head>
+<body>
+<div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+<div class="row w-100 d-flex justify-content-center">
+  <div lang="en" th:replace="~{/global/fragments/sidebar-account :: sidebar(type=1, tab=1)}" th:remove="tag"></div>
+  <section id="page-account-data" class="col-sm p-3">
+    <div th:if="${action == 'update'}" th:remove="tag">
+      <h2>Update delivery address</h2>
+      <h4>Update current delivery address in your account</h4>
+    </div>
+    <div th:unless="${action == 'update'}" th:remove="tag">
+      <h2>Add delivery address</h2>
+      <h4>Add new delivery address to your account</h4>
+    </div>
+    <hr />
+    <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left text-white bg-primary mb-3 p-2 rounded-1" th:utext="${barMsg}"></div>
+    <form class="modal-body" th:action="${'/account/address/' + (action == 'update' ? 'update' : 'add')}" method="post">
+      <div th:if="${action == 'update'}" class="form-floating mb-3">
+        <input type="text" name="id" class="form-control" readonly th:value="${userAddress == null ? '' : userAddress.getId()}">
+        <label for="floatingInput">ID</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" name="name" class="form-control" th:value="${userAddress == null ? '' : userAddress.getName()}">
+        <label for="floatingInput">Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" name="address" class="form-control" th:value="${userAddress == null ? '' : userAddress.getAddress()}">
+        <label for="floatingInput">Address</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="tel" name="phone" class="form-control" th:value="${userAddress == null ? '' : userAddress.getPhone()}">
+        <label for="floatingInput">Phone</label>
+      </div>
+      <button type="submit" th:unless="${action == 'update'}" class="btn btn-primary me-1 px-4 py-2">Add</button>
+      <button type="submit" th:if="${action == 'update'}" class="btn btn-success me-1 px-4 py-2">Save changes</button>
+      <a href="/account/address"><button type="button" class="btn btn-danger mx-1 px-4 py-2" data-bs-dismiss="modal">Cancel</button></a>
+    </form>
+  </section>
+</div>
+<div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
+</body>
+</html>

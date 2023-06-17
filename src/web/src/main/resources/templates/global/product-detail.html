@@ -35,7 +35,19 @@
                         <form action="/product/add-to-cart" method="post">
                             <div class="action mb-4">
                                 <input type="text" name="productid" th:value="${product.getId()}" readonly hidden>
-                                <input type="text" name="count" th:value="1" readonly hidden>
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <div class="form-floating">
+                                                <input type="number" class="form-control" name="count" min="1" th:attr="max=${product.getInventoryCount()}" value="1">
+                                                <label for="count">Count</label>
+                                            </div>
+                                        </div>        
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span class="text-default" th:text="${product.getInventoryCount() + ' items available'}"></span>
+                                    </div>
+                                </div>
                                 <button class="add-to-cart btn btn-default" type="submit">Add to cart</button>
                                 <!-- <button class="like btn btn-default" type="button"><i class="bi bi-heart"></i></button> -->
                             </div>

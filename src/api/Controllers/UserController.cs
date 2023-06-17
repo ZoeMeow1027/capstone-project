@@ -136,13 +136,13 @@ namespace PhoneStoreManager.Controllers
                         switch (userDTO.Action.ToLower())
                         {
                             case "add":
-                                AddUserAddress(userDTO.Data.ToObject<UserAddressDataDTO>());
+                                AddUserAddress(userDTO.Data.ToObject<UserAddressDTO>());
                                 break;
                             case "update":
-                                UpdateUserAddress(userDTO.Data.ToObject<UserAddressDataDTO>());
+                                UpdateUserAddress(userDTO.Data.ToObject<UserAddressDTO>());
                                 break;
                             case "delete":
-                                DeleteUserAddress(userDTO.Data.ToObject<UserAddressDataDTO>());
+                                DeleteUserAddress(userDTO.Data.ToObject<UserAddressDTO>());
                                 break;
                             default:
                                 throw new BadHttpRequestException("Invalid \"action\" value!");
@@ -371,7 +371,7 @@ namespace PhoneStoreManager.Controllers
         #endregion
 
         #region User Address area
-        private void AddUserAddress(UserAddressDataDTO data)
+        private void AddUserAddress(UserAddressDTO data)
         {
             List<string> reqArgList = new List<string>() { "userid", "name", "address", "phone" };
             Utils.CheckRequiredArguments(data, reqArgList);
@@ -401,7 +401,7 @@ namespace PhoneStoreManager.Controllers
             });
         }
 
-        private void UpdateUserAddress(UserAddressDataDTO data)
+        private void UpdateUserAddress(UserAddressDTO data)
         {
             List<string> reqArgList = new List<string>() { "id" };
             Utils.CheckRequiredArguments(data, reqArgList);
@@ -438,7 +438,7 @@ namespace PhoneStoreManager.Controllers
 
         }
 
-        private void DeleteUserAddress(UserAddressDataDTO data)
+        private void DeleteUserAddress(UserAddressDTO data)
         {
             List<string> reqArgList = new List<string>() { "id" };
             Utils.CheckRequiredArguments(data, reqArgList);

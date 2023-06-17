@@ -9,26 +9,28 @@
         </div>
         <div class="mb-4 mb-md-0 w-100 px-2 py-3">
             <h2>Your cart</h2>
-            <h4>View your cart and start delivering now.</h4>
+            <h4>View your cart and start delivering</h4>
             <hr />
             <div class="row d-flex">
                 <div class="col-md-8">
                     <div class="row d-flex justify-content-center align-items-center mb-1">
                         <div class="col-md-8">
-                            <h5 class="mb-1">Shopping cart</h5>
-                            <p
+                            <h4
                                 class="mb-1"
                                 th:text="${
-                                    'You have ' + (cartCount == null ? 'no' : cartCount == 0 ? 'no' : cartCount) +
-                                    ' item' + (cartCount == null ? '' : cartCount == 1 ? '' : 's') +
-                                    ' in your cart.'
+                                    (cartCount == null ? 'No' : cartCount == 0 ? 'No' : cartCount) +
+                                    ' item' + (cartCount == null ? '' : cartCount == 1 ? '' : 's')
                                 }">
-                            </p>
+                            </h4>
                         </div>
                         <div class="col-md-4 justify-content-end">
-                            <div class="w-100 mb-1 d-flex justify-content-end">
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAllConfirm">Remove all items</button>
-                            </div>        
+                            <div th:if="${cartList.size() > 0}" th:remove="tag">
+                                <div class="w-100 mb-1 d-flex justify-content-end">
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#deleteAllConfirm">Remove all items
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -81,8 +83,38 @@
                         </div>
                     </div>        
                 </div>
-                <div class="col-md-4">
-                    <span class="text-default">data</span>
+                <div th:if="${cartList.size() > 0}" th:remove="tag">
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header py-3">
+                                <h5 class="mb-0">Summary</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <li
+                                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                        Products
+                                        <span th:text="${'$' + #numbers.formatDecimal(cartTotal,2,2,'COMMA')}"></span>
+                                    </li>
+                                    <li
+                                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                        <div>
+                                            <strong>Total amount</strong>
+                                            <strong>
+                                                <p class="mb-0">(including VAT)</p>
+                                            </strong>
+                                        </div>
+                                        <span><strong
+                                                th:text="${'$' + #numbers.formatDecimal(cartTotal, 2, 2, 'COMMA')}"></strong></span>
+                                    </li>
+                                </ul>
+
+                                <button type="button" class="btn btn-primary btn-lg btn-block">
+                                    Go to checkout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
