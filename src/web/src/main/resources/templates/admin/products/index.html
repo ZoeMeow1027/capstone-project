@@ -18,7 +18,7 @@
                     <div class="col d-flex align-items-left flex-fill card my-1">
                         <div class="row justify-content-between">
                             <div class="col-md-auto mx-2 my-2">
-                                <img src="/" width="48" height="48" alt="image">
+                                <img th:src="${item.getImages().size() == 0 ? '#' : (baseurl + '/products/img/blob?id=' + item.getImages().get(0).getId())}" width="64" height="64" alt="no image">
                             </div>
                             <div class="col-md-3 my-2 mx-1">
                                 <div class="col">

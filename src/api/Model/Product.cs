@@ -25,7 +25,7 @@ namespace PhoneStoreManager.Model
 
         [Required]
         [JsonProperty("inventorycount")]
-        public int InventoryCount { get; set; } = 0;
+        public long InventoryCount { get; set; } = 0;
 
         [Required]
         [JsonProperty("unit")]

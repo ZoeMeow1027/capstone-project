@@ -7,18 +7,21 @@ namespace PhoneStoreManager.Model
     [Table("BillDetails")]
     public class BillDetails
     {
+        [Key]
+        [JsonProperty("id")]
         public int ID { get; set; }
 
         [Required]
+        [JsonProperty("billid")]
         public int BillID { get; set; }
 
         [Required]
+        [JsonProperty("productid")]
         public int ProductID { get; set; }
 
         [Required]
-        public ulong Count { get; set; } = 0;
-
-        public ulong Discount { get; set; } = 0;
+        [JsonProperty("count")]
+        public long Count { get; set; } = 0;
 
         #region Entity
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -27,6 +30,7 @@ namespace PhoneStoreManager.Model
         [ForeignKey("BillID")]
         public BillSummary BillSummary { get; set; }
 
+        [JsonProperty("product")]
         [Required]
         [ForeignKey("ProductID")]
         public Product Product { get; set; }

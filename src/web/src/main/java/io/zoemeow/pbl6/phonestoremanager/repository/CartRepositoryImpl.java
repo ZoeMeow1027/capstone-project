@@ -91,4 +91,17 @@ public class CartRepositoryImpl extends RequestRepository implements CartReposit
         String postData = bodyRoot.toString();
         return postRequestWithResult("/api/cart", null, header, postData);
     }
+
+    @Override
+    public RequestResult<JsonObject> checkout(Map<String, String> header, Integer userAddressId, String userMessage) {
+        JsonObject productAdd = new JsonObject();
+        productAdd.addProperty("addressid", userAddressId);
+        productAdd.addProperty("message", userMessage);
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("action", "checkout");
+        bodyRoot.add("data", productAdd);
+
+        String postData = bodyRoot.toString();
+        return postRequestWithResult("/api/cart", null, header, postData);
+    }
 }

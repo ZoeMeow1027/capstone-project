@@ -8,6 +8,7 @@ import org.springframework.core.io.Resource;
 
 import com.google.gson.JsonObject;
 
+import io.zoemeow.pbl6.phonestoremanager.model.bean.BillSummary;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.UserAddress;
@@ -26,7 +27,7 @@ public interface AccountRepository {
 
     public List<UserAddress> getAllAddress(Map<String, String> header) throws Exception;
 
-    public UserAddress getAddressById(Map<String, String> header, int id) throws Exception;
+    public UserAddress getAddressById(Map<String, String> header, Integer id) throws Exception;
 
     public RequestResult<JsonObject> addAddress(Map<String, String> header, UserAddress userAddress);
 
@@ -34,5 +35,13 @@ public interface AccountRepository {
 
     public RequestResult<JsonObject> deleteAddress(Map<String, String> header, UserAddress userAddress);
 
-    public RequestResult<JsonObject> deleteAddress(Map<String, String> header, int id);
+    public RequestResult<JsonObject> deleteAddress(Map<String, String> header, Integer id);
+
+    public List<BillSummary> getBillSummaries(Map<String, String> header) throws Exception;
+
+    public List<BillSummary> getActiveBillSummaries(Map<String, String> header) throws Exception;
+
+    public BillSummary getBillSummaryById(Map<String, String> header, Integer id) throws Exception;
+
+    public RequestResult<JsonObject> cancelOrder(Map<String, String> header, Integer orderid) throws Exception;
 }

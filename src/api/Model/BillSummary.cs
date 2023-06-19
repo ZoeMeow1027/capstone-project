@@ -25,19 +25,28 @@ namespace PhoneStoreManager.Model
         public string RecipientAddress { get; set; } = string.Empty;
 
         [Required]
+        [JsonProperty("recipientphone")]
+        public string RecipientPhone { get; set; } = string.Empty;
+
+        [Required]
         [JsonProperty("datecreated")]
         public long DateCreated { get; set; } = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
-        [Required]
         [JsonProperty("datecompleted")]
         public long? DateCompleted{ get; set; } = null;
 
+        [JsonProperty("shippingprice")]
+        public double ShippingPrice { get; set; } = 0;
+
         [JsonProperty("vat")]
-        public long VAT { get; set; } = 0;
+        public double VAT { get; set; } = 0;
+
+        [JsonProperty("discount")]
+        public double Discount { get; set; } = 0;
 
         [Required]
         [JsonProperty("totalprice")]
-        public long TotalPrice { get; set; } = 0;
+        public double TotalPrice { get; set; } = 0;
 
         [Required]
         [JsonProperty("status")]
@@ -51,7 +60,7 @@ namespace PhoneStoreManager.Model
 
         [Required]
         [JsonProperty("paymentmethod")]
-        public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.COD;
+        public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.Unselected;
 
         [JsonProperty("paymentmethodname")]
         public string? PaymentMethodName { get; set; } = null;
