@@ -127,6 +127,35 @@ public class AdminProductsController {
             view.addObject("productCategoryList", _AdminProductRepository.getProductCategories(header, null, false));
             view.addObject("productManufacturerList", _AdminProductRepository.getProductManufacturers(header, null, false));
             view.addObject("product", _AdminProductRepository.getProductById(header, id));
+            view.addObject("tab", 0);
+        } catch (NoInternetException niEx) {
+            // TODO: No internet connection
+        } catch (Exception ex) {
+            view = new ModelAndView("redirect:/admin");
+        }
+        return view;
+    }
+
+    @GetMapping("/admin/products/images")
+    public ModelAndView pageProductImages(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Integer id) {
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
+        ModelAndView view = null;
+        try {
+            view = new ModelAndView("/admin/products/images");
+            view.addObject("action", "edit");
+
+            User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
+            view.addObject("name", user == null ? "(Unknown)" : user.getName());
+            view.addObject("baseurl",
+                    String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
+
+            view.addObject("product", _AdminProductRepository.getProductById(header, id));
+            view.addObject("tab", 2);
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {

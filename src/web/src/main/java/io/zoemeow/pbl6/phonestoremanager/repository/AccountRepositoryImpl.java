@@ -81,7 +81,7 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
 
     @Override
     public RequestResult<JsonObject> setAvatar(Map<String, String> header, Resource resource) throws Exception {
-        return postRequestFromImage("/api/account/avatar", null, header, resource);
+        return postRequestFromImage("/api/account/avatar", null, header, resource, null);
     }
 
     @Override

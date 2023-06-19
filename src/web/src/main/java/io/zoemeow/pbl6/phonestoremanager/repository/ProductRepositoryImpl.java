@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Repository;
 
 import com.google.gson.Gson;
@@ -299,5 +300,19 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         parameters.put("id", id.toString());
         return getRequestToImage("/api/products/img/blob", parameters, header);
     }
-    
+
+    @Override
+    public RequestResult<JsonObject> uploadImage(Map<String, String> header, Integer productId, Resource resource) throws Exception {
+        Map<String, String> body = new HashMap<String, String>();
+        body.put("productid", productId.toString());
+        return postRequestFromImage("/api/products/img/upload", null, header, resource, body);
+    }
+
+    @Override
+    public RequestResult<JsonObject> deleteProductImage(Map<String, String> header, Integer id) throws Exception {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("id", id.toString());
+        return postRequestWithResult("/api/products/img/delete", parameters, header, null);
+    }
+
 }

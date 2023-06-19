@@ -14,47 +14,52 @@
             <h4 th:text="${'Product ' + (product == null ? '' : product.getName()) + ' with ID ' + (product == null ? '' : product.getId())}"></h4>
         </div>
         <hr />
+        <nav th:unless="${condition}" class="nav nav-pills nav-justified">
+            <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/update?id=' + product.getId()}" th:classappend="${tab == 0 ? 'active' : ''}">Basic information</a>
+            <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/specifications?id=' + product.getId()}" th:classappend="${tab == 1 ? 'active' : ''}">Specifications</a>
+            <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/images?id=' + product.getId()}" th:classappend="${tab == 2 ? 'active' : ''}">Images</a>
+        </nav>
         <form class="modal-body" id="modal-product-modify">
             <div id="modal-info-bar" class="text-left text-white mb-3 p-2 rounded-1" style="visibility: hidden;"></div>
             <div th:unless="${condition}" class="form-floating mb-3">
-                <input type="text" class="form-control" name="id" readonly th:value="${product == null ? '' : product.getId()}">
-                <label for="floatingInput">ID</label>
+                <input type="text" class="form-control" id="id" name="id" readonly th:value="${product == null ? '' : product.getId()}">
+                <label for="id">ID</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" name="name" th:value="${product == null ? '' : product.getName()}">
-                <label for="floatingInput">Name</label>
+                <input type="text" class="form-control" id="name" name="name" th:value="${product == null ? '' : product.getName()}">
+                <label for="name">Name</label>
             </div>
             <div class="form-floating mb-3">
-                <select class="form-control form-select" name="categoryid" json-type="number">
+                <select class="form-control form-select" id="category" name="categoryid" json-type="number">
                     <option th:each="item: ${productCategoryList}" th:value="${item.getId()}" th:text="${item.getName()}" th:selected="${product == null ? false : item.getId() == product.getCategoryId()}"></option>
                 </select>
-                <label for="floatingInput">Category</label>
+                <label for="category">Category</label>
             </div>
             <div class="form-floating mb-3">
-                <select class="form-control form-select" name="manufacturerid" json-type="number">
+                <select class="form-control form-select" id="manufacturer" name="manufacturerid" json-type="number">
                     <option th:each="item: ${productManufacturerList}" th:value="${item.getId()}" th:text="${item.getName()}" th:selected="${product == null ? false : item.getId() == product.getManufacturerId()}"></option>
                 </select>
-                <label for="floatingInput">Manufacturer</label>
+                <label for="manufacturer">Manufacturer</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="number" class="form-control" name="inventorycount" min="0" th:value="${product == null ? '0' : product.getInventoryCount()}">
-                <label for="floatingInput">Inventory Count</label>
+                <input type="number" class="form-control" id="inventoryCount" name="inventorycount" min="0" th:value="${product == null ? '0' : product.getInventoryCount()}">
+                <label for="inventoryCount">Inventory Count</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" name="unit" th:value="${product == null ? '' : product.getUnit()}">
-                <label for="floatingInput">Unit</label>
+                <input type="text" class="form-control" id="unit" name="unit" th:value="${product == null ? '' : product.getUnit()}">
+                <label for="unit">Unit</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="number" class="form-control" name="warrantymonth" min="0" th:value="${product == null ? '' : product.getWarrantyMonth()}">
-                <label for="floatingInput">Warranty Month</label>
+                <input type="number" class="form-control" id="warrantyMonth" name="warrantymonth" min="0" th:value="${product == null ? '' : product.getWarrantyMonth()}">
+                <label for="warrantyMonth">Warranty Month</label>
             </div>
             <div th:unless="${condition}" class="form-floating mb-3">
-                <input type="text" class="form-control" name="datecreated" min="0" disabled th:value="${#calendars.format(new java.util.Date(product.getDateCreated()), 'dd/MM/yyyy HH:mm:ss')}">
-                <label for="floatingInput">Date Created</label>
+                <input type="text" class="form-control" id="dateCreated" name="datecreated" min="0" disabled th:value="${#calendars.format(new java.util.Date(product.getDateCreated()), 'dd/MM/yyyy HH:mm:ss')}">
+                <label for="dateCreated">Date Created</label>
             </div>
             <div th:unless="${condition}" class="form-floating mb-3">
-                <input type="text" class="form-control" name="datemodified" min="0" disabled th:value="${#calendars.format(new java.util.Date(product.getDateModified()), 'dd/MM/yyyy HH:mm:ss')}">
-                <label for="floatingInput">Date Modified</label>
+                <input type="text" class="form-control" id="dateModified" name="datemodified" min="0" disabled th:value="${#calendars.format(new java.util.Date(product.getDateModified()), 'dd/MM/yyyy HH:mm:ss')}">
+                <label for="dateModified">Date Modified</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="number" class="form-control" name="price" min="0" th:value="${product == null ? '' : product.getPrice()}">
