@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import io.zoemeow.pbl6.phonestoremanager.model.bean.BillSummary;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.UserAddress;
@@ -48,7 +49,7 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
     }
 
     @Override
-    public UserAddress getAddressById(Map<String, String> header, int id) throws NoInternetException, RequestException {
+    public UserAddress getAddressById(Map<String, String> header, Integer id) throws NoInternetException, RequestException {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("id", Integer.toString(id));
 
@@ -146,7 +147,7 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
     }
 
     @Override
-    public RequestResult<JsonObject> deleteAddress(Map<String, String> header, int id) {
+    public RequestResult<JsonObject> deleteAddress(Map<String, String> header, Integer id) {
         JsonObject productAdd = new JsonObject();
         productAdd.addProperty("id", id);
         JsonObject bodyRoot = new JsonObject();
@@ -168,5 +169,92 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
             throws Exception {
         String postData = new Gson().toJson(changePassDTO);
         return postRequestWithResult("/api/account/change-password", null, header, postData);
+    }
+
+    @Override
+    public List<BillSummary> getActiveBillSummaries(Map<String, String> header) throws NoInternetException, RequestException {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("activeonly", "true");
+
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/delivery", parameters, header);
+        if (!reqResult.getIsSuccessfulRequest()) {
+            throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
+        }
+        if (reqResult.getStatusCode() != 200) {
+            throw new RequestException(
+                "/api/account/delivery",
+                reqResult.getStatusCode(),
+                reqResult.getMessage()
+            );
+        }
+
+        var data = reqResult.getData().get("data").getAsJsonArray();
+        if (data == null)
+            return new ArrayList<BillSummary>();
+        return new Gson().fromJson(
+            reqResult.getData().get("data").getAsJsonArray(),
+            (new TypeToken<List<BillSummary>>() {}).getType()
+        );
+    }
+
+    @Override
+    public List<BillSummary> getBillSummaries(Map<String, String> header) throws NoInternetException, RequestException {
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/delivery", null , header);
+        if (!reqResult.getIsSuccessfulRequest()) {
+            throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
+        }
+        if (reqResult.getStatusCode() != 200) {
+            throw new RequestException(
+                "/api/account/delivery",
+                reqResult.getStatusCode(),
+                reqResult.getMessage()
+            );
+        }
+
+        var data = reqResult.getData().get("data").getAsJsonArray();
+        if (data == null)
+            return new ArrayList<BillSummary>();
+        return new Gson().fromJson(
+            reqResult.getData().get("data").getAsJsonArray(),
+            (new TypeToken<List<BillSummary>>() {}).getType()
+        );
+    }
+
+    @Override
+    public BillSummary getBillSummaryById(Map<String, String> header, Integer id) throws NoInternetException, RequestException {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("id", Integer.toString(id));
+
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/delivery", parameters, header);
+        if (!reqResult.getIsSuccessfulRequest()) {
+            throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
+        }
+        if (reqResult.getStatusCode() != 200) {
+            throw new RequestException(
+                "/api/account/delivery",
+                reqResult.getStatusCode(),
+                reqResult.getMessage()
+            );
+        }
+
+        var data = reqResult.getData().get("data").getAsJsonObject();
+        if (data == null)
+            return new BillSummary();
+        return new Gson().fromJson(
+            reqResult.getData().get("data").getAsJsonObject(),
+            (new TypeToken<BillSummary>() {}).getType()
+        );
+    }
+
+    @Override
+    public RequestResult<JsonObject> cancelOrder(Map<String, String> header, Integer orderid) throws Exception {
+        JsonObject productAdd = new JsonObject();
+        productAdd.addProperty("orderid", orderid);
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("action", "cancel");
+        bodyRoot.add("data", productAdd);
+
+        String postData = bodyRoot.toString();
+        return postRequestWithResult("/api/account/delivery", null, header, postData);
     }
 }

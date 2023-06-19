@@ -4,9 +4,10 @@
     {
         Failed = -2,
         Cancelled = -1,
-        WaitingForConfirm = 0,
-        Preparing = 1,
-        Delivering = 2,
-        Completed = 3,
+        WaitingForPurchase = 0,
+        WaitingForConfirm = 1,
+        Preparing = 2,
+        Delivering = 3,
+        Completed = 4,
     }
 }

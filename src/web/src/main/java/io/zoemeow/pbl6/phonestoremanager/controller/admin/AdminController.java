@@ -24,7 +24,7 @@ public class AdminController {
     @Autowired
     AccountRepository _AccountRepository;
 
-    @GetMapping("/admin")
+    @GetMapping(value = {"/admin" , "/admin/"})
     public ModelAndView index(
         HttpServletRequest request,
         HttpServletResponse response
@@ -34,7 +34,7 @@ public class AdminController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("redirect:/admin/dashboard");
+            view = new ModelAndView("redirect:/admin/products");
             _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
         } catch (NoInternetException niEx) {
             // TODO: No internet connection

@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using PhoneStoreManager.Model;
 using PhoneStoreManager.Model.DTO;
+using PhoneStoreManager.Model.Enums;
 using PhoneStoreManager.Services;
 
 namespace PhoneStoreManager.Controllers
@@ -13,17 +14,23 @@ namespace PhoneStoreManager.Controllers
         private readonly IUserAvatarService _userAvatarService;
         private readonly IUserAddressService _userAddressService;
         private readonly IUserService _userService;
+        private readonly IBillService _billService;
+        private readonly IProductService _productService;
 
         public AccountController(
             IUserSessionService userSessionService,
             IUserAvatarService userAvatarService,
             IUserAddressService userAddressService,
-            IUserService userService
+            IUserService userService,
+            IBillService billService,
+            IProductService productService
             ) : base(userSessionService)
         {
             _userAvatarService = userAvatarService;
             _userAddressService = userAddressService;
             _userService = userService;
+            _billService = billService;
+            _productService = productService;
         }
 
         [HttpGet("my")]
@@ -431,7 +438,7 @@ namespace PhoneStoreManager.Controllers
                         AddressDelete(userDTO.Data.ToObject<UserAddressDTO>(), user.ID);
                         break;
                     default:
-                        throw new BadHttpRequestException("Invalid \"type\" value!");
+                        throw new BadHttpRequestException("Unknown \"action\" value!");
                 }
             }
             catch (ArgumentException argEx)
@@ -458,6 +465,106 @@ namespace PhoneStoreManager.Controllers
             return StatusCode(result.StatusCode, result.ToDynamicObject());
         }
 
+        [HttpGet("delivery")]
+        public ActionResult GetDelivery(int? id = null, bool? activeonly = false)
+        {
+            ReturnResultTemplate result = new ReturnResultTemplate();
+            result.StatusCode = 200;
+
+            try
+            {
+                string? token = Request.Cookies["token"];
+                User? user = GetUserByToken(token);
+                if (user == null)
+                    throw new UnauthorizedAccessException("Session has expired.");
+
+                result.StatusCode = 200;
+                result.Message = "Successful!";
+                result.Data = id == null
+                    ? _billService.GetBillSummaries(user.ID, activeonly == null ? false : activeonly.Value)
+                    : _billService.GetBillSummaryById(id.Value, user.ID);
+
+                if (result.Data == null)
+                {
+                    throw new BadHttpRequestException("Data not found!");
+                }
+            }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                result.StatusCode = 401;
+                result.Message = uaEx.Message;
+            }
+            catch (BadHttpRequestException bhrEx)
+            {
+                result.StatusCode = 400;
+                result.Message = bhrEx.Message;
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.Message = ex.Message;
+            }
+
+            return StatusCode(result.StatusCode, result.ToDynamicObject());
+        }
+
+        [HttpPost("delivery")]
+        public ActionResult ActionDelivery(JToken args)
+        {
+            ReturnResultTemplate result = new ReturnResultTemplate
+            {
+                StatusCode = 200,
+                Message = "Successful!"
+            };
+
+            try
+            {
+                string? token = Request.Cookies["token"];
+                User? user = GetUserByToken(token);
+                if (user == null)
+                    throw new UnauthorizedAccessException("Session has expired.");
+
+                RequestDTO? userDTO = args.ToObject<RequestDTO>();
+                if (userDTO == null)
+                    throw new Exception("Error while converting parameters!");
+
+                if (userDTO.Action == null || userDTO.Data == null)
+                {
+                    throw new BadHttpRequestException("Missing parameters!");
+                }
+
+                switch (userDTO.Action.ToLower())
+                {
+                    case "cancel":
+                        OrderCancel(userDTO.Data, user.ID);
+                        break;
+                    default:
+                        throw new BadHttpRequestException("Unknown \"action\" value!");
+                }
+            }
+            catch (ArgumentException argEx)
+            {
+                result.StatusCode = 400;
+                result.Message = argEx.Message;
+            }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                result.StatusCode = 403;
+                result.Message = uaEx.Message;
+            }
+            catch (BadHttpRequestException bhrEx)
+            {
+                result.StatusCode = 400;
+                result.Message = bhrEx.Message;
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.Message = ex.Message;
+            }
+
+            return StatusCode(result.StatusCode, result.ToDynamicObject());
+        }
 
         #region User Address area
         private void AddressAdd(UserAddressDTO userAddress, int userID)
@@ -543,5 +650,34 @@ namespace PhoneStoreManager.Controllers
             _userAddressService.DeleteUserAddressById(userAddress.ID.Value);
         }
         #endregion
+
+        #region Order history
+        private void OrderCancel(JToken args, int userId)
+        {
+            List<string> reqArgList = new List<string>() { "orderid" };
+            Utils.CheckRequiredArguments(args, reqArgList);
+
+            int? orderId = args["orderid"].Value<int>();
+            BillSummary? billSummary = _billService.GetBillSummaryById(orderId.Value, userId);
+            if (billSummary == null)
+            {
+                throw new ArgumentException(string.Format("Order with ID {0} is not exist or you don't have permission for this order!", orderId));
+            }
+
+            billSummary.Status = DeliverStatus.Cancelled;
+            billSummary.StatusAdditional = "User has cancelled this order.";
+
+            _billService.UpdateBill(billSummary);
+
+            // TODO: Add back to product
+            foreach (var item in billSummary.BillDetails)
+            {
+                var productData = _productService.GetProductById(item.ID);
+                productData.InventoryCount += item.Count;
+                _productService.UpdateProduct(productData);
+            }
+        }
+        #endregion
+
     }
 }

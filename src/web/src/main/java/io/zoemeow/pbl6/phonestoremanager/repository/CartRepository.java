@@ -18,4 +18,6 @@ public interface CartRepository {
     public RequestResult<JsonObject> removeItem(Map<String, String> header, Integer cartId) throws Exception;
 
     public RequestResult<JsonObject> removeAllItems(Map<String, String> header) throws Exception;
+
+    public RequestResult<JsonObject> checkout(Map<String, String> header, Integer userAddressId, String userMessage);
 }

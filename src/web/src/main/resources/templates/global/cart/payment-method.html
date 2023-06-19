@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head lang="en"
+    th:replace="~{/global/fragments/tag-head :: headtag(title=${'Payment method - Delivery ' + orderitem.getId()})}">
+</head>
+
+<body>
+    <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div class="container w-100">
+        <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left bg-primary my-3 p-2 rounded-1">
+            <span class="text-white" th:utext="${barMsg}"></span>
+        </div>
+        <div class="mb-4 mb-md-0 w-100 px-2 py-3">
+            <h2>Payment method</h2>
+            <h4 th:text="${'Choose your payment method for delivery ID ' + orderitem.getId()}"></h4>
+            <hr />
+            <div class="form-floating mt-3">
+                <input type="text" class="form-control" th:value="${orderitem.getId()}" readonly>
+                <label for="floatingTextarea2">Delivery ID</label>
+            </div>
+            <div class="form-floating mt-3">
+                <textarea class="form-control" style="height: 100px" th:text="${useraddress}" readonly></textarea>
+                <label for="floatingTextarea2">Delivery address</label>
+            </div>
+            <div class="form-floating mt-3">
+                <input type="text" class="form-control" th:value="${'$' + orderitem.getTotalPrice()}" readonly>
+                <label for="floatingTextarea2">Total price</label>
+            </div>
+            <div class="my-3" th:if="${alreadydone}">
+                <span>You have already done this delivery payment. No action is required.</span></br>
+                <span>To create new order, go to product and add them, and order again.</span>
+            </div>
+            <div class="my-3" th:unless="${alreadydone}">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <span class="h4">Choose your favorite payment method</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="my-3">
+                <a class="text-decoration-none me-2"
+                    th:href="${baseurl + '/account/delivery/detail?id=' + orderitem.getId()}">
+                    <button type="button" class="btn" th:classappend="${alreadydone ? 'btn-primary' : 'btn-danger'}"
+                        th:text="${alreadydone ? 'Go to this delivery detail' : 'Suspend and return to delivery detail'}"></button>
+                </a>
+                <a class="text-decoration-none" href="/">
+                    <button type="button" class="btn btn-secondary">Go to home page</button>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
+</body>
+
+</html>

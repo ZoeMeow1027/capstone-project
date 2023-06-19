@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head lang="en"
+    th:replace="~{/global/fragments/tag-head :: headtag(title=${'Your ' + (activeonly ? 'active ' : 'all ') + 'orders'})}">
+</head>
+
+<body>
+    <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div class="row w-100 d-flex justify-content-center">
+        <div lang="en" th:replace="~{/global/fragments/sidebar-account :: sidebar(type=0, tab=${activeonly ? 0 : 1})}"
+            th:remove="tag"></div>
+        <section id="page-account-data" class="col-sm p-3">
+            <div th:if="${activeonly == true}" th:remove="tag">
+                <h2>Your active orders</h2>
+                <h4>View and/or complete your payment</h4>
+            </div>
+            <div th:unless="${activeonly == true}" th:remove="tag">
+                <h2>Your all orders</h2>
+                <h4>View all orders you created</h4>
+            </div>
+            <hr />
+            <div id="modal-info-bar" th:if="${barMsg != null}"
+                class="text-left text-white bg-primary mb-3 p-2 rounded-1" th:utext="${barMsg}"></div>
+            <div class="container-fluid">
+                <div class="row mx-1">
+                    <div th:each="item: ${deliverylist}" th:remove="tag">
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md my-2">
+                                        <div class="col">
+                                            <span class="h5" th:text="${'Delivery ID ' + item.getId()}"></span>
+                                        </div>
+                                        <div class="col">
+                                            <span class="h6"
+                                                th:text="${'on ' + #calendars.format(new java.util.Date(item.getDateCreated()), 'dd/MM/yyyy HH:mm:ss')}"></span>
+                                        </div>
+                                        <th:block th:switch="${item.getDeliverStatus()}">
+                                            <div th:case="-2">
+                                                <div class="col mt-3 mb-2 text-left text-white bg-danger p-2 rounded-1">
+                                                    <span class="h6">Failed</span>
+                                                    <span class="h6" th:text="${item.getStatusAdditional()}"></span>
+                                                </div>
+                                            </div>
+                                            <div th:case="-1">
+                                                <div
+                                                    class="col mt-3 mb-2 text-left text-white bg-secondary p-2 rounded-1">
+                                                    <span class="h6">Cancelled:</span>
+                                                    <span class="h6" th:text="${item.getStatusAdditional()}"></span>
+                                                </div>
+                                            </div>
+                                            <div th:case="0">
+                                                <div
+                                                    class="col mt-3 mb-2 text-left text-black bg-warning p-2 rounded-1">
+                                                    <span class="h6">Waiting for your payment</span>
+                                                </div>
+                                            </div>
+                                            <div th:case="1">
+                                                <div
+                                                    class="col mt-3 mb-2 text-left text-black bg-warning p-2 rounded-1">
+                                                    <span class="h6">Waiting for confirm by us</span>
+                                                </div>
+                                            </div>
+                                            <div th:case="2">
+                                                <div class="col mt-3 mb-2 text-left text-white bg-info p-2 rounded-1">
+                                                    <span class="h6">Preparing</span>
+
+                                                </div>
+                                            </div>
+                                            <div th:case="3">
+                                                <div class="col mt-3 mb-2 text-left text-white bg-info p-2 rounded-1">
+                                                    <span class="h6">Delivering:</span>
+                                                    <span class="h6" th:text="${item.getStatusAdditional()}"></span>
+                                                </div>
+                                            </div>
+                                            <div th:case="4">
+                                                <div
+                                                    class="col mt-3 mb-2 text-left text-white bg-success p-2 rounded-1">
+                                                    <span class="h6">Completed</span>
+                                                </div>
+                                            </div>
+                                        </th:block>
+                                    </div>
+                                </div>
+                                <div class="row d-flex mx-0" th:each="item: ${item.getBillDetails()}">
+                                    <div class="card w-100 my-1">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <div class="d-flex flex-row align-items-center">
+                                                    <div>
+                                                        <div th:if="${item.getProduct().getImages().size() > 0}"
+                                                            th:remove="tag">
+                                                            <img th:src="${baseurl + '/products/img/blob?id=' + item.getProduct().getImages().get(0).getId()}"
+                                                                class="img-fluid rounded-3" alt="Shopping item"
+                                                                style="width: 65px; height: 65px;">
+                                                        </div>
+                                                        <div th:unless="${item.getProduct().getImages().size() > 0}"
+                                                            th:remove="tag">
+                                                            <img src="#" class="img-fluid rounded-3" alt="No images"
+                                                                style="width: 65px; height: 65px;">
+                                                        </div>
+                                                    </div>
+                                                    <div class="ms-3">
+                                                        <h5 class="mb-0 text-default"
+                                                            th:text="${item.getProduct().getName()}"></h5>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex flex-row align-items-center">
+                                                    <div class="me-5 d-flex justify-content-center">
+                                                        <form action="/cart/update" method="post">
+                                                            <input type="text" name="id" th:value="${item.getId()}"
+                                                                readonly hidden>
+                                                            <div class="input-group">
+                                                                <div class="form-floating">
+                                                                    <input type="number" class="form-control" readonly
+                                                                        name="count" min="1"
+                                                                        th:attr="max=${item.getProduct().getInventoryCount()}"
+                                                                        th:value="${item.getCount() == null ? 0 : item.getCount()}">
+                                                                    <label for="count">Count</label>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="me-4">
+                                                        <h5 class="mb-0 text-nowrap"
+                                                            th:text="${'$' + #numbers.formatDecimal(item.getProduct().getPrice() * item.getCount(), 2, 2, 'COMMA')}">
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col text-end">
+                                        <span class="h5"
+                                            th:text="${'Total price: $' + #numbers.formatDecimal(item.getTotalPrice(),1,2,'COMMA')}"></span>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col text-end">
+                                        <button th:if="${item.getDeliverStatus() == 0}"
+                                            th:attr="onclick=|setCancelOrderId('${item.getId()}')|"
+                                            class="btn btn-danger mx-1" data-bs-toggle="modal"
+                                            data-bs-target="#cancelConfirmModal">Cancel order</button>
+                                        <a th:if="${item.getDeliverStatus() == 0}" class="text-decoration-none"
+                                            th:href="${baseurl + '/payment-method?id=' + item.getId()}">
+                                            <button class="btn btn-primary mx-1">Complete payment</button>
+                                        </a>
+                                        <a class="text-decoration-none"
+                                            th:href="${baseurl + '/account/delivery/detail?id=' + item.getId()}">
+                                            <button class="btn btn-primary ms-1">View details</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="modal fade" id="cancelConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="cancelConfirmModal" aria-hidden="true">
+        <form id="cancelConfirmForm" action="/account/delivery/cancel" method="post">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cancel order?</h5>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" name="orderid" id="cancelorderid" readonly hidden>
+                        <span class="text-left">
+                            Cancel order? You will need to create a new order again if you changed your mind. This
+                            action is undone!<br><br>
+                            Are you sure you want to continue?
+                        </span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-danger">Confirm cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
+    <script>
+        function setCancelOrderId(id) {
+            document.getElementById('cancelorderid').value = id;
+        }
+    </script>
+</body>
+
+</html>

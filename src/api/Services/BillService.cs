@@ -1,4 +1,5 @@
-﻿using PhoneStoreManager.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using PhoneStoreManager.Model;
 using PhoneStoreManager.Model.Enums;
 
 namespace PhoneStoreManager.Services
@@ -14,57 +15,53 @@ namespace PhoneStoreManager.Services
 
         public void AddBill(BillSummary item)
         {
-            _context.Add(item);
+            _context.BillSummaries.Add(item);
             _context.SaveChanges();
         }
 
-        public List<BillSummary> FindAllBillSummariesByUserId(int userId)
+        public List<BillSummary> GetBillSummaries(int? userId = null, bool activeOnly = false)
         {
-            return _context.BillSummaries.Where(p => p.UserID == userId).ToList();
+            var data = _context.BillSummaries
+                .Include(p => p.User)
+                .Include(p => p.BillDetails).ThenInclude(c => c.Product).ThenInclude(q => q.Images)
+                .Include(p => p.Warranties)
+                .OrderByDescending(p => p.DateCreated)
+                .ToList();
+            if (userId != null)
+            {
+                data = data.Where(p => p.UserID == userId).ToList();
+            }
+            if (activeOnly)
+            {
+                data = data.Where(p => (new DeliverStatus[] { DeliverStatus.Completed, DeliverStatus.Failed, DeliverStatus.Cancelled }.Contains(p.Status)) == false).ToList();
+            }
+            return data;
         }
 
-        public List<BillSummary> GetAllBillSummaries()
+        public BillSummary? GetBillSummaryById(int id, int? userId = null)
         {
-            return _context.BillSummaries.ToList();
-        }
-
-        public BillSummary? GetBillSummaryById(int id)
-        {
-            return _context.BillSummaries.Where(p => p.ID == id).FirstOrDefault();
+            return GetBillSummaries(userId)
+                .Where(p => p.ID == id)
+                .FirstOrDefault();
         }
 
         public void UpdateBill(BillSummary item)
         {
-            var data = _context.BillSummaries.Where(p => p.ID == item.ID).FirstOrDefault();
+            var data = _context.BillSummaries
+                .Where(p => p.ID == item.ID)
+                .FirstOrDefault();
             if (data == null)
                 throw new Exception("Bill with ID is not exist!");
 
-            // TODO: Update bill here!
-            throw new NotImplementedException();
-        }
-
-        public void UpdateBillPayment(int id, PaymentMethod method, string? methodName = null, string? paymentId = null)
-        {
-            var data = _context.BillSummaries.Where(p => p.ID == id).FirstOrDefault();
-            if (data == null)
-                throw new Exception("Bill with ID is not exist!");
-
-            data.PaymentMethod = method;
-            data.PaymentMethodName = methodName;
-            data.PaymentID = paymentId;
-
-            _context.BillSummaries.Update(data);
-            _context.SaveChanges();
-        }
-
-        public void UpdateBillStatus(int id, DeliverStatus deliverStatus, string deliverStatusAddress)
-        {
-            var data = _context.BillSummaries.Where(p => p.ID == id).FirstOrDefault();
-            if (data == null)
-                throw new Exception("Bill with ID is not exist!");
-
-            data.Status = deliverStatus;
-            data.StatusAddress = deliverStatusAddress;
+            data.DateCompleted = item.DateCompleted;
+            data.PaymentCompleted = item.PaymentCompleted;
+            data.PaymentID = item.PaymentID;
+            data.PaymentMethod = item.PaymentMethod;
+            data.PaymentMethodName = item.PaymentMethodName;
+            data.PaymentCompleted = item.PaymentCompleted;
+            data.Status = item.Status;
+            data.StatusAddress = item.StatusAddress;
+            data.StatusAdditional = item.StatusAdditional;
 
             _context.BillSummaries.Update(data);
             _context.SaveChanges();

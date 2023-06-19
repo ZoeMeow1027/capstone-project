@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-public class CartAndCheckoutController {
+public class CartController {
     @Autowired
     AccountRepository _AccountRepository;
 
@@ -121,44 +121,5 @@ public class CartAndCheckoutController {
         }
 
         return String.format("redirect:/cart");
-    }
-
-    @GetMapping("/checkout")
-    public ModelAndView pageCheckout(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        @ModelAttribute("barMsg") String barMsg
-    ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
-        
-        ModelAndView view = new ModelAndView("/global/cart/checkout");
-
-        try {
-            User user = _AccountRepository.getUserInformation(header, null);
-            view.addObject("user", user);
-            view.addObject("name", user == null ? "(Unknown)" : user.getName());
-            view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
-            view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
-            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
-
-            var cartList = _CartRepository.getAllItemsInCart(header, null, null);
-            view.addObject("cartCount", cartList.size());
-
-            view.addObject("cartList", cartList);
-            view.addObject("cartTotal", cartList.stream().mapToDouble(o -> o.getProduct().getPrice() * o.getCount()).sum());
-
-            view.addObject("shippingPrice", 5.00);
-
-            view.addObject("userAddressList", _AccountRepository.getAllAddress(header));
-        } catch (NoInternetException niEx) {
-
-        } catch (SessionExpiredException seEx) {
-            view = new ModelAndView("redirect:/");
-        } catch (Exception ex) {
-            // TODO: 500 error code here!
-        }
-
-        return view;
     }
 }

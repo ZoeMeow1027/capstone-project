@@ -58,6 +58,8 @@ namespace PhoneStoreManager
             builder.Services.AddScoped<IUserCartService, UserCartService>();
             builder.Services.AddScoped<IUserAvatarService, UserAvatarService>();
 
+            builder.Services.AddScoped<IBillService, BillService>();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

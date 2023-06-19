@@ -53,6 +53,8 @@ public class AdminProductsController {
             view.addObject("name", user == null ? "(Unknown)" : user.getName());
 
             view.addObject("productList", _AdminProductRepository.getProducts(header, query, includehidden == null ? false : includehidden));
+            view.addObject("baseurl",
+                    String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {
