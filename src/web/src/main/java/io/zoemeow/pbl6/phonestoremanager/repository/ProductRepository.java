@@ -11,6 +11,7 @@ import io.zoemeow.pbl6.phonestoremanager.model.bean.ProductManufacturer;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
+import org.springframework.core.io.Resource;
 
 public interface ProductRepository {
     public List<Product> getProducts(Map<String, String> header, String query, Boolean includehidden) throws NoInternetException, RequestException;
@@ -38,4 +39,8 @@ public interface ProductRepository {
     public RequestResult<JsonObject> updateProductManufacturer(Map<String, String> header, ProductManufacturer productManufacturer);
 
     public byte[] getProductImage(Map<String, String> header, Integer id) throws Exception;
+
+    public RequestResult<JsonObject> uploadImage(Map<String, String> header, Integer productId, Resource resource) throws Exception;
+
+    public RequestResult<JsonObject> deleteProductImage(Map<String, String> header, Integer id) throws Exception;
 }

@@ -672,7 +672,7 @@ namespace PhoneStoreManager.Controllers
             // TODO: Add back to product
             foreach (var item in billSummary.BillDetails)
             {
-                var productData = _productService.GetProductById(item.ID);
+                var productData = _productService.GetProductById(item.ProductID);
                 productData.InventoryCount += item.Count;
                 _productService.UpdateProduct(productData);
             }

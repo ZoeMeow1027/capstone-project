@@ -108,8 +108,10 @@ public class RequestRepository {
             }
             httppost.addHeader("Content-Type", "application/json; charset=UTF-8");
 
-            HttpEntity jsonparam = new StringEntity(jsonString, Charset.forName("UTF-8"));
-            httppost.setEntity(jsonparam);
+            if (jsonString != null) {
+                HttpEntity jsonparam = new StringEntity(jsonString, Charset.forName("UTF-8"));
+                httppost.setEntity(jsonparam);
+            }
 
             CloseableHttpClient httpClient = createHttpClient();
             CloseableHttpResponse httpResponse = httpClient.execute(httppost);
@@ -172,7 +174,7 @@ public class RequestRepository {
     }
 
     public RequestResult<JsonObject> postRequestFromImage(
-        String url, Map<String, String> parameters, Map<String, String> header, Resource resource
+        String url, Map<String, String> parameters, Map<String, String> header, Resource resource, Map<String, String> body
     ) {
         RequestResult<JsonObject> result = new RequestResult<JsonObject>();
 
@@ -195,6 +197,11 @@ public class RequestRepository {
             builder.setMode(HttpMultipartMode.LEGACY);
             builder.setContentType(ContentType.MULTIPART_FORM_DATA);
             builder.addBinaryBody("file", resource.getInputStream(), ContentType.APPLICATION_OCTET_STREAM, resource.getFilename());
+            if (body != null) {
+                for (var dataItem: body.keySet()) {
+                    builder.addTextBody(dataItem, body.get(dataItem));
+                }
+            }
             HttpEntity multipart = builder.build();
             httppost.setEntity(multipart);
         

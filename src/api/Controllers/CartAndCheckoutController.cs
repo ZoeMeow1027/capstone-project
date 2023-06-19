@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PhoneStoreManager.Model;
 using PhoneStoreManager.Model.DTO;
 using PhoneStoreManager.Services;
+using System.Dynamic;
 
 namespace PhoneStoreManager.Controllers
 {
@@ -167,7 +169,10 @@ namespace PhoneStoreManager.Controllers
                         }
 
                         // TODO: Check if product has limit exceed.
-                        AddOrder(user.ID, userCart, userAddress, userMessage);
+                        int orderid = AddOrder(user.ID, userCart, userAddress, userMessage);
+                        dynamic data = new ExpandoObject();
+                        data.orderid = orderid;
+                        result.Data = data;
 
                         // Clear user cart after successful billing.
                         _cartService.ClearCart(user.ID);
@@ -175,9 +180,9 @@ namespace PhoneStoreManager.Controllers
                         // Subtract product after successful billing.
                         foreach (var userCartItem in userCart)
                         {
-                            var data = _productService.GetProductById(userCartItem.ProductID);
-                            data.InventoryCount -= userCartItem.Count;
-                            _productService.UpdateProduct(data);
+                            var productTemp = _productService.GetProductById(userCartItem.ProductID);
+                            productTemp.InventoryCount -= userCartItem.Count;
+                            _productService.UpdateProduct(productTemp);
                         }
                         break;
                     default:
@@ -206,7 +211,7 @@ namespace PhoneStoreManager.Controllers
             return StatusCode(result.StatusCode, result.ToDynamicObject());
         }
 
-        private void AddOrder(int userId, List<UserCart> userCartList, UserAddress userAddress, string? userMessage)
+        private int AddOrder(int userId, List<UserCart> userCartList, UserAddress userAddress, string? userMessage)
         {
             double shippingPrice = 3;
             var billDetails = new List<BillDetails>();
@@ -218,7 +223,7 @@ namespace PhoneStoreManager.Controllers
                     Count = item.Count
                 });
             }
-            _billService.AddBill(new BillSummary()
+            var billSummary = new BillSummary()
             {
                 UserID = userId,
                 Recipient = userAddress.Name,
@@ -234,7 +239,9 @@ namespace PhoneStoreManager.Controllers
                 PaymentMethod = Model.Enums.PaymentMethod.Unselected,
                 PaymentCompleted = false,
                 UserMessage = userMessage
-            });
+            };
+            _billService.AddBill(billSummary);
+            return billSummary.ID;
         }
     }
 }

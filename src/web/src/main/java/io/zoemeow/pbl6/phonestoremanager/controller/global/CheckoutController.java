@@ -85,7 +85,14 @@ public class CheckoutController {
                 throw new Exception(checkout.getMessage());
             }
             redirectAttributes.addFlashAttribute("barMsg", "Successfully placed order! Check your order in Your current order.");
-            return String.format("redirect:/cart");
+            String returnUrl = "redirect:/account/delivery?activeonly=true";
+            if (checkout.getData() != null) {
+                var data = checkout.getData().getAsJsonObject().get("data").getAsJsonObject();
+                if (data.get("orderid") != null) {
+                    returnUrl = String.format("redirect:/payment-method?id=%d", data.get("orderid").getAsInt());
+                }
+            }
+            return returnUrl;
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute(
                 "barMsg",

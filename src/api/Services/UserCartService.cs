@@ -133,9 +133,9 @@ namespace PhoneStoreManager.Services
                 .ToList();
             _context.UserCarts.RemoveRange(data);
             var _rowAffected = _context.SaveChanges();
-            if (_rowAffected != 1)
+            if (_rowAffected != data.Count)
             {
-                throw new Exception(string.Format("We ran into a problem while removing item for you!"));
+                throw new Exception(string.Format("We ran into a problem while removing all items on your cart!"));
             }
             ClearItemZeroCount();
         }

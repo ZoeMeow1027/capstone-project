@@ -48,7 +48,7 @@
                                         <li th:unless="${adminuser}"><a class="dropdown-item" href="/cart">View your cart</a></li>
                                         <hr th:unless="${adminuser}" />
                                         <h6 th:unless="${adminuser}" class="dropdown-header">Your delivery</h6>
-                                        <li th:unless="${adminuser}"><a class="dropdown-item" href="/account/delivery?activeonly=true">Current orders</a></li>
+                                        <li th:unless="${adminuser}"><a class="dropdown-item" href="/account/delivery?activeonly=true">Active orders</a></li>
                                         <li th:unless="${adminuser}"><a class="dropdown-item" href="/account/delivery">All orders</a></li>
                                         <hr th:unless="${adminuser}" />
                                         <h6 th:if="${adminuser}" class="dropdown-header">Administrator area</h6>

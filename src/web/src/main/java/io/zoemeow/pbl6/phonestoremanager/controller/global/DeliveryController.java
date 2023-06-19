@@ -131,6 +131,6 @@ public class DeliveryController {
         if (returnurl != null) {
             return String.format("redirect:%s", returnurl);
         }
-        return String.format("redirect:/account/delivery");
+        return String.format("redirect:/account/delivery?activeonly=true");
     }
 }
