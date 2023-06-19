@@ -16,6 +16,9 @@ namespace PhoneStoreManager.Model.DTO
         [JsonProperty("address")]
         public string? Address { get; set; }
 
+        [JsonProperty("countrycode")]
+        public string? CountryCode { get; set; }
+
         [JsonProperty("phone")]
         public string? Phone { get; set; }
     }

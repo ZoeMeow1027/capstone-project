@@ -44,4 +44,6 @@ public interface AccountRepository {
     public BillSummary getBillSummaryById(Map<String, String> header, Integer id) throws Exception;
 
     public RequestResult<JsonObject> cancelOrder(Map<String, String> header, Integer orderid) throws Exception;
+
+    public RequestResult<JsonObject> markOrderPaid(Map<String, String> header, Integer orderid, Integer paymentMethod, String paymentId) throws Exception;
 }

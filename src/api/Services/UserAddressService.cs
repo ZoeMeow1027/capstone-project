@@ -89,6 +89,7 @@ namespace PhoneStoreManager.Services
                 data.Name = item.Name;
                 data.Address = item.Address;
                 data.Phone = item.Phone;
+                data.CountryCode = item.CountryCode;
 
                 _context.UserAddresses.Update(data);
                 int _rowAffected = _context.SaveChanges();

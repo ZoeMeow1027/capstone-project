@@ -25,6 +25,10 @@ namespace PhoneStoreManager.Model
         public string RecipientAddress { get; set; } = string.Empty;
 
         [Required]
+        [JsonProperty("recipientcountrycode")]
+        public string RecipientCountryCode { get; set; } = string.Empty;
+
+        [Required]
         [JsonProperty("recipientphone")]
         public string RecipientPhone { get; set; } = string.Empty;
 

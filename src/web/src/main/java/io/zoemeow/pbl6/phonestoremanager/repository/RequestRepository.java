@@ -37,12 +37,62 @@ public class RequestRepository {
     
     @Value("${serverapi.baseurl}")
     private String baseUrl;
-    
+
     public RequestResult<JsonObject> getRequestWithResult(String uri, Map<String, String> parameters, Map<String, String> header) {
         RequestResult<JsonObject> result = new RequestResult<JsonObject>();
 
         try {
             URIBuilder uriBuilder = new URIBuilder(baseUrl + uri);
+            if (parameters != null) {
+                for (String parItem : parameters.keySet()) {
+                    uriBuilder.addParameter(parItem, parameters.get(parItem));
+                }
+            }
+
+            HttpGet httpGet = new HttpGet(uriBuilder.build());
+            if (header != null) {
+                for (String key : header.keySet()) {
+                    httpGet.addHeader(key, header.get(key));
+                }
+            }
+
+            CloseableHttpClient httpClient = createHttpClient();
+            CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
+
+            if (httpResponse.getCode() != 200)
+                throw new RequestException(
+                        uriBuilder.build().toString(),
+                        httpResponse.getCode(),
+                        "");
+            result.setStatusCode(httpResponse.getCode());
+            result.setIsSuccessfulRequest(true);
+            result.setMessage("Successful");
+
+            try {
+                String responseString = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
+                JsonObject jObject = JsonParser.parseString(responseString).getAsJsonObject();
+
+                result.setData(jObject);
+            } catch (Exception ex) {
+                result.setData(null);
+            }
+        } catch (RequestException rEx) {
+            result.setStatusCode(rEx.getStatusCode());
+            result.setMessage(rEx.getMessage());
+            result.setIsSuccessfulRequest(true);
+        } catch (Exception ex) {
+            result.setIsSuccessfulRequest(false);
+            result.setMessage(ex.getMessage());
+        }
+
+        return result;
+    }
+
+    public RequestResult<JsonObject> getRequestWithResult(String baseUri, String uri, Map<String, String> parameters, Map<String, String> header) {
+        RequestResult<JsonObject> result = new RequestResult<JsonObject>();
+
+        try {
+            URIBuilder uriBuilder = new URIBuilder(baseUri + uri);
             if (parameters != null) {
                 for (String parItem : parameters.keySet()) {
                     uriBuilder.addParameter(parItem, parameters.get(parItem));

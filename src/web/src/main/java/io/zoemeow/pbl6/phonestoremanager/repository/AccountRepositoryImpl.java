@@ -118,6 +118,7 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         productAdd.addProperty("name", userAddress.getName());
         productAdd.addProperty("phone", userAddress.getPhone());
         productAdd.addProperty("address", userAddress.getAddress());
+        productAdd.addProperty("countrycode", userAddress.getCountryCode());
         JsonObject bodyRoot = new JsonObject();
         bodyRoot.addProperty("action", "add");
         bodyRoot.add("data", productAdd);
@@ -133,6 +134,7 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         productAdd.addProperty("name", userAddress.getName());
         productAdd.addProperty("phone", userAddress.getPhone());
         productAdd.addProperty("address", userAddress.getAddress());
+        productAdd.addProperty("countrycode", userAddress.getCountryCode());
         JsonObject bodyRoot = new JsonObject();
         bodyRoot.addProperty("action", "update");
         bodyRoot.add("data", productAdd);
@@ -252,6 +254,20 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         productAdd.addProperty("orderid", orderid);
         JsonObject bodyRoot = new JsonObject();
         bodyRoot.addProperty("action", "cancel");
+        bodyRoot.add("data", productAdd);
+
+        String postData = bodyRoot.toString();
+        return postRequestWithResult("/api/account/delivery", null, header, postData);
+    }
+
+    @Override
+    public RequestResult<JsonObject> markOrderPaid(Map<String, String> header, Integer orderid, Integer paymentMethod, String paymentId) throws Exception {
+        JsonObject productAdd = new JsonObject();
+        productAdd.addProperty("orderid", orderid);
+        productAdd.addProperty("transactionid", paymentId);
+        productAdd.addProperty("paymentmethod", paymentMethod);
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("action", "paid");
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();

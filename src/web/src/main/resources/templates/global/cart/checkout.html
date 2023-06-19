@@ -23,7 +23,7 @@
                             aria-label="Default select example">
                             <div th:each="addressItem: ${userAddressList}">
                                 <option th:value="${addressItem.getId()}"
-                                    th:attr="data-content=${addressItem.getName() + '<br>' + addressItem.getAddress() + '<br>' + addressItem.getPhone()}">
+                                    th:attr="data-content=${addressItem.getName() + '<br>' + addressItem.getAddress() + ', ' + addressItem.getCountryCode() + '<br>' + addressItem.getPhone()}">
                                 </option>
                             </div>
                         </select>

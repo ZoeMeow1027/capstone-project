@@ -30,6 +30,10 @@
         <label for="floatingInput">Address</label>
       </div>
       <div class="form-floating mb-3">
+        <input type="text" name="countrycode" class="form-control" th:value="${userAddress == null ? '' : userAddress.getCountryCode()}">
+        <label for="floatingInput">Country Code</label>
+      </div>
+      <div class="form-floating mb-3">
         <input type="tel" name="phone" class="form-control" th:value="${userAddress == null ? '' : userAddress.getPhone()}">
         <label for="floatingInput">Phone</label>
       </div>

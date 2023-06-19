@@ -21,6 +21,9 @@ namespace PhoneStoreManager.Model
         [JsonProperty("address")]
         public string Address { get; set; } = string.Empty;
 
+        [JsonProperty("countrycode")]
+        public string CountryCode { get; set; } = string.Empty;
+
         [JsonProperty("phone")]
         public string Phone { get; set; } = string.Empty;
 

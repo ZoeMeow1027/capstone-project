@@ -75,7 +75,7 @@ public class AdminBillsController {
 
             var data = _BillRepository.getBillSummaryById(header, id);
             view.addObject("billItem", data);
-            view.addObject("useraddress", String.format("%s\n%s\n%s", data.getRecipient(), data.getRecipientAddress(),
+            view.addObject("useraddress", String.format("%s\n%s, %s\n%s", data.getRecipient(), data.getRecipientAddress(), data.getRecipientCountryCode(),
                     data.getRecipientPhone()));
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
@@ -112,7 +112,7 @@ public class AdminBillsController {
                 throw new Exception();
             }
             view.addObject("billItem", data);
-            view.addObject("useraddress", String.format("%s\n%s\n%s", data.getRecipient(), data.getRecipientAddress(),
+            view.addObject("useraddress", String.format("%s\n%s, %s\n%s", data.getRecipient(), data.getRecipientAddress(), data.getRecipientCountryCode(),
                     data.getRecipientPhone()));
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
@@ -183,6 +183,6 @@ public class AdminBillsController {
         if (returnurl != null) {
             return String.format("redirect:%s", returnurl);
         }
-        return String.format("redirect:/admin/bills");
+        return "redirect:/admin/bills";
     }
 }

@@ -91,7 +91,7 @@ public class DeliveryController {
 
             var data = _AccountRepository.getBillSummaryById(header, id);
             view.addObject("orderitem", data);
-            view.addObject("useraddress", String.format("%s\n%s\n%s", data.getRecipient(), data.getRecipientAddress(),
+            view.addObject("useraddress", String.format("%s\n%s, %s\n%s", data.getRecipient(), data.getRecipientAddress(), data.getRecipientCountryCode(),
                     data.getRecipientPhone()));
         } catch (NoInternetException niEx) {
 

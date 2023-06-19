@@ -228,6 +228,7 @@ namespace PhoneStoreManager.Controllers
                 UserID = userId,
                 Recipient = userAddress.Name,
                 RecipientAddress = userAddress.Address,
+                RecipientCountryCode = userAddress.CountryCode,
                 RecipientPhone = userAddress.Phone,
                 DateCreated = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                 BillDetails = billDetails,
