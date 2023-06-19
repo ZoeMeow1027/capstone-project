@@ -1,13 +1,12 @@
 package io.zoemeow.pbl6.phonestoremanager.controller.global;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+import io.zoemeow.pbl6.phonestoremanager.model.dto.PaymentMethodResponseDTO;
+import io.zoemeow.pbl6.phonestoremanager.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
@@ -53,7 +52,7 @@ public class PaymentMethodController {
             }
             view.addObject("alreadydone", !Arrays.asList(0).contains(data.getDeliverStatus()));
             view.addObject("orderitem", data);
-            view.addObject("useraddress", String.format("%s\n%s\n%s", data.getRecipient(), data.getRecipientAddress(),
+            view.addObject("useraddress", String.format("%s\n%s, %s\n%s", data.getRecipient(), data.getRecipientAddress(), data.getRecipientCountryCode(),
                     data.getRecipientPhone()));
         } catch (NoInternetException niEx) {
 
@@ -65,5 +64,57 @@ public class PaymentMethodController {
         }
 
         return view;
+    }
+
+    @PostMapping("/payment-method/paypal")
+    public String actionPaypalMethod(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestBody PaymentMethodResponseDTO data
+            ) {
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
+        try {
+            var repo = new RequestRepository();
+
+            Map<String, String> headerPaypal = new HashMap<String, String>();
+            headerPaypal.put("Authorization", String.format("Bearer %s", data.getData().getFacilitatorAccessToken()));
+
+            var data1 = repo.getRequestWithResult(
+                    "https://api.sandbox.paypal.com",
+                    "/v2/checkout/orders/" + data.getData().getOrderID(),
+                    null,
+                    headerPaypal);
+            if (!data1.getIsSuccessfulRequest()) {
+                throw new Exception("Request isn't successful");
+            }
+            if (data1.getStatusCode() != 200) {
+                throw new Exception("Request isn't successful");
+            }
+
+            String transID = null;
+            if (data1.getData() != null) {
+                transID = data1.getData().getAsJsonObject()
+                        .get("purchase_units").getAsJsonArray()
+                        .get(0).getAsJsonObject()
+                        .get("payments").getAsJsonObject()
+                        .get("captures").getAsJsonArray()
+                        .get(0).getAsJsonObject()
+                        .get("id").getAsString();
+            }
+
+            var markOrderPaid = _AccountRepository.markOrderPaid(header, data.getOrderid(), 3, transID);
+            if (!data1.getIsSuccessfulRequest()) {
+                throw new Exception("Request isn't successful");
+            }
+            if (data1.getStatusCode() != 200) {
+                throw new Exception("Request isn't successful");
+            }
+        } catch (Exception ex) {
+
+        }
+
+        return "redirect:/account/delivery?activeonly=true";
     }
 }

@@ -15,6 +15,9 @@ public class UserAddress {
     @SerializedName("address")
     String address;
 
+    @SerializedName("countrycode")
+    String countryCode;
+
     @SerializedName("phone")
     String phone;
 
@@ -48,6 +51,14 @@ public class UserAddress {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 
     public String getPhone() {

@@ -373,7 +373,7 @@ namespace PhoneStoreManager.Controllers
         #region User Address area
         private void AddUserAddress(UserAddressDTO data)
         {
-            List<string> reqArgList = new List<string>() { "userid", "name", "address", "phone" };
+            List<string> reqArgList = new List<string>() { "userid", "name", "address", "countrycode", "phone" };
             Utils.CheckRequiredArguments(data, reqArgList);
 
             // User Address [Add] - CHeck if phone are valid!
@@ -397,6 +397,7 @@ namespace PhoneStoreManager.Controllers
                 UserID = data.UserID.Value,
                 Name = data.Name,
                 Address = data.Address,
+                CountryCode = data.CountryCode ?? "VN",
                 Phone = data.Phone
             });
         }

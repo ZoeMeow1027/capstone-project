@@ -6,6 +6,7 @@
 </head>
 
 <body>
+    <script src="https://www.paypal.com/sdk/js?client-id=AQS-DvkZZ9oc9Y8NpVoKMoSIogGLmQd6yDuW9igJr0O_-cgcW1HmDkkcFzYRtp7SIHIDYo_7jYJWw3rp"></script>
     <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
     <div class="container w-100">
         <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left bg-primary my-3 p-2 rounded-1">
@@ -37,6 +38,7 @@
                         <div class="mb-3">
                             <span class="h4">Choose your favorite payment method</span>
                         </div>
+                        <div id="paypal-button-container"></div>
                     </div>
                 </div>
             </div>
@@ -53,6 +55,63 @@
         </div>
     </div>
     <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
+    <script>
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    intent: 'CAPTURE',
+                    payer: {
+                        name: {
+                            given_name: "[[${orderitem.getRecipient()}]]"
+                        },
+                        address: {
+                            address_line_1: "[[${orderitem.getRecipientAddress()}]]",
+                            country_code: "[[${orderitem.getRecipientCountryCode()}]]"
+                        },
+                        email_address: "[[${orderitem.getUser().getEmail()}]]",
+                        phone: {
+                            phone_type: "MOBILE",
+                            phone_number: {
+                                national_number: "[[${orderitem.getRecipientPhone()}]]"
+                            }
+                        }
+                    },
+                    purchase_units: [{
+                        amount: {
+                            value: "[[${orderitem.getTotalPrice()}]]",
+                            currency_code: "USD"
+                        }
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(
+                    function(details) {
+                        var dataPost = {
+                            orderid: [[${orderitem.getId()}]],
+                            data: data
+                        };
+                        console.log(data);
+                        console.log(details);
+                        fetch('[[${baseurl + '/payment-method/paypal'}]]',
+                            {
+                                method: 'post',
+                                headers: {
+                                    "Content-type": "application/json; charset=UTF-8"
+                                },
+                                redirect: 'manual',
+                                body: JSON.stringify(dataPost)
+                            }
+                        ).then(response => {
+                            if (response.redirected) {
+                                windows.location.href = response.url;
+                            }
+                        });
+                    }
+                );
+            }
+        }).render('#paypal-button-container');
+    </script>
 </body>
 
 </html>

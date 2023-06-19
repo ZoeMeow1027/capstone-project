@@ -538,6 +538,9 @@ namespace PhoneStoreManager.Controllers
                     case "cancel":
                         OrderCancel(userDTO.Data, user.ID);
                         break;
+                    case "paid":
+                        OrderPaid(userDTO.Data, user.ID);
+                        break;
                     default:
                         throw new BadHttpRequestException("Unknown \"action\" value!");
                 }
@@ -589,6 +592,7 @@ namespace PhoneStoreManager.Controllers
             dataTemp.Name = userAddress.Name;
             dataTemp.Address = userAddress.Address;
             dataTemp.Phone = userAddress.Phone;
+            dataTemp.CountryCode = userAddress.CountryCode ?? "VN";
             dataTemp.UserID = userID;
             _userAddressService.AddUserAddress(dataTemp);
         }
@@ -676,6 +680,32 @@ namespace PhoneStoreManager.Controllers
                 productData.InventoryCount += item.Count;
                 _productService.UpdateProduct(productData);
             }
+        }
+
+        private void OrderPaid(JToken args, int userId)
+        {
+            List<string> reqArgList = new List<string>() { "orderid", "transactionid", "paymentmethod" };
+            Utils.CheckRequiredArguments(args, reqArgList);
+
+            int? orderId = args["orderid"].Value<int>();
+            BillSummary? billSummary = _billService.GetBillSummaryById(orderId.Value, userId);
+            if (billSummary == null)
+            {
+                throw new ArgumentException(string.Format("Order with ID {0} is not exist or you don't have permission for this order!", orderId));
+            }
+
+            int paymentMethod = args["paymentmethod"].Value<int>();
+            if (!Enum.IsDefined(typeof(PaymentMethod), paymentMethod))
+            {
+                throw new ArgumentException(string.Format("No payment method with ID {0}!", paymentMethod));
+            }
+            billSummary.Status = DeliverStatus.WaitingForConfirm;
+            billSummary.PaymentMethod = (PaymentMethod)paymentMethod;
+            billSummary.PaymentID = args["transactionid"].Value<string>();
+            billSummary.PaymentCompleted = true;
+            billSummary.StatusAdditional = "User has completed this order payment.";
+
+            _billService.UpdateBill(billSummary);
         }
         #endregion
 

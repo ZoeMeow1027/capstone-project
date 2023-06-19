@@ -97,7 +97,8 @@ public class AccountAddressController {
             RedirectAttributes redirectAttributes,
             @RequestParam("name") String name,
             @RequestParam("phone") String phone,
-            @RequestParam("address") String address
+            @RequestParam("address") String address,
+            @RequestParam("countrycode") String countryCode
     ) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
@@ -108,6 +109,7 @@ public class AccountAddressController {
             userAddress.setName(name);
             userAddress.setPhone(phone);
             userAddress.setAddress(address);
+            userAddress.setCountryCode(countryCode);
             var result = _AccountRepository.addAddress(header, userAddress);
             if (result.getStatusCode() != 200)
                 throw new Exception(result.getMessage());
@@ -163,7 +165,8 @@ public class AccountAddressController {
             @RequestParam("id") Integer id,
             @RequestParam("name") String name,
             @RequestParam("phone") String phone,
-            @RequestParam("address") String address
+            @RequestParam("address") String address,
+            @RequestParam("countrycode") String countryCode
     ) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
@@ -175,6 +178,7 @@ public class AccountAddressController {
             userAddress.setName(name);
             userAddress.setPhone(phone);
             userAddress.setAddress(address);
+            userAddress.setCountryCode(countryCode);
             var result = _AccountRepository.updateAddress(header, userAddress);
             if (result.getStatusCode() != 200)
                 throw new Exception(result.getMessage());
@@ -187,7 +191,7 @@ public class AccountAddressController {
     }
 
     @PostMapping("/account/address/delete")
-    public String actionAddressUpdate(
+    public String actionAddressDelete(
             HttpServletRequest request,
             HttpServletResponse response,
             RedirectAttributes redirectAttributes,

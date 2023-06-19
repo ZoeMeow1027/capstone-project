@@ -17,6 +17,9 @@ public class BillSummary {
     @SerializedName("recipientaddress")
     String recipientAddress;
 
+    @SerializedName("recipientcountrycode")
+    String recipientCountryCode;
+
     @SerializedName("recipientphone")
     String recipientPhone;
 
@@ -98,6 +101,14 @@ public class BillSummary {
 
     public void setRecipientAddress(String recipientAddress) {
         this.recipientAddress = recipientAddress;
+    }
+
+    public String getRecipientCountryCode() {
+        return recipientCountryCode;
+    }
+
+    public void setRecipientCountryCode(String recipientCountryCode) {
+        this.recipientCountryCode = recipientCountryCode;
     }
 
     public String getRecipientPhone() {
