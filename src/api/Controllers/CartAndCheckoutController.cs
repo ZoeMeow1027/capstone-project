@@ -13,17 +13,20 @@ namespace PhoneStoreManager.Controllers
         private readonly IUserCartService _cartService;
         private readonly IBillService _billService;
         private readonly IUserAddressService _userAddressService;
+        private readonly IProductService _productService;
 
         public CartAndCheckoutController(
             IUserSessionService userSessionService,
             IUserCartService cartService,
             IBillService billService,
-            IUserAddressService userAddressService
+            IUserAddressService userAddressService,
+            IProductService productService
             ) : base(userSessionService)
         {
             _cartService = cartService;
             _billService = billService;
             _userAddressService = userAddressService;
+            _productService = productService;
         }
 
         [HttpGet]
@@ -94,6 +97,7 @@ namespace PhoneStoreManager.Controllers
                             new List<string>() { "productid", "count" }
                             );
 
+                        // TODO: Check if product has limit exceed.
                         _cartService.AddItem(
                             user,
                             int.Parse(requestDTO.Data["productid"].ToString()),
@@ -110,6 +114,7 @@ namespace PhoneStoreManager.Controllers
                             new List<string>() { "id", "count" }
                             );
 
+                        // TODO: Check if product has limit exceed.
                         _cartService.UpdateItem(
                             user,
                             int.Parse(requestDTO.Data["id"].ToString()),
@@ -161,9 +166,19 @@ namespace PhoneStoreManager.Controllers
                             userMessage = requestDTO.Data["message"].Value<string>();
                         }
 
+                        // TODO: Check if product has limit exceed.
                         AddOrder(user.ID, userCart, userAddress, userMessage);
-                        // TODO: Clear user cart after successful billing.
-                        // TODO: Subtract product after successful billing.
+
+                        // Clear user cart after successful billing.
+                        _cartService.ClearCart(user.ID);
+
+                        // Subtract product after successful billing.
+                        foreach (var userCartItem in userCart)
+                        {
+                            var data = _productService.GetProductById(userCartItem.ProductID);
+                            data.InventoryCount -= userCartItem.Count;
+                            _productService.UpdateProduct(data);
+                        }
                         break;
                     default:
                         throw new BadHttpRequestException("Unknown 'action' value!");

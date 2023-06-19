@@ -201,7 +201,10 @@ namespace PhoneStoreManager.Controllers
             billSummary.Status = (DeliverStatus)status;
             billSummary.StatusAddress = args["statusaddress"].Value<string>();
             billSummary.StatusAdditional = args["statusadditional"].Value<string>();
-
+            if (billSummary.Status == DeliverStatus.Completed)
+            {
+                billSummary.DateCompleted = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            }
             _billService.UpdateBill(billSummary);
 
             if (billSummary.Status == DeliverStatus.Failed || billSummary.Status == DeliverStatus.Cancelled)
