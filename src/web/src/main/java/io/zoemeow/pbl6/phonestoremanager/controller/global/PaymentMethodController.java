@@ -2,12 +2,14 @@ package io.zoemeow.pbl6.phonestoremanager.controller.global;
 
 import java.util.*;
 
+import io.zoemeow.pbl6.phonestoremanager.model.dto.PayPalResponseDataDTO;
 import io.zoemeow.pbl6.phonestoremanager.model.dto.PaymentMethodResponseDTO;
 import io.zoemeow.pbl6.phonestoremanager.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
@@ -54,6 +56,8 @@ public class PaymentMethodController {
             view.addObject("orderitem", data);
             view.addObject("useraddress", String.format("%s\n%s, %s\n%s", data.getRecipient(), data.getRecipientAddress(), data.getRecipientCountryCode(),
                     data.getRecipientPhone()));
+
+            view.addObject("payPalClientID", "AQS-DvkZZ9oc9Y8NpVoKMoSIogGLmQd6yDuW9igJr0O_-cgcW1HmDkkcFzYRtp7SIHIDYo_7jYJWw3rp");
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
@@ -70,7 +74,8 @@ public class PaymentMethodController {
     public String actionPaypalMethod(
             HttpServletRequest request,
             HttpServletResponse response,
-            @RequestBody PaymentMethodResponseDTO data
+            RedirectAttributes redirectAttributes,
+            @RequestBody PaymentMethodResponseDTO<PayPalResponseDataDTO> data
             ) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
@@ -80,7 +85,6 @@ public class PaymentMethodController {
 
             Map<String, String> headerPaypal = new HashMap<String, String>();
             headerPaypal.put("Authorization", String.format("Bearer %s", data.getData().getFacilitatorAccessToken()));
-
             var data1 = repo.getRequestWithResult(
                     "https://api.sandbox.paypal.com",
                     "/v2/checkout/orders/" + data.getData().getOrderID(),
@@ -104,17 +108,47 @@ public class PaymentMethodController {
                         .get("id").getAsString();
             }
 
-            var markOrderPaid = _AccountRepository.markOrderPaid(header, data.getOrderid(), 3, transID);
             if (!data1.getIsSuccessfulRequest()) {
                 throw new Exception("Request isn't successful");
             }
             if (data1.getStatusCode() != 200) {
                 throw new Exception("Request isn't successful");
             }
+
+            var markOrderPaid = _AccountRepository.markOrderPaid(header, data.getOrderid(), 3, transID);
+            if (!markOrderPaid.getIsSuccessfulRequest()) {
+                throw new Exception("Something went wrong while completing your payment. If you sure you have done this payment, please contact us for support.");
+            }
+
+            redirectAttributes.addFlashAttribute("barMsg", String.format("You have done payment order %d with %s method! You can check your payment in Your active order page.", data.getOrderid(), "PayPal"));
+            return String.format("redirect:/account/delivery/detail?id=%d", data.getOrderid());
         } catch (Exception ex) {
-
+            redirectAttributes.addFlashAttribute("barMsg", ex.getMessage());
+            return "redirect:/account/delivery?activeonly=true";
         }
+    }
 
-        return "redirect:/account/delivery?activeonly=true";
+    @PostMapping("/payment-method/cod")
+    public String actionCoDMethod(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            RedirectAttributes redirectAttributes,
+            @RequestBody PaymentMethodResponseDTO<String> data
+            ) {
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
+        try {
+            var markOrderPaid = _AccountRepository.markOrderPaid(header, data.getOrderid(), 0, "");
+            if (!markOrderPaid.getIsSuccessfulRequest()) {
+                throw new Exception("Something went wrong while completing your payment. If you sure you have done this payment, please contact us for support.");
+            }
+
+            redirectAttributes.addFlashAttribute("barMsg", String.format("You have done payment order %d with %s method! You can check your payment in Your active order page.", data.getOrderid(), "CoD"));
+            return String.format("redirect:/account/delivery/detail?id=%d", data.getOrderid());
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("barMsg", ex.getMessage());
+            return "redirect:/account/delivery?activeonly=true";
+        }
     }
 }

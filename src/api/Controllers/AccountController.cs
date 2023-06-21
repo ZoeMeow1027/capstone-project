@@ -699,9 +699,15 @@ namespace PhoneStoreManager.Controllers
             {
                 throw new ArgumentException(string.Format("No payment method with ID {0}!", paymentMethod));
             }
+
+            if ((PaymentMethod)paymentMethod == PaymentMethod.PayPal && args["transactionid"] == null)
+            {
+                throw new ArgumentException("Missing \"transactionid\" value when completing this delivery with PayPal!");
+            }
+
             billSummary.Status = DeliverStatus.WaitingForConfirm;
             billSummary.PaymentMethod = (PaymentMethod)paymentMethod;
-            billSummary.PaymentID = args["transactionid"].Value<string>();
+            billSummary.PaymentID = args["transactionid"]?.Value<string>();
             billSummary.PaymentCompleted = true;
             billSummary.StatusAdditional = "User has completed this order payment.";
 

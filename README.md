@@ -26,8 +26,8 @@
 
 | Group         | Components    | Start date    | Updated       | Progress          |
 | -             | -             | -             | -             | -                 |
-| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/20    | ![https://progress-bar.dev/97/?scale=100&width=120](https://progress-bar.dev/97/?scale=100&width=120) |
-| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/20    | ![https://progress-bar.dev/92/?scale=100&width=120](https://progress-bar.dev/92/?scale=100&width=120) |
+| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/22    | ![https://progress-bar.dev/97/?scale=100&width=120](https://progress-bar.dev/97/?scale=100&width=120) |
+| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/22    | ![https://progress-bar.dev/92/?scale=100&width=120](https://progress-bar.dev/92/?scale=100&width=120) |
 
 ## API
 
@@ -62,7 +62,7 @@ Start date: 2023/04/24
 | Cart                      | User cart.                                                            | 2023/06/17    | <ul><li>[x] Get all items</li><li>[x] Add item (in product detail)</li><li>[x] Update item</li><li>[x] Remove item</li><li>[x] Remove all</li></ul> |
 | Bills                     | User bills.                                                           | 2023/06/20    | <ul><li>[x] Get all bills/a bill info</li><li>[x] Update bill status</li><li>[x] Cancel bill</li></ul> |
 | Warranty                  | Manage all warranties.                                                | 2023/05/18    | <ul><li>[x] Get (all (`**`)/by ID(`*`))</li></ul> |
-| Account                   | Logged in account information.                                        | 2023/06/20    | <ul><li>[x] My information</li><li>[x] Avatar (get/set/remove)</li><li>[x] User address</li><li>[x] Change Password</li></ul> |
+| Account                   | Logged in account information.                                        | 2023/06/22    | <ul><li>[x] My information</li><li>[x] Avatar (get/set/remove)</li><li>[x] User address</li><li>[x] Change Password</li><li>[x] Done payment</li></ul> |
 
 
 (`*`): Owner account or administrator only
@@ -112,6 +112,6 @@ Start date: 2023/06/17
 | Change your password      | Change your password                                                  | 2023/06/13    | <ul><li>[x] View</li><li>[x] Change password</li></ul> |
 | Your cart                 | Manage your cart                                                      | 2023/06/19    | <ul><li>[x] View</li><li>[x] List items in cart</li><li>[x] Update a item</li><li>[x] Remove a item</li><li>[x] Remove all items</li><li>[x] Go to checkout</li></ul> |
 | Checkout                  | Checkout before place order                                           | 2023/06/19    | <ul><li>[x] View</li><li>[x] Change delivery address</li><li>[x] Place order</li></ul> |
-| Payment method            | Used when done checkout                                               | 2023/06/20    | <ul><li>[x] View</li><li>[x] Start purchase (PayPal)</li></ul> |
+| Payment method            | Used when done checkout                                               | 2023/06/22    | <ul><li>[x] View</li><li>[x] Purchase (PayPal)</li><li>[x] Purchase (CoD)</li></ul> |
 
 [Go to progress](#progress)
