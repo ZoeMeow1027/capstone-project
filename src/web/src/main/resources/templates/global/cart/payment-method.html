@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head lang="en"
-    th:replace="~{/global/fragments/tag-head :: headtag(title=${'Payment method - Delivery ' + orderitem.getId()})}">
+<head>
+    <div
+        th:replace="~{/global/fragments/tag-head :: headtag(title=${'Payment method - Delivery ' + orderitem.getId()})}">
+    </div>
+    <link rel="stylesheet" th:href="@{/css/global-cart-checkout.css}">
 </head>
 
 <body>
@@ -38,18 +41,20 @@
                             <span class="h4">Payment method</span><br>
                         </div>
                         <div class="mb-3">
-                            <span>Note that you can only choose one of the methods below and won't be able to select another methods after completed, so make sure you will surely confirm it.</span>
+                            <span>Note that you can only choose one of the methods below and won't be able to select
+                                another methods after completed, so make sure you will surely confirm it.</span>
                         </div>
                         <div class="accordion" id="accordionPayment">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="accordionHeadingPayPal">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#accordionPayPal" aria-expanded="false" aria-controls="accordionPayPal">
+                                        data-bs-target="#accordionPayPal" aria-expanded="false"
+                                        aria-controls="accordionPayPal">
                                         PayPal
                                     </button>
                                 </h2>
-                                <div id="accordionPayPal" class="accordion-collapse collapse" aria-labelledby="accordionHeadingPayPal"
-                                    data-bs-parent="#accordionPayment">
+                                <div id="accordionPayPal" class="accordion-collapse collapse"
+                                    aria-labelledby="accordionHeadingPayPal" data-bs-parent="#accordionPayment">
                                     <div class="accordion-body mx-1 my-3">
                                         <div id="paypal-button-container"></div>
                                     </div>
@@ -62,13 +67,16 @@
                                         CoD (Cash on delivery)
                                     </button>
                                 </h2>
-                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="accordionHeadingCoD"
-                                    data-bs-parent="#accordionPayment">
+                                <div id="collapseTwo" class="accordion-collapse collapse"
+                                    aria-labelledby="accordionHeadingCoD" data-bs-parent="#accordionPayment">
                                     <div class="accordion-body">
                                         <div class="mx-1 mt-1 mb-2">
-                                            <span>You will need to complete the payment in cash upon receipt of the order.</span>
+                                            <span>You will need to complete the payment in cash upon receipt of the
+                                                order.</span>
                                         </div>
-                                        <button type="button" id="po-cod-btn" th:attr="onclick=|completeWithCoD(${orderitem.getId()})|" class="btn btn-place-order">Confirm COD method</button>
+                                        <button type="button" id="po-cod-btn"
+                                            th:attr="onclick=|completeWithCoD(${orderitem.getId()})|"
+                                            class="btn btn-place-order">Confirm COD method</button>
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +93,7 @@
                 <div th:if="${alreadydone}" th:remove="tag">
                     <a class="text-decoration-none" href="/">
                         <button type="button" class="btn btn-secondary">Go to home page</button>
-                    </a>    
+                    </a>
                 </div>
             </div>
         </div>
@@ -94,7 +102,7 @@
     <script th:src="|@{https://www.paypal.com/sdk/js?client-id=}${payPalClientID}|"></script>
     <script defer text="text/javascript">
         paypal.Buttons({
-            createOrder: function(data, actions) {
+            createOrder: function (data, actions) {
                 return actions.order.create({
                     intent: 'CAPTURE',
                     payer: {
@@ -121,16 +129,16 @@
                     }]
                 });
             },
-            onApprove: function(data, actions) {
+            onApprove: function (data, actions) {
                 return actions.order.capture().then(
-                    function(details) {
+                    function (details) {
                         var dataPost = {
-                            orderid: [[${orderitem.getId()}]],
+                            orderid: [[${ orderitem.getId() }]],
                             data: data
                         };
                         console.log(data);
                         console.log(details);
-                        fetch('[[${baseurl + '/payment-method/paypal'}]]',
+                        fetch('[[${baseurl + ' / payment - method / paypal'}]]',
                             {
                                 method: 'post',
                                 headers: {
@@ -156,7 +164,7 @@
             dataPost = {
                 orderid: orderid,
             };
-            fetch('[[${baseurl + '/payment-method/cod'}]]',
+            fetch('[[${baseurl + ' / payment - method / cod'}]]',
                 {
                     method: 'post',
                     headers: {

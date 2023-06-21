@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head lang="en" th:replace="~{/global/fragments/tag-head :: headtag(title=${'Your cart'})}"></head>
+
+<head>
+    <div th:replace="~{/global/fragments/tag-head :: headtag(title=${'Your cart'})}"></div>
+    <link rel="stylesheet" th:href="@{/css/global-cart-checkout.css}">
+</head>
+
 <body>
     <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
     <div class="container w-100">
@@ -15,9 +20,7 @@
                 <div class="col-md-8">
                     <div class="row d-flex justify-content-center align-items-center mb-1">
                         <div class="col-md-8">
-                            <h4
-                                class="mb-1"
-                                th:text="${
+                            <h4 class="mb-1" th:text="${
                                     (cartCount == null ? 'No' : cartCount == 0 ? 'No' : cartCount) +
                                     ' item' + (cartCount == null ? '' : cartCount == 1 ? '' : 's')
                                 }">
@@ -27,7 +30,7 @@
                             <div th:if="${cartList.size() > 0}" th:remove="tag">
                                 <div class="w-100 mb-1 d-flex justify-content-end">
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                            data-bs-target="#deleteAllConfirm">Remove all items
+                                        data-bs-target="#deleteAllConfirm">Remove all items
                                     </button>
                                 </div>
                             </div>
@@ -41,10 +44,13 @@
                                         <div>
                                             <div th:if="${item.getProduct().getImages().size() > 0}" th:remove="tag">
                                                 <img th:src="${baseurl + '/products/img/blob?id=' + item.getProduct().getImages().get(0).getId()}"
-                                                     class="img-fluid rounded-3" alt="Shopping item" style="width: 65px; height: 65px;">
+                                                    class="img-fluid rounded-3" alt="Shopping item"
+                                                    style="width: 65px; height: 65px;">
                                             </div>
-                                            <div th:unless="${item.getProduct().getImages().size() > 0}" th:remove="tag">
-                                                <img src="#" class="img-fluid rounded-3" alt="No images" style="width: 65px; height: 65px;">
+                                            <div th:unless="${item.getProduct().getImages().size() > 0}"
+                                                th:remove="tag">
+                                                <img src="#" class="img-fluid rounded-3" alt="No images"
+                                                    style="width: 65px; height: 65px;">
                                             </div>
                                         </div>
                                         <div class="ms-3">
@@ -57,15 +63,20 @@
                                                 <input type="text" name="id" th:value="${item.getId()}" readonly hidden>
                                                 <div class="input-group">
                                                     <div class="form-floating">
-                                                        <input type="number" class="form-control" name="count" min="1" th:attr="max=${item.getProduct().getInventoryCount()}" th:value="${item.getCount() == null ? 0 : item.getCount()}">
+                                                        <input type="number" class="form-control" name="count" min="1"
+                                                            th:attr="max=${item.getProduct().getInventoryCount()}"
+                                                            th:value="${item.getCount() == null ? 0 : item.getCount()}">
                                                         <label for="count">Count</label>
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary text-white"><i class="bi bi-check-lg"></i></button>
+                                                    <button type="submit" class="btn btn-primary text-white"><i
+                                                            class="bi bi-check-lg"></i></button>
                                                 </div>
                                             </form>
                                         </div>
                                         <div class="me-4">
-                                            <h5 class="mb-0 text-nowrap" th:text="${'$' + #numbers.formatDecimal(item.getProduct().getPrice() * item.getCount(), 2, 2, 'COMMA')}"></h5>
+                                            <h5 class="mb-0 text-nowrap"
+                                                th:text="${'$' + #numbers.formatDecimal(item.getProduct().getPrice() * item.getCount(), 2, 2, 'COMMA')}">
+                                            </h5>
                                         </div>
                                         <div class="me-1">
                                             <form action="/cart/remove" method="post">
@@ -90,12 +101,12 @@
                             <div class="card-body">
                                 <ul class="list-group list-group-flush">
                                     <li
-                                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                        class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                                         Products
                                         <span th:text="${'$' + #numbers.formatDecimal(cartTotal,2,2,'COMMA')}"></span>
                                     </li>
                                     <li
-                                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                        class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
                                         <div>
                                             <strong>Total amount</strong>
                                             <strong>
@@ -110,7 +121,7 @@
                                 <a href="/checkout">
                                     <button type="button" class="btn btn-primary btn-lg btn-block">
                                         Go to checkout
-                                    </button>    
+                                    </button>
                                 </a>
                             </div>
                         </div>
@@ -137,7 +148,8 @@
                 </div>
                 <div class="modal-footer">
                     <form action="/cart/remove-all" method="post">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No. Take me back</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No. Take me
+                            back</button>
                         <button type="submit" class="btn btn-danger">CONTINUE REMOVE</button>
                     </form>
                 </div>
@@ -146,4 +158,5 @@
     </div>
     <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
 </body>
+
 </html>

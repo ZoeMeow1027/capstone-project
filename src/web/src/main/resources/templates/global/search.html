@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head lang="en" th:replace="~{/global/fragments/tag-head :: headtag(title=${'You searched ' + query})}"></head>
+<head>
+    <div th:replace="~{/global/fragments/tag-head :: headtag(title=${'You searched ' + query})}"></div>
+</head>
 <body>
     <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser}, query=${query})}"></div>
     <div class="container w-100">
         <div class="row d-flex w-100">
             <div class="col-md-6 mb-4 mb-md-0 w-100">
                 <section id="page-search-data" class="col-sm px-2 py-3">
-<!--                    <h2 th:text="${'All products matches with ' + (query == null ? '(unknown query)' : query)}"></h2>-->
                     <h2 th:text="${T(java.lang.String).format('All products matches with ''%s''', query == null ? '(empty query)' : query)}"></h2>
                     <h4 th:text="${productFilter.size() + ' item' + (productFilter.size() == 1 ? '' : 's') + ' on your search.'}"></h4>
                     <hr />
