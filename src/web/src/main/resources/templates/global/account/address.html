@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head lang="en" th:replace="~{/global/fragments/tag-head :: headtag(title=${'Your delivery address - Account Settings'})}"></head>
+
+<head>
+    <div th:replace="~{/global/fragments/tag-head :: headtag(title=${'Your delivery address - Account Settings'})}">
+    </div>
+</head>
+
 <body>
     <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
     <div class="row w-100 d-flex justify-content-center">
-        <div lang="en" th:replace="~{/global/fragments/sidebar-account :: sidebar(type=1, tab=1)}" th:remove="tag"></div>
+        <div lang="en" th:replace="~{/global/fragments/sidebar-account :: sidebar(type=1, tab=1)}" th:remove="tag">
+        </div>
         <section id="page-account-data" class="col-sm p-3">
             <h2>Your delivery address</h2>
             <h4>View and update your added delivery address</h4>
             <hr />
-            <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left text-white bg-primary mb-3 p-2 rounded-1" th:utext="${barMsg}"></div>
+            <div id="modal-info-bar" th:if="${barMsg != null}"
+                class="text-left text-white bg-primary mb-3 p-2 rounded-1" th:utext="${barMsg}"></div>
             <div class="w-100 pb-2 d-flex justify-content-end">
-                <a href="/account/address/add" class="ps-2"><button type="button" class="btn btn-success">Create new</button></a>
+                <a href="/account/address/add" class="ps-2"><button type="button" class="btn btn-success">Create
+                        new</button></a>
             </div>
             <div class="container-fluid">
                 <div class="row">
@@ -34,12 +42,15 @@
                                 </div>
                                 <div class="col-auto flexbox mx-1 my-2">
                                     <div class="col my-1">
-                                        <a th:href="${'/account/address/update?id=' + item.getId()}"><button type="button" class="btn btn-primary btn-action-account">Update</button></a>
+                                        <a th:href="${'/account/address/update?id=' + item.getId()}"><button
+                                                type="button"
+                                                class="btn btn-primary btn-action-account">Update</button></a>
                                     </div>
                                     <div class="col my-1">
                                         <form action="/account/address/delete" method="post">
                                             <input type="text" name="id" th:value="${item.getId()}" readonly hidden>
-                                            <button type="submit" class="btn btn-danger btn-action-account">Delete</button>
+                                            <button type="submit"
+                                                class="btn btn-danger btn-action-account">Delete</button>
                                         </form>
                                     </div>
                                 </div>
@@ -52,4 +63,5 @@
     </div>
     <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
 </body>
+
 </html>

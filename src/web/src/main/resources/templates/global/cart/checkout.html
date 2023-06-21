@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head lang="en" th:replace="~{/global/fragments/tag-head :: headtag(title=${'Checkout'})}"></head>
+<head>
+    <div th:replace="~{/global/fragments/tag-head :: headtag(title=${'Checkout'})}"></div>
+    <link rel="stylesheet" th:href="@{/css/global-cart-checkout.css}">
+</head>
 
 <body>
     <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
@@ -116,10 +119,12 @@
                             </div>
                         </div>
                         <div class="form-floating mb-3">
-                            <textarea type="text-area" class="form-control" id="message" name="message" form="checkout-form"></textarea>
+                            <textarea type="text-area" class="form-control" id="message" name="message"
+                                form="checkout-form"></textarea>
                             <label for="floatingInput">Message to seller</label>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-lg btn-block btn-place-order mb-2" form="checkout-form">Place order</button>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block btn-place-order mb-2"
+                            form="checkout-form">Place order</button>
                         <div>
                             <span>
                                 Clicking "Place Order" means that you agree the

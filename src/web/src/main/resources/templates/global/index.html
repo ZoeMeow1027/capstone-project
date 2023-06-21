@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head lang="en" th:replace="~{/global/fragments/tag-head :: headtag(title=${null})}"></head>
+<head>
+    <div th:replace="~{/global/fragments/tag-head :: headtag(title=${null})}"></div>
+</head>
 <body>
     <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div class="bg-dark py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">Phone Store shop</h1>
+                <p class="lead fw-normal text-white-50 mb-0">With this shop homepage template</p>
+            </div>
+        </div>
+    </div>
     <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
 </body>
 </html>
