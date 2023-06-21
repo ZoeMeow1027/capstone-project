@@ -71,7 +71,7 @@ public class IndexController {
             view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
             view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
             view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
-            view.addObject("productfilter", _AdminProductRepository.getProducts(header, q, false));
+            view.addObject("productFilter", _AdminProductRepository.getProducts(header, q, false));
         } catch (SessionExpiredException seEx) {
             view.addObject("name", null);
             view.addObject("adminuser", false);

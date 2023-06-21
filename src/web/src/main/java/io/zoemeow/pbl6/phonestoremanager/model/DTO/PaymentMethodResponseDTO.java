@@ -2,12 +2,12 @@ package io.zoemeow.pbl6.phonestoremanager.model.dto;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentMethodResponseDTO {
+public class PaymentMethodResponseDTO<T> {
     @SerializedName("orderid")
     Integer orderid;
 
     @SerializedName("data")
-    PayPalResponseDataDTO data;
+    T data;
 
     public Integer getOrderid() {
         return orderid;
@@ -17,11 +17,11 @@ public class PaymentMethodResponseDTO {
         this.orderid = orderid;
     }
 
-    public PayPalResponseDataDTO getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(PayPalResponseDataDTO data) {
+    public void setData(T data) {
         this.data = data;
     }
 }

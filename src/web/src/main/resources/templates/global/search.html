@@ -7,19 +7,19 @@
         <div class="row d-flex w-100">
             <div class="col-md-6 mb-4 mb-md-0 w-100">
                 <section id="page-search-data" class="col-sm px-2 py-3">
-                    <h2 th:text="${'All products matches with ' + (query == null ? '(unknown query)' : query)}"></h2>
-                    <h4>View and select your favorite products below.</h4>
+<!--                    <h2 th:text="${'All products matches with ' + (query == null ? '(unknown query)' : query)}"></h2>-->
+                    <h2 th:text="${T(java.lang.String).format('All products matches with ''%s''', query == null ? '(empty query)' : query)}"></h2>
+                    <h4 th:text="${productFilter.size() + ' item' + (productFilter.size() == 1 ? '' : 's') + ' on your search.'}"></h4>
                     <hr />
                     <div class="row">
-                        <div class="col-xl-4 d-flex justify-content-center text-left" th:each="item : ${productfilter}">
+                        <div class="col-xl-3 d-flex justify-content-start text-left" th:each="item : ${productFilter}">
                             <a class="text-decoration-none text-black" th:href="${'/product?id=' + item.getId()}">
                                 <div class="card my-3" style="width: 18rem;">
                                     <img style="max-height: 320px;" th:src="${item.getImages().size() == 0 ? '#' : (baseurl + '/products/img/blob?id=' + item.getImages().get(0).getId())}" class="card-img-top text-center" alt="...">
                                     <div class="card-body text-center">
                                         <h5 class="card-title" th:text="${item.getName()}"></h5>
                                         <h6 class="card-title" th:text="${item.getManufacturer().getName()}"></h6>
-                                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                                            content.</p>
+                                        <p class="card-text">(Specifications here)</p>
                                     </div>
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item" th:text="${'Available: ' + item.getInventoryCount()}"></li>
