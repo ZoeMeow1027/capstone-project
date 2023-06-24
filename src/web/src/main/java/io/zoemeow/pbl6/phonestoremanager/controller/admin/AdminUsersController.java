@@ -45,7 +45,7 @@ public class AdminUsersController extends RequestRepository {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/users/index");
+            view = new ModelAndView("admin/users/index");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
@@ -76,7 +76,7 @@ public class AdminUsersController extends RequestRepository {
             if (!(enabled == 0 || enabled == 1))
                 throw new Exception("Invalid 'enabled' value!");
 
-            view = new ModelAndView("/admin/users/toggle");
+            view = new ModelAndView("admin/users/toggle");
             view.addObject("action", enabled == 0 ? "disable" : "enable");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
@@ -119,7 +119,7 @@ public class AdminUsersController extends RequestRepository {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/users/add");
+            view = new ModelAndView("admin/users/add");
             view.addObject("action", "add");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
@@ -162,7 +162,7 @@ public class AdminUsersController extends RequestRepository {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/users/add");
+            view = new ModelAndView("admin/users/add");
             view.addObject("action", "edit");
             view.addObject("id", id);
 
@@ -208,7 +208,7 @@ public class AdminUsersController extends RequestRepository {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/users/resetPassword");
+            view = new ModelAndView("admin/users/resetPassword");
             view.addObject("id", id);
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));

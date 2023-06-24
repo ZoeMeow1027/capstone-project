@@ -49,7 +49,7 @@ public class ProfileController {
             @ModelAttribute("barMsg") String barMsg) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
-        ModelAndView view = new ModelAndView("/global/account/profile");
+        ModelAndView view = new ModelAndView("global/account/profile");
 
         try {
             User user = _AccountRepository.getUserInformation(header, null);

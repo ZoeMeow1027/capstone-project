@@ -6,7 +6,7 @@ using PhoneStoreManager.Services;
 namespace PhoneStoreManager.Controllers
 {
     [ApiController]
-    [Route("api/warranties")]
+    [Route("warranties")]
     public class WarrantyController : UserSessionControllerBase
     {
         private readonly IWarrantyService _warrantyService;

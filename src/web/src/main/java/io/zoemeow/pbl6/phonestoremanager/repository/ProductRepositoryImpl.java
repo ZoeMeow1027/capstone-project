@@ -31,13 +31,13 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         if (query != null) {
             parameters.put("query", query);
         }
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/products", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/products", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/products",
+                "/products",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -61,13 +61,13 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         if (query != null) {
             parameters.put("query", query);
         }
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/products", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/products", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/products",
+                "/products",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -91,13 +91,13 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         if (query != null) {
             parameters.put("query", query);
         }
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/products", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/products", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/products",
+                "/products",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -119,13 +119,13 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         parameters.put("includehidden", "true");
         parameters.put("id", id.toString());
 
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/products", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/products", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/products",
+                "/products",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -159,7 +159,7 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/products/", null, header, postData);
+        return postRequestWithResult("/products/", null, header, postData);
     }
 
     @Override
@@ -182,7 +182,7 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         bodyRoot.add("data", productUpdate);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/products/", null, header, postData);
+        return postRequestWithResult("/products/", null, header, postData);
     }
 
     @Override
@@ -195,7 +195,7 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         bodyRoot.add("data", productUpdate);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/products/", null, header, postData);
+        return postRequestWithResult("/products/", null, header, postData);
     }
 
     @Override
@@ -205,13 +205,13 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         parameters.put("type", "category");
         parameters.put("id", id.toString());
 
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/products", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/products", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/products",
+                "/products",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -238,7 +238,7 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         bodyRoot.add("data", productUpdate);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/products/", null, header, postData);
+        return postRequestWithResult("/products/", null, header, postData);
     }
 
     @Override
@@ -252,7 +252,7 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         bodyRoot.add("data", productUpdate);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/products/", null, header, postData);
+        return postRequestWithResult("/products/", null, header, postData);
     }
 
     @Override
@@ -262,13 +262,13 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         parameters.put("type", "manufacturer");
         parameters.put("id", id.toString());
 
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/products", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/products", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/products",
+                "/products",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -295,28 +295,28 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         bodyRoot.add("data", productUpdate);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/products/", null, header, postData);
+        return postRequestWithResult("/products/", null, header, postData);
     }
 
     @Override
     public byte[] getProductImage(Map<String, String> header, Integer id) throws Exception {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("id", id.toString());
-        return getRequestToImage("/api/products/img/blob", parameters, header);
+        return getRequestToImage("/products/img/blob", parameters, header);
     }
 
     @Override
     public RequestResult<JsonObject> uploadImage(Map<String, String> header, Integer productId, Resource resource) throws Exception {
         Map<String, String> body = new HashMap<String, String>();
         body.put("productid", productId.toString());
-        return postRequestFromImage("/api/products/img/upload", null, header, resource, body);
+        return postRequestFromImage("/products/img/upload", null, header, resource, body);
     }
 
     @Override
     public RequestResult<JsonObject> deleteProductImage(Map<String, String> header, Integer id) throws Exception {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("id", id.toString());
-        return postRequestWithResult("/api/products/img/delete", parameters, header, null);
+        return postRequestWithResult("/products/img/delete", parameters, header, null);
     }
 
 }

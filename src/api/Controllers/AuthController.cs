@@ -7,7 +7,7 @@ using System.Dynamic;
 namespace PhoneStoreManager.Controllers
 {
     [ApiController]
-    [Route("api/auth")]
+    [Route("auth")]
     public class AuthController : UserSessionControllerBase
     {
         private IUserService userService;

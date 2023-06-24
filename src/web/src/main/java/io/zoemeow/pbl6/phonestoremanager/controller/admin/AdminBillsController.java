@@ -40,7 +40,7 @@ public class AdminBillsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/bills/index");
+            view = new ModelAndView("admin/bills/index");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
@@ -66,7 +66,7 @@ public class AdminBillsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/bills/detail");
+            view = new ModelAndView("admin/bills/detail");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
@@ -98,7 +98,7 @@ public class AdminBillsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/bills/update");
+            view = new ModelAndView("admin/bills/update");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());

@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>io.zoemeow.pbl6</groupId>
 	<artifactId>phonestoremanager</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.6.5</version>
 	<name>Phone Store Manager</name>
 	<description>A project about phone store.</description>
 	<properties>
@@ -74,8 +74,15 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<addResources>false</addResources>
+				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+			  <directory>${project.basedir}/src/main/resources</directory>
+			</resource>
+		</resources>
 	</build>
-
 </project>

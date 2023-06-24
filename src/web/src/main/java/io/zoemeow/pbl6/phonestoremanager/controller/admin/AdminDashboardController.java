@@ -30,7 +30,7 @@ public class AdminDashboardController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/dashboard");
+            view = new ModelAndView("admin/dashboard");
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
         } catch (NoInternetException niEx) {

@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <div th:replace="~{/global/fragments/tag-head :: headtag(title=${'Your profile - Account Settings'})}"></div>
+    <div th:replace="~{global/fragments/tag-head :: headtag(title=${'Your profile - Account Settings'})}"></div>
 </head>
 
 <body>
-    <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div lang="en" th:replace="~{global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
     <div class="row w-100 d-flex justify-content-center">
-        <div lang="en" th:replace="~{/global/fragments/sidebar-account :: sidebar(type=1, tab=0)}" th:remove="tag">
+        <div lang="en" th:replace="~{global/fragments/sidebar-account :: sidebar(type=1, tab=0)}" th:remove="tag">
         </div>
         <section id="page-account-data" class="col-sm p-3">
             <h2>Your Profile</h2>
@@ -52,7 +52,7 @@
             </form>
         </section>
     </div>
-    <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
+    <div lang="en" th:replace="~{global/fragments/footer :: footer}"></div>
 </body>
 
 </html>

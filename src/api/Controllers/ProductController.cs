@@ -8,7 +8,7 @@ using PhoneStoreManager.Services;
 namespace PhoneStoreManager.Controllers
 {
     [ApiController]
-    [Route("api/products")]
+    [Route("products")]
     public class ProductController : UserSessionControllerBase
     {
         private readonly IProductService productService;

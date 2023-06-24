@@ -37,7 +37,7 @@ public class AccountAddressController {
     ) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
-        ModelAndView view = new ModelAndView("/global/account/address");
+        ModelAndView view = new ModelAndView("global/account/address");
 
         try {
             User user = _AccountRepository.getUserInformation(header, null);
@@ -67,7 +67,7 @@ public class AccountAddressController {
     ) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
-        ModelAndView view = new ModelAndView("/global/account/address-modify");
+        ModelAndView view = new ModelAndView("global/account/address-modify");
 
         try {
             User user = _AccountRepository.getUserInformation(header, null);
@@ -129,7 +129,7 @@ public class AccountAddressController {
     ) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
-        ModelAndView view = new ModelAndView("/global/account/address-modify");
+        ModelAndView view = new ModelAndView("global/account/address-modify");
 
         try {
             User user = _AccountRepository.getUserInformation(header, null);

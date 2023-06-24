@@ -3,14 +3,14 @@
 
 <head>
     <div
-        th:replace="~{/global/fragments/tag-head :: headtag(title=${product.getManufacturer().getName() + ' ' + product.getName()})}">
+        th:replace="~{global/fragments/tag-head :: headtag(title=${product.getManufacturer().getName() + ' ' + product.getName()})}">
     </div>
     <link rel="stylesheet" th:href="@{/css/global-product-details.css}">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
-    <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div lang="en" th:replace="~{global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
     <div class="container">
         <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left bg-primary my-3 p-2 rounded-1">
             <span class="text-white" th:utext="${barMsg}"></span>
@@ -25,7 +25,7 @@
                                     th:classappend="${iter.index == 0 ? 'show active' : ''}" role="tabpanel"
                                     th:attr="aria-labelledby=${'pic-' + iter.index}">
                                     <img style="object-fit: cover; margin-left: auto; margin-right: auto; width: 400px; height: 447px;"
-                                        th:src="${baseurl + '/products/img/blob?id=' + urlItem.getId()}" />
+                                        th:src="${'/products/img/blob?id=' + urlItem.getId()}" />
                                 </div>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                                         data-bs-toggle="tab">
                                         <img class="rounded-1"
                                             style="width: 80px; height: 72px; object-fit: cover; margin-left: auto; margin-right: auto;"
-                                            th:src="${baseurl + '/products/img/blob?id=' + urlItem.getId()}" />
+                                            th:src="${'/products/img/blob?id=' + urlItem.getId()}" />
                                     </a>
                                 </li>
                             </div>
@@ -172,7 +172,7 @@
             </div>
         </div>
     </div>
-    <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
+    <div lang="en" th:replace="~{global/fragments/footer :: footer}"></div>
     <script>
         var data = document.getElementById('articlecontent').textContent;
         document.getElementById('tab-content-overview').innerHTML = marked.parse(data);

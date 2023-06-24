@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head lang="en" th:replace="~{/admin/fragments/head :: headtag(title=${'Products'})}"></head>
+<head lang="en" th:replace="~{admin/fragments/head :: headtag(title=${'Products'})}"></head>
 <body>
-    <div lang="en" th:replace="~{/admin/fragments/sideNavBar :: sidenavbar(tab='products', user=${name})}"></div>
+    <div lang="en" th:replace="~{admin/fragments/sideNavBar :: sidenavbar(tab='products', user=${name})}"></div>
     <section id="admin-page-data" class="col-sm p-3 min-vh-100">
         <h2>Products</h2>
         <h4>Manage your imported products</h4>
@@ -18,7 +18,7 @@
                     <div class="col d-flex align-items-left flex-fill card my-1">
                         <div class="row align-items-center">
                             <div class="col-md-auto mx-2 my-2">
-                                <img class="rounded-1" th:src="${item.getImages().size() == 0 ? '#' : (baseurl + '/products/img/blob?id=' + item.getImages().get(0).getId())}" width="78" height="78" style="object-fit: cover;" alt="no image">
+                                <img class="rounded-1" th:src="${item.getImages().size() == 0 ? '#' : ('/products/img/blob?id=' + item.getImages().get(0).getId())}" width="78" height="78" style="object-fit: cover;" alt="no image">
                             </div>
                             <div class="col-md-3 my-2 mx-1">
                                 <div class="col">

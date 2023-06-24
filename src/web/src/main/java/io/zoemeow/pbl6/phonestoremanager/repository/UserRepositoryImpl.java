@@ -28,13 +28,13 @@ public class UserRepositoryImpl extends RequestRepository implements UserReposit
         parameters.put("type", "user");
         parameters.put("includedisabled", includeHidden.toString());
         
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/users", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/users", parameters, header);
                 if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/products",
+                "/products",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -56,13 +56,13 @@ public class UserRepositoryImpl extends RequestRepository implements UserReposit
         parameters.put("includedisabled", "true");
         parameters.put("id", id.toString());
 
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/users", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/users", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/products",
+                "/products",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -87,7 +87,7 @@ public class UserRepositoryImpl extends RequestRepository implements UserReposit
         bodyRoot.add("data", userToggle);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/users", null, header, postData);
+        return postRequestWithResult("/users", null, header, postData);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class UserRepositoryImpl extends RequestRepository implements UserReposit
         bodyRoot.add("data", userResetPass);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/users", null, header, postData);
+        return postRequestWithResult("/users", null, header, postData);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class UserRepositoryImpl extends RequestRepository implements UserReposit
         bodyRoot.add("data", userAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/users", null, header, postData);
+        return postRequestWithResult("/users", null, header, postData);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class UserRepositoryImpl extends RequestRepository implements UserReposit
         bodyRoot.add("data", userAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/users", null, header, postData);
+        return postRequestWithResult("/users", null, header, postData);
     }
     
 }

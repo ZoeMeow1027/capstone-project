@@ -9,7 +9,7 @@ using PhoneStoreManager.Services;
 namespace PhoneStoreManager.Controllers
 {
     [ApiController]
-    [Route("api/bills")]
+    [Route("bills")]
     public class BillController : UserSessionControllerBase
     {
         private readonly IBillService _billService;

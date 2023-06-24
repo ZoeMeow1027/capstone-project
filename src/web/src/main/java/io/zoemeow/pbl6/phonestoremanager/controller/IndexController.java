@@ -34,7 +34,7 @@ public class IndexController {
             HttpServletResponse response
     ) {
         var header = RequestAndResponse.getCookieHeader(request);
-        ModelAndView view = new ModelAndView("/global/index");
+        ModelAndView view = new ModelAndView("global/index");
 
         try {
             User user = null;
@@ -67,7 +67,7 @@ public class IndexController {
         String q
     ) {
         var header = RequestAndResponse.getCookieHeader(request);
-        ModelAndView view = new ModelAndView("/global/search");
+        ModelAndView view = new ModelAndView("global/search");
 
         try {
             User user = null;
@@ -96,7 +96,7 @@ public class IndexController {
         HttpServletResponse response
     ) {
         var header = RequestAndResponse.getCookieHeader(request);
-        ModelAndView view = new ModelAndView("/global/about");
+        ModelAndView view = new ModelAndView("global/about");
 
         try {
             User user = null;
