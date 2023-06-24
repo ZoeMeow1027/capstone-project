@@ -23,6 +23,15 @@ public class Product {
     @SerializedName("unit")
     String unit = "item";
 
+    @SerializedName("article")
+    String article = null;
+
+    @SerializedName("specification")
+    String specification = null;
+
+    @SerializedName("views")
+    Long views = 0L;
+
     @SerializedName("warrantymonth")
     Integer warrantymonth = 12;
 
@@ -114,6 +123,14 @@ public class Product {
         this.unit = unit;
     }
 
+    public String getArticle() {
+        return article;
+    }
+
+    public void setArticle(String article) {
+        this.article = article;
+    }
+
     public Integer getWarrantyMonth() {
         return warrantymonth;
     }
@@ -128,6 +145,10 @@ public class Product {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Long getViews() {
+        return views;
     }
 
     public Long getDateCreated() {
@@ -146,6 +167,13 @@ public class Product {
         this.datemodified = dateModified;
     }
 
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String metadata) {
+        this.specification = metadata;
+    }
 
     public Boolean getShowInPage() {
         return showinpage;

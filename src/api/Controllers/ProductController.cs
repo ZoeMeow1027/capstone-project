@@ -306,6 +306,8 @@ namespace PhoneStoreManager.Controllers
                 InventoryCount = data.InventoryCount ?? 0,
                 WarrantyMonth = data.WarrantyMonth ?? 12,
                 Price = data.Price.Value,
+                Article = data.Article,
+                Specification = data.Specification,
                 ShowInPage = data.ShowInPage ?? true
             });
         }
@@ -368,6 +370,8 @@ namespace PhoneStoreManager.Controllers
             productTemp.ManufacturerID = data.ManufacturerID ?? productTemp.ManufacturerID;
             productTemp.InventoryCount = data.InventoryCount ?? productTemp.InventoryCount;
             productTemp.WarrantyMonth = data.WarrantyMonth ?? productTemp.WarrantyMonth;
+            productTemp.Article = data.Article ?? productTemp.Article;
+            productTemp.Specification = data.Specification ?? productTemp.Specification;
             productTemp.Price = data.Price ?? productTemp.Price;
             productTemp.ShowInPage = data.ShowInPage ?? productTemp.ShowInPage;
             productTemp.DateModified = DateTimeOffset.Now.ToUnixTimeMilliseconds();

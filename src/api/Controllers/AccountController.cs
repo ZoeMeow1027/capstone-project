@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PhoneStoreManager.Model;
 using PhoneStoreManager.Model.DTO;
@@ -544,6 +545,64 @@ namespace PhoneStoreManager.Controllers
                     default:
                         throw new BadHttpRequestException("Unknown \"action\" value!");
                 }
+            }
+            catch (ArgumentException argEx)
+            {
+                result.StatusCode = 400;
+                result.Message = argEx.Message;
+            }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                result.StatusCode = 403;
+                result.Message = uaEx.Message;
+            }
+            catch (BadHttpRequestException bhrEx)
+            {
+                result.StatusCode = 400;
+                result.Message = bhrEx.Message;
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = 500;
+                result.Message = ex.Message;
+            }
+
+            return StatusCode(result.StatusCode, result.ToDynamicObject());
+        }
+
+        [HttpPost("review")]
+        public ActionResult PublishReview(JToken args)
+        {
+            ReturnResultTemplate result = new ReturnResultTemplate
+            {
+                StatusCode = 200,
+                Message = "Successful!"
+            };
+
+            try
+            {
+                string? token = Request.Cookies["token"];
+                User? user = GetUserByToken(token);
+                if (user == null)
+                    throw new UnauthorizedAccessException("Session has expired.");
+
+                var comment = args.ToObject<ProductCommentDTO>();
+                if (comment == null)
+                {
+                    throw new ArgumentException("Missing parameters or error while converting values!");
+                }
+                if (comment.ProductID == null || comment.Rating == null || comment.Comment == null)
+                {
+                    throw new ArgumentException("Missing parameters!");
+                }
+
+                Product? product = _productService.GetProductById(comment.ProductID.Value);
+                if (product == null)
+                {
+                    throw new ArgumentException(string.Format("Product with ID {0} is not exist!", comment.ProductID.Value));
+                }
+
+                _productService.AddComment(user.ID, product.ID, comment.Rating.Value, comment.Comment);
             }
             catch (ArgumentException argEx)
             {

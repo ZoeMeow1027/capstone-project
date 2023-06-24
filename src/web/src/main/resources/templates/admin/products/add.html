@@ -16,8 +16,9 @@
         <hr />
         <nav th:unless="${condition}" class="nav nav-pills nav-justified">
             <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/update?id=' + product.getId()}" th:classappend="${tab == 0 ? 'active' : ''}">Basic information</a>
-            <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/specifications?id=' + product.getId()}" th:classappend="${tab == 1 ? 'active' : ''}">Specifications</a>
-            <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/images?id=' + product.getId()}" th:classappend="${tab == 2 ? 'active' : ''}">Images</a>
+            <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/article?id=' + product.getId()}" th:classappend="${tab == 1 ? 'active' : ''}">Article</a>
+            <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/specifications?id=' + product.getId()}" th:classappend="${tab == 2 ? 'active' : ''}">Specifications</a>
+            <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/images?id=' + product.getId()}" th:classappend="${tab == 3 ? 'active' : ''}">Images</a>
         </nav>
         <form class="modal-body" id="modal-product-modify">
             <div id="modal-info-bar" class="text-left text-white mb-3 p-2 rounded-1" style="visibility: hidden;"></div>
@@ -43,7 +44,7 @@
             </div>
             <div class="form-floating mb-3">
                 <input type="number" class="form-control" id="inventoryCount" name="inventorycount" min="0" th:value="${product == null ? '0' : product.getInventoryCount()}">
-                <label for="inventoryCount">Inventory Count</label>
+                <label for="inventoryCount">Quantity</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="unit" name="unit" th:value="${product == null ? '' : product.getUnit()}">

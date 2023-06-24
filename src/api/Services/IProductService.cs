@@ -17,5 +17,9 @@ namespace PhoneStoreManager.Services
         void HideProductById(int id);
 
         void HideProduct(Product item);
+
+        void AddComment(int userId, int productId, int rating, string comment);
+
+        void AddComment(User user, int productId, int rating, string comment);
     }
 }

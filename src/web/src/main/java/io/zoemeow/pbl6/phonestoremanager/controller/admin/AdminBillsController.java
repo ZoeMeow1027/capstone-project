@@ -43,7 +43,7 @@ public class AdminBillsController {
             view = new ModelAndView("/admin/bills/index");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
-            view.addObject("name", user == null ? "(Unknown)" : user.getName());
+            view.addObject("name", user == null ? null : user.getName());
 
             view.addObject("billList", _BillRepository.getAllBillSummaries(header));
         } catch (NoInternetException niEx) {
@@ -69,7 +69,7 @@ public class AdminBillsController {
             view = new ModelAndView("/admin/bills/detail");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
-            view.addObject("name", user == null ? "(Unknown)" : user.getName());
+            view.addObject("name", user == null ? null : user.getName());
             view.addObject("baseurl",
                     String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
 
@@ -101,7 +101,7 @@ public class AdminBillsController {
             view = new ModelAndView("/admin/bills/update");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
-            view.addObject("name", user == null ? "(Unknown)" : user.getName());
+            view.addObject("name", user == null ? null : user.getName());
             view.addObject("baseurl",
                     String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
             view.addObject("returnurl", returnurl);

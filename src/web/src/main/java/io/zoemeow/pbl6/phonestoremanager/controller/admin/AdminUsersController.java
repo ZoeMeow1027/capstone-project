@@ -48,7 +48,7 @@ public class AdminUsersController extends RequestRepository {
             view = new ModelAndView("/admin/users/index");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
-            view.addObject("name", user == null ? "(Unknown)" : user.getName());
+            view.addObject("name", user == null ? null : user.getName());
 
             view.addObject("userList", _AdminUserRepository.getAllUsers(header, false));
         } catch (NoInternetException niEx) {
@@ -80,7 +80,7 @@ public class AdminUsersController extends RequestRepository {
             view.addObject("action", enabled == 0 ? "disable" : "enable");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
-            view.addObject("name", user == null ? "(Unknown)" : user.getName());
+            view.addObject("name", user == null ? null : user.getName());
 
             view.addObject("user", _AdminUserRepository.getUser(header, id));
         } catch (NoInternetException niEx) {
@@ -123,7 +123,7 @@ public class AdminUsersController extends RequestRepository {
             view.addObject("action", "add");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
-            view.addObject("name", user == null ? "(Unknown)" : user.getName());
+            view.addObject("name", user == null ? null : user.getName());
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {
@@ -167,7 +167,7 @@ public class AdminUsersController extends RequestRepository {
             view.addObject("id", id);
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
-            view.addObject("name", user == null ? "(Unknown)" : user.getName());
+            view.addObject("name", user == null ? null : user.getName());
 
             view.addObject("user", _AdminUserRepository.getUser(header, id));
         } catch (NoInternetException niEx) {
@@ -212,7 +212,7 @@ public class AdminUsersController extends RequestRepository {
             view.addObject("id", id);
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
-            view.addObject("name", user == null ? "(Unknown)" : user.getName());
+            view.addObject("name", user == null ? null : user.getName());
 
             view.addObject("user", _AdminUserRepository.getUser(header, id));
         } catch (NoInternetException niEx) {
