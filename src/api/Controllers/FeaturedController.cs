@@ -5,7 +5,7 @@ using PhoneStoreManager.Services;
 namespace PhoneStoreManager.Controllers
 {
     [ApiController]
-    [Route("api/featured")]
+    [Route("featured")]
     public class FeaturedController : UserSessionControllerBase
     {
         private readonly IProductService _productService;

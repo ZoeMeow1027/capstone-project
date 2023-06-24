@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head lang="en" th:replace="~{/admin/fragments/head :: headtag(title=${'Users'})}"></head>
+<head lang="en" th:replace="~{admin/fragments/head :: headtag(title=${'Users'})}"></head>
 <body>
-    <div lang="en" th:replace="~{/admin/fragments/sideNavBar :: sidenavbar(tab='users', user=${name})}"></div>
+    <div lang="en" th:replace="~{admin/fragments/sideNavBar :: sidenavbar(tab='users', user=${name})}"></div>
     <div id="admin-page-data" class="col-sm p-3 min-vh-100">
         <h2>Users</h2>
         <h4>Manage user accounts</h4>

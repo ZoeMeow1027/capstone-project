@@ -21,13 +21,13 @@ public class CartRepositoryImpl extends RequestRepository implements CartReposit
     @Override
     public List<UserCart> getAllItemsInCart(Map<String, String> header, String query, Boolean includehidden)
             throws Exception {
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/cart", null, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/cart", null, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/cart",
+                "/cart",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -53,7 +53,7 @@ public class CartRepositoryImpl extends RequestRepository implements CartReposit
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/cart", null, header, postData);
+        return postRequestWithResult("/cart", null, header, postData);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class CartRepositoryImpl extends RequestRepository implements CartReposit
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/cart", null, header, postData);
+        return postRequestWithResult("/cart", null, header, postData);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class CartRepositoryImpl extends RequestRepository implements CartReposit
         bodyRoot.addProperty("action", "removeall");
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/cart", null, header, postData);
+        return postRequestWithResult("/cart", null, header, postData);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class CartRepositoryImpl extends RequestRepository implements CartReposit
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/cart", null, header, postData);
+        return postRequestWithResult("/cart", null, header, postData);
     }
 
     @Override
@@ -102,6 +102,6 @@ public class CartRepositoryImpl extends RequestRepository implements CartReposit
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/cart", null, header, postData);
+        return postRequestWithResult("/cart", null, header, postData);
     }
 }

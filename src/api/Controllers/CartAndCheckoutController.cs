@@ -9,7 +9,7 @@ using System.Dynamic;
 namespace PhoneStoreManager.Controllers
 {
     [ApiController]
-    [Route("api/cart")]
+    [Route("cart")]
     public class CartAndCheckoutController : UserSessionControllerBase
     {
         private readonly IUserCartService _cartService;

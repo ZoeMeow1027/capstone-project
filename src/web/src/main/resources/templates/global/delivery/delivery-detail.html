@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="~{/global/fragments/tag-head :: headtag(title=${'Delivery detail'})}"></div>
+    <div th:replace="~{global/fragments/tag-head :: headtag(title=${'Delivery detail'})}"></div>
 </head>
 <body>
-    <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div lang="en" th:replace="~{global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
     <div class="container w-100">
         <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left bg-primary my-3 p-2 rounded-1">
             <span class="text-white" th:utext="${barMsg}"></span>
@@ -92,7 +92,7 @@
                                         <div>
                                             <div th:if="${item.getProduct().getImages().size() > 0}"
                                                  th:remove="tag">
-                                                <img th:src="${baseurl + '/products/img/blob?id=' + item.getProduct().getImages().get(0).getId()}"
+                                                <img th:src="${'/products/img/blob?id=' + item.getProduct().getImages().get(0).getId()}"
                                                      class="img-fluid rounded-3" alt="Shopping item"
                                                      style="width: 65px; height: 65px;">
                                             </div>
@@ -196,7 +196,7 @@
                 <button th:if="${orderitem.getDeliverStatus() == 0}" class="btn btn-danger mx-1" data-bs-toggle="modal"
                     data-bs-target="#cancelConfirmModal">Cancel order</button>
                 <a th:if="${orderitem.getDeliverStatus() == 0}" class="text-decoration-none"
-                    th:href="${baseurl + '/payment-method?id=' + orderitem.getId()}">
+                    th:href="${'/payment-method?id=' + orderitem.getId()}">
                     <button class="btn btn-primary">Complete payment</button>
                 </a>
             </div>
@@ -205,7 +205,7 @@
     <div class="modal fade" id="cancelConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="cancelConfirmModal" aria-hidden="true">
         <form id="cancelConfirmForm"
-            th:action="${baseurl + '/account/delivery/cancel?returnurl=%2Faccount%2Fdelivery%2Fdetail%3Fid%3D' + orderitem.getId()}" method="post">
+            th:action="${'/account/delivery/cancel?returnurl=%2Faccount%2Fdelivery%2Fdetail%3Fid%3D' + orderitem.getId()}" method="post">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -228,7 +228,7 @@
             </div>
         </form>
     </div>
-    <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
+    <div lang="en" th:replace="~{global/fragments/footer :: footer}"></div>
 </body>
 
 </html>

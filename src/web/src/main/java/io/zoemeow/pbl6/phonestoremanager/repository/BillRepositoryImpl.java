@@ -21,13 +21,13 @@ public class BillRepositoryImpl extends RequestRepository implements BillReposit
 
     @Override
     public List<BillSummary> getAllBillSummaries(Map<String, String> header) throws Exception {
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/bills", null, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/bills", null, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/bills",
+                "/bills",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -47,13 +47,13 @@ public class BillRepositoryImpl extends RequestRepository implements BillReposit
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("id", id.toString());
 
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/bills", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/bills", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/bills",
+                "/bills",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -77,7 +77,7 @@ public class BillRepositoryImpl extends RequestRepository implements BillReposit
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/bills", null, header, postData);
+        return postRequestWithResult("/bills", null, header, postData);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class BillRepositoryImpl extends RequestRepository implements BillReposit
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/bills", null, header, postData);
+        return postRequestWithResult("/bills", null, header, postData);
     }
 
 }

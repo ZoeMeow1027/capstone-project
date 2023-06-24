@@ -54,7 +54,7 @@ public class AdminProductsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/products/index");
+            view = new ModelAndView("admin/products/index");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
@@ -79,7 +79,7 @@ public class AdminProductsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/products/add");
+            view = new ModelAndView("admin/products/add");
             view.addObject("action", "add");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
@@ -125,7 +125,7 @@ public class AdminProductsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/products/add");
+            view = new ModelAndView("admin/products/add");
             view.addObject("action", "edit");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
@@ -154,7 +154,7 @@ public class AdminProductsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/products/article");
+            view = new ModelAndView("admin/products/article");
             view.addObject("action", "edit");
             view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
 
@@ -207,7 +207,7 @@ public class AdminProductsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/products/specification");
+            view = new ModelAndView("admin/products/specification");
             view.addObject("action", "edit");
             view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
 
@@ -259,7 +259,7 @@ public class AdminProductsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/products/images");
+            view = new ModelAndView("admin/products/images");
             view.addObject("action", "edit");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
@@ -308,7 +308,7 @@ public class AdminProductsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/productCategory/index");
+            view = new ModelAndView("dmin/productCategory/index");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
@@ -331,7 +331,7 @@ public class AdminProductsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/productCategory/add");
+            view = new ModelAndView("admin/productCategory/add");
             view.addObject("action", "add");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
@@ -374,7 +374,7 @@ public class AdminProductsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/productCategory/add");
+            view = new ModelAndView("admin/productCategory/add");
             view.addObject("action", "edit");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
@@ -420,7 +420,7 @@ public class AdminProductsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/productManufacturer/index");
+            view = new ModelAndView("admin/productManufacturer/index");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
@@ -443,7 +443,7 @@ public class AdminProductsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/productManufacturer/add");
+            view = new ModelAndView("admin/productManufacturer/add");
             view.addObject("action", "add");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
@@ -486,7 +486,7 @@ public class AdminProductsController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("/admin/productManufacturer/add");
+            view = new ModelAndView("admin/productManufacturer/add");
             view.addObject("action", "edit");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));

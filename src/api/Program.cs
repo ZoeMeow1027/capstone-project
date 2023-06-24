@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PhoneStoreManager.Model;
 using PhoneStoreManager.Services;
+using System.Net;
 
 namespace PhoneStoreManager
 {
@@ -15,7 +16,7 @@ namespace PhoneStoreManager
 
             // Add SqLite
             string SQLITE_CSTRING = string.Format(
-                "Filename={0}",
+                "Filename={0};Mode=ReadWriteCreate;",
                 System.IO.Path.Combine(new string[] { Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhoneStoreManager", "data.db" })
                 );
             builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(SQLITE_CSTRING));
@@ -28,6 +29,11 @@ namespace PhoneStoreManager
             // Initialize Database and create admin account if not exist.
 #pragma warning disable CS8604 // Possible null reference argument.
             bool isInit = true;
+            string folderPath = System.IO.Path.Combine(new string[] { Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhoneStoreManager" });
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
             if (isInit)
             {
                 if (builder.Configuration.GetConnectionString("Default") == null)
@@ -91,10 +97,7 @@ namespace PhoneStoreManager
                 app.UseSwaggerUI();
             }
 
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseHttpsRedirection();
-            }
+            //app.UseHttpsRedirection();
 
             app.UseAuthorization();
 

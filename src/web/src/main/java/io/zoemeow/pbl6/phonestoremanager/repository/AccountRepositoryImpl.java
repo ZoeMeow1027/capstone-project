@@ -27,13 +27,13 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
 
     @Override
     public List<UserAddress> getAllAddress(Map<String, String> header) throws NoInternetException, RequestException {
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/address", null, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/account/address", null, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/account/address",
+                "/account/address",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -53,13 +53,13 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("id", Integer.toString(id));
 
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/address", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/account/address", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/account/address",
+                "/account/address",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -76,18 +76,18 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
 
     @Override
     public byte[] getAvatar(Map<String, String> header) throws Exception {
-        return getRequestToImage("/api/account/avatar", null, header);
+        return getRequestToImage("/account/avatar", null, header);
     }
 
     @Override
     public RequestResult<JsonObject> setAvatar(Map<String, String> header, Resource resource) throws Exception {
-        return postRequestFromImage("/api/account/avatar", null, header, resource, null);
+        return postRequestFromImage("/account/avatar", null, header, resource, null);
     }
 
     @Override
     public User getUserInformation(Map<String, String> header, ArrayList<Integer> allowedUserType)
             throws Exception {
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/my", null, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/account/my", null, header);
         
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
@@ -124,7 +124,7 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/account/address", null, header, postData);
+        return postRequestWithResult("/account/address", null, header, postData);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/account/address", null, header, postData);
+        return postRequestWithResult("/ess", null, header, postData);
     }
 
     @Override
@@ -157,20 +157,20 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/account/address", null, header, postData);
+        return postRequestWithResult("/account/address", null, header, postData);
     }
 
     @Override
     public RequestResult<JsonObject> setUserInformation(Map<String, String> header, User user) throws Exception {
         String postData = new Gson().toJson(user);
-        return postRequestWithResult("/api/account/my", null, header, postData);
+        return postRequestWithResult("/account/my", null, header, postData);
     }
 
     @Override
     public RequestResult<JsonObject> changePassword(Map<String, String> header, ChangePasswordDTO changePassDTO)
             throws Exception {
         String postData = new Gson().toJson(changePassDTO);
-        return postRequestWithResult("/api/account/change-password", null, header, postData);
+        return postRequestWithResult("/account/change-password", null, header, postData);
     }
 
     @Override
@@ -178,13 +178,13 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("activeonly", "true");
 
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/delivery", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/account/delivery", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/account/delivery",
+                "/account/delivery",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -201,13 +201,13 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
 
     @Override
     public List<BillSummary> getBillSummaries(Map<String, String> header) throws NoInternetException, RequestException {
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/delivery", null , header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/account/delivery", null , header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/account/delivery",
+                "/account/delivery",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -227,13 +227,13 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("id", Integer.toString(id));
 
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/delivery", parameters, header);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/account/delivery", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/account/delivery",
+                "/account/delivery",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -257,7 +257,7 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/account/delivery", null, header, postData);
+        return postRequestWithResult("/account/delivery", null, header, postData);
     }
 
     @Override
@@ -271,7 +271,7 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         bodyRoot.add("data", productAdd);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/account/delivery", null, header, postData);
+        return postRequestWithResult("/account/delivery", null, header, postData);
     }
 
     @Override
@@ -283,6 +283,6 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         bodyRoot.addProperty("comment", comment);
 
         String postData = bodyRoot.toString();
-        return postRequestWithResult("/api/account/review", null, header, postData);
+        return postRequestWithResult("/account/review", null, header, postData);
     }
 }

@@ -35,7 +35,7 @@ public class PaymentMethodController {
             Integer id) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
-        ModelAndView view = new ModelAndView("/global/cart/payment-method");
+        ModelAndView view = new ModelAndView("global/cart/payment-method");
 
         try {
             User user = _AccountRepository.getUserInformation(header, null);

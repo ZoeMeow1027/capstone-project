@@ -29,13 +29,13 @@ public class FeaturedRepositoryImpl extends RequestRepository implements Feature
             parameters.put("limit", limit.toString());
         }
 
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/featured/new", parameters, headers);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/featured/new", parameters, headers);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/featured/new",
+                "/featured/new",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );
@@ -57,13 +57,13 @@ public class FeaturedRepositoryImpl extends RequestRepository implements Feature
             parameters.put("limit", limit.toString());
         }
 
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/api/featured/mostview", parameters, headers);
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/featured/mostview", parameters, headers);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }
         if (reqResult.getStatusCode() != 200) {
             throw new RequestException(
-                "/api/featured/mostview",
+                "/featured/mostview",
                 reqResult.getStatusCode(),
                 reqResult.getMessage()
             );

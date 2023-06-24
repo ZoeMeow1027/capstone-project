@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head lang="en" th:replace="~{/admin/fragments/head :: headtag(title=${'Product specification - Products'})}"></head>
+<head lang="en" th:replace="~{admin/fragments/head :: headtag(title=${'Product specification - Products'})}"></head>
 
 <body>
-    <div lang="en" th:replace="~{/admin/fragments/sideNavBar :: sidenavbar(tab='products', user=${name})}"></div>
+    <div lang="en" th:replace="~{admin/fragments/sideNavBar :: sidenavbar(tab='products', user=${name})}"></div>
     <section id="admin-page-data" class="col-sm p-3 min-vh-100"
         th:with="condition=${action == null ? true : action.compareTo('edit') == 0 ? false : true}">
         <a href="/admin/products"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>

@@ -3,13 +3,13 @@
 
 <head>
     <div
-        th:replace="~{/global/fragments/tag-head :: headtag(title=${'Payment method - Delivery ' + orderitem.getId()})}">
+        th:replace="~{global/fragments/tag-head :: headtag(title=${'Payment method - Delivery ' + orderitem.getId()})}">
     </div>
     <link rel="stylesheet" th:href="@{/css/global-cart-checkout.css}">
 </head>
 
 <body>
-    <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div lang="en" th:replace="~{global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
     <div class="container w-100">
         <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left bg-primary my-3 p-2 rounded-1">
             <span class="text-white" th:utext="${barMsg == null}"></span>
@@ -98,7 +98,7 @@
             </div>
         </div>
     </div>
-    <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
+    <div lang="en" th:replace="~{global/fragments/footer :: footer}"></div>
     <script th:src="|@{https://www.paypal.com/sdk/js?client-id=}${payPalClientID}|"></script>
     <script defer text="text/javascript">
         paypal.Buttons({
@@ -138,7 +138,7 @@
                         };
                         console.log(data);
                         console.log(details);
-                        fetch('[[${baseurl + ' / payment - method / paypal'}]]',
+                        fetch('/payment-method/paypal',
                             {
                                 method: 'post',
                                 headers: {
@@ -164,7 +164,7 @@
             dataPost = {
                 orderid: orderid,
             };
-            fetch('[[${baseurl + ' / payment - method / cod'}]]',
+            fetch('/payment-method/cod',
                 {
                     method: 'post',
                     headers: {

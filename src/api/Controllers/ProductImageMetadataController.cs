@@ -7,7 +7,7 @@ using PhoneStoreManager.Services;
 namespace PhoneStoreManager.Controllers
 {
     [ApiController]
-    [Route("api/products/img")]
+    [Route("products/img")]
     public class ProductImageMetadataController : UserSessionControllerBase
     {
         private readonly IProductService _productService;

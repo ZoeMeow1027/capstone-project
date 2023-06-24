@@ -37,7 +37,7 @@ public class ChangePasswordController {
     ) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
-        ModelAndView view = new ModelAndView("/global/account/change-password");
+        ModelAndView view = new ModelAndView("global/account/change-password");
 
         try {
             User user = _AccountRepository.getUserInformation(header, null);

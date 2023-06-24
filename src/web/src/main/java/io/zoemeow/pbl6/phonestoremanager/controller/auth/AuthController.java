@@ -31,13 +31,13 @@ public class AuthController extends RequestRepository {
     public ModelAndView pageLogin(
             HttpServletRequest request,
             HttpServletResponse response) {
-        String uriRedirect = "/auth/login";
+        String uriRedirect = "auth/login";
 
         try {
             Map<String, String> header = new HashMap<String, String>();
             header.put("cookie", request.getHeader("cookie"));
 
-            RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/my", null, header);
+            RequestResult<JsonObject> reqResult = getRequestWithResult("/account/my", null, header);
             if (!reqResult.getIsSuccessfulRequest()) {
                 // TODO: Check if not successful request here!
             }
@@ -57,7 +57,7 @@ public class AuthController extends RequestRepository {
                     break;
             }
         } catch (Exception ex) {
-            uriRedirect = "/auth/login";
+            uriRedirect = "auth/login";
         }
 
         ModelAndView view = new ModelAndView(uriRedirect);
@@ -102,7 +102,7 @@ public class AuthController extends RequestRepository {
             }
             modelAndView = new ModelAndView(urlRedirect);
         } catch (Exception ex) {
-            modelAndView = new ModelAndView("/auth/login");
+            modelAndView = new ModelAndView("auth/login");
             modelAndView.addObject("errMsg", ex.getMessage());
         }
 
@@ -111,13 +111,13 @@ public class AuthController extends RequestRepository {
 
     @GetMapping("/auth/register")
     public ModelAndView pageRegister(HttpServletRequest request, HttpServletResponse response) {
-        String uriRedirect = "/auth/register";
+        String uriRedirect = "auth/register";
 
         try {
             Map<String, String> header = new HashMap<String, String>();
             header.put("cookie", request.getHeader("cookie"));
 
-            RequestResult<JsonObject> reqResult = getRequestWithResult("/api/account/my", null, header);
+            RequestResult<JsonObject> reqResult = getRequestWithResult("/account/my", null, header);
             if (!reqResult.getIsSuccessfulRequest()) {
                 // TODO: Check if not successful request here!
             }
@@ -137,7 +137,7 @@ public class AuthController extends RequestRepository {
                     break;
             }
         } catch (Exception ex) {
-            uriRedirect = "/auth/register";
+            uriRedirect = "auth/register";
         }
 
         ModelAndView view = new ModelAndView(uriRedirect);

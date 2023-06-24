@@ -9,7 +9,7 @@ using PhoneStoreManager.Services;
 namespace PhoneStoreManager.Controllers
 {
     [ApiController]
-    [Route("api/account")]
+    [Route("account")]
     public class AccountController : UserSessionControllerBase
     {
         private readonly IUserAvatarService _userAvatarService;

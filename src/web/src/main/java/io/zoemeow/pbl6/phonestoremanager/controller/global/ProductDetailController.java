@@ -44,7 +44,7 @@ public class ProductDetailController {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
         
-        ModelAndView view = new ModelAndView("/global/product-detail");
+        ModelAndView view = new ModelAndView("global/product-detail");
 
         try {
             User user = null;

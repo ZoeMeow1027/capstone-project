@@ -19,7 +19,7 @@ public class AuthRepositoryImpl extends RequestRepository implements AuthReposit
         auth.addProperty("password", password);
 
         header.put("content-type", "application/json; charset=UTF-8");
-        RequestResult<JsonObject> reqResult = postRequestWithResult("/api/auth/login", null, header, auth.toString());
+        RequestResult<JsonObject> reqResult = postRequestWithResult("/auth/login", null, header, auth.toString());
 
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
@@ -32,7 +32,7 @@ public class AuthRepositoryImpl extends RequestRepository implements AuthReposit
 
     @Override
     public RequestResult<JsonObject> logout(Map<String, String> header) throws Exception {
-        return postRequestWithResult("/api/account/logout", null, header, null);
+        return postRequestWithResult("/account/logout", null, header, null);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class AuthRepositoryImpl extends RequestRepository implements AuthReposit
         auth.addProperty("phone", registerDTO.getPhone());
 
         header.put("content-type", "application/json; charset=UTF-8");
-        RequestResult<JsonObject> reqResult = postRequestWithResult("/api/auth/register", null, header, auth.toString());
+        RequestResult<JsonObject> reqResult = postRequestWithResult("/auth/register", null, header, auth.toString());
 
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");

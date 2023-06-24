@@ -2,12 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <div th:replace="~{/global/fragments/tag-head :: headtag(title=${'Your cart'})}"></div>
+    <div th:replace="~{global/fragments/tag-head :: headtag(title=${'Your cart'})}"></div>
     <link rel="stylesheet" th:href="@{/css/global-cart-checkout.css}">
 </head>
 
 <body>
-    <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div lang="en" th:replace="~{global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
     <div class="container w-100">
         <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left bg-primary my-3 p-2 rounded-1">
             <span class="text-white" th:utext="${barMsg}"></span>
@@ -43,7 +43,7 @@
                                     <div class="d-flex flex-row align-items-center">
                                         <div>
                                             <div th:if="${item.getProduct().getImages().size() > 0}" th:remove="tag">
-                                                <img th:src="${baseurl + '/products/img/blob?id=' + item.getProduct().getImages().get(0).getId()}"
+                                                <img th:src="${'/products/img/blob?id=' + item.getProduct().getImages().get(0).getId()}"
                                                     class="img-fluid rounded-3" alt="Shopping item"
                                                     style="width: 65px; height: 65px;">
                                             </div>
@@ -156,7 +156,7 @@
             </div>
         </div>
     </div>
-    <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
+    <div lang="en" th:replace="~{global/fragments/footer :: footer}"></div>
 </body>
 
 </html>

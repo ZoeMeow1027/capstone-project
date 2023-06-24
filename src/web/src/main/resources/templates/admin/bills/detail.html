@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head lang="en" th:replace="~{/admin/fragments/head :: headtag(title=${'View a bill detail - Bills'})}"></head>
+<head lang="en" th:replace="~{admin/fragments/head :: headtag(title=${'View a bill detail - Bills'})}"></head>
 <body>
-    <div lang="en" th:replace="~{/admin/fragments/sideNavBar :: sidenavbar(tab='bills', user=${name})}"></div>
+    <div lang="en" th:replace="~{admin/fragments/sideNavBar :: sidenavbar(tab='bills', user=${name})}"></div>
     <section id="admin-page-data" class="col-sm p-3 min-vh-100">
         <a href="/admin/bills"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
         <h2>Order detail</h2>
@@ -85,7 +85,7 @@
                                         <div>
                                             <div th:if="${item.getProduct().getImages().size() > 0}"
                                                  th:remove="tag">
-                                                <img th:src="${baseurl + '/products/img/blob?id=' + item.getProduct().getImages().get(0).getId()}"
+                                                <img th:src="${'/products/img/blob?id=' + item.getProduct().getImages().get(0).getId()}"
                                                      class="img-fluid rounded-3" alt="Shopping item"
                                                      style="width: 65px; height: 65px;">
                                             </div>
@@ -188,7 +188,7 @@
             <div class="col text-end">
                 <button th:if="${billItem.getDeliverStatus() == 0 || billItem.getDeliverStatus() == 1 || billItem.getDeliverStatus() == 2}" class="btn btn-danger mx-1" data-bs-toggle="modal"
                         data-bs-target="#cancelConfirmModal mx-1 my-1">Cancel order</button>
-                <a th:if="${billItem.getDeliverStatus() == 1 || billItem.getDeliverStatus() == 2 || billItem.getDeliverStatus() == 3}" th:href="${baseurl + '/admin/bills/update?id=' + billItem.getId() + '&returnurl=%2Fadmin%2Fbills%2Fdetail%3Fid%3D' + billItem.getId()}" class="text-decoration-none">
+                <a th:if="${billItem.getDeliverStatus() == 1 || billItem.getDeliverStatus() == 2 || billItem.getDeliverStatus() == 3}" th:href="${'/admin/bills/update?id=' + billItem.getId() + '&returnurl=%2Fadmin%2Fbills%2Fdetail%3Fid%3D' + billItem.getId()}" class="text-decoration-none">
                     <button type="button" class="btn btn-success mt-1 my-1">Update status</button>
                 </a>
             </div>
@@ -196,7 +196,7 @@
     </section>
     <div class="modal fade" id="cancelConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="cancelConfirmModal" aria-hidden="true">
-        <form id="cancelConfirmForm" method="post" th:action="${baseurl + '/admin/bills/cancel?returnurl=%2Fadmin%2Fbills%2Fdetail%3Fid%3D' + billItem.getId()}">
+        <form id="cancelConfirmForm" method="post" th:action="${'/admin/bills/cancel?returnurl=%2Fadmin%2Fbills%2Fdetail%3Fid%3D' + billItem.getId()}">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">

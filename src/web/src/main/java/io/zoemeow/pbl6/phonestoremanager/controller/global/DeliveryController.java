@@ -36,7 +36,7 @@ public class DeliveryController {
             Boolean activeonly) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
-        ModelAndView view = new ModelAndView("/global/delivery/delivery-list");
+        ModelAndView view = new ModelAndView("global/delivery/delivery-list");
 
         activeonly = activeonly == null ? false : activeonly;
 
@@ -76,7 +76,7 @@ public class DeliveryController {
             Integer id) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
-        ModelAndView view = new ModelAndView("/global/delivery/delivery-detail");
+        ModelAndView view = new ModelAndView("global/delivery/delivery-detail");
 
         try {
             User user = _AccountRepository.getUserInformation(header, null);
