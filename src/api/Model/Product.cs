@@ -39,8 +39,14 @@ namespace PhoneStoreManager.Model
         [JsonProperty("price")]
         public double Price { get; set; } = 0;
 
-        [JsonProperty("metadata")]
-        public string? Metadata { get; set; } = null;
+        [JsonProperty("specification")]
+        public string? Specification { get; set; } = null;
+
+        [JsonProperty("article")]
+        public string? Article { get; set; } = null;
+
+        [JsonProperty("views")]
+        public ulong Views { get; set; } = 0;
 
         [Required]
         [JsonProperty("showinpage")]

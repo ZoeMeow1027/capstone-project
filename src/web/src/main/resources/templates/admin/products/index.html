@@ -16,13 +16,13 @@
             <div class="row">
                 <div th:each="item: ${productList}" th:remove="tag">
                     <div class="col d-flex align-items-left flex-fill card my-1">
-                        <div class="row justify-content-between">
+                        <div class="row align-items-center">
                             <div class="col-md-auto mx-2 my-2">
-                                <img th:src="${item.getImages().size() == 0 ? '#' : (baseurl + '/products/img/blob?id=' + item.getImages().get(0).getId())}" width="64" height="64" alt="no image">
+                                <img class="rounded-1" th:src="${item.getImages().size() == 0 ? '#' : (baseurl + '/products/img/blob?id=' + item.getImages().get(0).getId())}" width="78" height="78" style="object-fit: cover;" alt="no image">
                             </div>
                             <div class="col-md-3 my-2 mx-1">
                                 <div class="col">
-                                    <span class="text" th:text="${'ID: ' + item.getId()}"></span>
+                                    <span class="fs-4" th:text="${'ID: ' + item.getId()}"></span>
                                 </div>
                                 <div class="col">
                                     <span class="h5" th:text="${item.getName()}"></span>
@@ -49,17 +49,20 @@
                             </div>
                             <div class="col-md-2 mx-1 my-2">
                                 <div class="col d-flex">
-                                    <button type="button" class="btn" th:classappend="${item.getShowInPage() ? 'bg-success' : 'bg-danger'}">
+                                    <button type="button" style="width: 110px; height: 40px;" class="btn" th:classappend="${item.getShowInPage() ? 'bg-success' : 'bg-danger'}">
                                         <span class="h6 text-white" th:text="${item.getShowInPage() ? 'In active' : 'Hidden'}"></span>
                                     </button>
                                 </div>
                             </div>
-                            <div class="col-md-1 mx-1 my-2 justify-content-center align-items-center">
+                            <div class="col-md-1 mx-1 my-2">
                                 <div class="col my-1">
-                                    <a th:href="${'/admin/products/update?id=' + item.getId()}"><button type="button" class="btn btn-primary">Update</button></a>
+                                    <a th:href="${'/admin/products/update?id=' + item.getId()}"><button type="button" style="width: 85px; height: 40px;" class="btn btn-primary">Update</button></a>
                                 </div>
                                 <div class="col my-1">
-                                    <a th:href="${''}"><button type="button" class="btn btn-danger">Delete</button></a>
+                                    <a th:href="${'/admin/products/images?id=' + item.getId()}"><button type="button" style="width: 85px; height: 40px;" class="btn btn-primary">Images</button></a>
+                                </div>
+                                <div class="col my-1">
+                                    <a th:href="${''}"><button type="button" style="width: 85px; height: 40px;" class="btn btn-danger">Delete</button></a>
                                 </div>
                             </div>
                         </div>

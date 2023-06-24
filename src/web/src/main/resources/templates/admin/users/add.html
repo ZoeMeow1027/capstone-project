@@ -39,7 +39,7 @@
             <div class="form-floating mb-3">
                 <select class="form-control form-select" name="usertype">
                     <option value="0" th:selected="${user == null ? false : user.getUserType() == 0}">User</option>
-                    <option value="1" th:selected="${user == null ? false : user.getUserType() == 1}">Staff</option>
+                    <!-- <option value="1" th:selected="${user == null ? false : user.getUserType() == 1}">Staff</option> -->
                     <option value="2" th:selected="${user == null ? false : user.getUserType() == 2}">Administrator</option>
                 </select>
                 <label for="floatingInput">User type</label>

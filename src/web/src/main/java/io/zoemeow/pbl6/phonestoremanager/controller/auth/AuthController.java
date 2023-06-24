@@ -90,11 +90,11 @@ public class AuthController extends RequestRepository {
             String urlRedirect;
             switch (reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt()) {
                 case 2:
-                    urlRedirect = "redirect:/admin/dashboard";
+                    urlRedirect = "redirect:/admin";
                     break;
                 case 1:
                     // TODO: Return staff page here
-                    urlRedirect = "redirect:/admin/dashboard";
+                    urlRedirect = "redirect:/admin";
                     break;
                 default:
                     urlRedirect = "redirect:/";
@@ -126,11 +126,11 @@ public class AuthController extends RequestRepository {
             }
             switch (reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt()) {
                 case 2:
-                    uriRedirect = "redirect:/admin/dashboard";
+                    uriRedirect = "redirect:/admin";
                     break;
                 case 1:
                     // TODO: Return staff page here
-                    uriRedirect = "redirect:/admin/dashboard";
+                    uriRedirect = "redirect:/admin";
                     break;
                 default:
                     uriRedirect = "redirect:/";

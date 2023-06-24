@@ -12,6 +12,16 @@ img {
     max-width: 100%;
 }
 
+.img-preview.nav-link {
+    border-radius: 5px;
+    border-width: 5px;
+    border-color: white;
+}
+
+.img-preview.nav-link.active {
+    border-color: var(--main-color);
+}
+
 .preview {
     display: -webkit-box;
     display: -webkit-flex;

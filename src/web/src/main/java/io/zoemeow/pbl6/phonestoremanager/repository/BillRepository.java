@@ -3,7 +3,6 @@ package io.zoemeow.pbl6.phonestoremanager.repository;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.BillSummary;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;

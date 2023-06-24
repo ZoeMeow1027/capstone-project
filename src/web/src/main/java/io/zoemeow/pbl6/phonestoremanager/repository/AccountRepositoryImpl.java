@@ -273,4 +273,16 @@ public class AccountRepositoryImpl extends RequestRepository implements AccountR
         String postData = bodyRoot.toString();
         return postRequestWithResult("/api/account/delivery", null, header, postData);
     }
+
+    @Override
+    public RequestResult<JsonObject> addReview(Map<String, String> header, Integer productId, Integer rating,
+            String comment) throws Exception {
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("productid", productId);
+        bodyRoot.addProperty("rating", rating);
+        bodyRoot.addProperty("comment", comment);
+
+        String postData = bodyRoot.toString();
+        return postRequestWithResult("/api/account/review", null, header, postData);
+    }
 }

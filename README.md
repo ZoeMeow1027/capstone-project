@@ -26,8 +26,8 @@
 
 | Group         | Components    | Start date    | Updated       | Progress          |
 | -             | -             | -             | -             | -                 |
-| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/22    | ![https://progress-bar.dev/97/?scale=100&width=120](https://progress-bar.dev/97/?scale=100&width=120) |
-| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/22    | ![https://progress-bar.dev/92/?scale=100&width=120](https://progress-bar.dev/92/?scale=100&width=120) |
+| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/22    | ![https://progress-bar.dev/98/?scale=100&width=120](https://progress-bar.dev/98/?scale=100&width=120) |
+| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/24    | ![https://progress-bar.dev/95/?scale=100&width=120](https://progress-bar.dev/95/?scale=100&width=120) |
 
 ## API
 
@@ -104,9 +104,9 @@ Start date: 2023/06/17
 
 | Group						          | Description															                              | Updated		    | Task (tick means completed)	|
 | -							            | -																		                                  | -				      | -								            |
-| Main page                 | Home web page                                                         | 2023/06/03    | <ul><li>[ ] View</li></ul> |
+| Main page                 | Home web page                                                         | 2023/06/24    | <ul><li>[x] View</li></ul> |
 | Search page               | Search result when you return a search query                          | 2023/06/17    | <ul><li>[x] View</li><li>[x] Navigate to product detail</li><li>[x] Product image</li></ul> |
-| Product detail            | Detail of a product (specifications, price, image preview, ...)       | 2023/06/19    | <ul><li>[x] View</li><li>[x] Add to cart</li><li>[ ] Specifications</li><li>[ ] Comments</li></ul> |
+| Product detail            | Detail of a product (specifications, price, image preview, ...)       | 2023/06/24    | <ul><li>[x] View</li><li>[x] Add to cart</li><li>[x] Specifications</li><li>[x] Comments</li></ul> |
 | Your profile              | Edit your basic profile                                               | 2023/06/13    | <ul><li>[x] View</li><li>[x] Profile data</li><li>[x] Save changes</li><li>[x] Get/set avatar</li></ul> |
 | Your address              | Edit your added address                                               | 2023/06/17    | <ul><li>[x] View</li><li>[x] Add</li><li>[x] Update</li><li>[x] Delete</li></ul> |
 | Change your password      | Change your password                                                  | 2023/06/13    | <ul><li>[x] View</li><li>[x] Change password</li></ul> |

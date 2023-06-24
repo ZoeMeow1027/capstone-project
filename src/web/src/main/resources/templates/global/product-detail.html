@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <div th:replace="~{/global/fragments/tag-head :: headtag(title=${product.getManufacturer().getName() + ' ' + product.getName()})}"></div>
+    <div
+        th:replace="~{/global/fragments/tag-head :: headtag(title=${product.getManufacturer().getName() + ' ' + product.getName()})}">
+    </div>
     <link rel="stylesheet" th:href="@{/css/global-product-details.css}">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
+
 <body>
     <div lang="en" th:replace="~{/global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
     <div class="container">
@@ -16,16 +21,24 @@
                     <div class="preview col-md-6">
                         <div class="row preview-pic tab-content">
                             <div th:each="urlItem,iter: ${product.getImages()}" th:remove="tag">
-                                <div class="tab-pane fade" th:id="${'pic-' + iter.index}" th:classappend="${iter.index == 0 ? 'show active' : ''}" role="tabpanel" th:attr="aria-labelledby=${'pic-' + iter.index}">
-                                    <img style="margin-left: auto; margin-right: auto;" th:src="${baseurl + '/products/img/blob?id=' + urlItem.getId()}" />
-                                </div>    
+                                <div class="tab-pane fade" th:id="${'pic-' + iter.index}"
+                                    th:classappend="${iter.index == 0 ? 'show active' : ''}" role="tabpanel"
+                                    th:attr="aria-labelledby=${'pic-' + iter.index}">
+                                    <img style="object-fit: cover; margin-left: auto; margin-right: auto; width: 400px; height: 447px;"
+                                        th:src="${baseurl + '/products/img/blob?id=' + urlItem.getId()}" />
+                                </div>
                             </div>
                         </div>
-                        <ul class="row preview-thumbnail nav nav-tabs d-flex justify-content-center" id="item-preview" role="tablist">
+                        <ul class="row preview-thumbnail nav nav-tabs d-flex justify-content-center" id="item-preview"
+                            role="tablist">
                             <div th:each="urlItem,iter: ${product.getImages()}" th:remove="tag">
-                                <li class="nav-item item-preview-thumb" role="presentation">
-                                    <a class="nav-link" th:classappend="${iter.index == 0 ? 'active' : ''}" th:href="${'#pic-' + iter.index}" th:attr="data-target=${'pic-' + iter.index}" data-bs-toggle="tab">
-                                        <img th:src="${baseurl + '/products/img/blob?id=' + urlItem.getId()}" />
+                                <li class="nav-item item-preview-thumb mx-1 my-1 px-0 py-0" role="presentation">
+                                    <a class="img-preview nav-link" th:classappend="${iter.index == 0 ? 'active' : ''}"
+                                        th:href="${'#pic-' + iter.index}" th:attr="data-target=${'pic-' + iter.index}"
+                                        data-bs-toggle="tab">
+                                        <img class="rounded-1"
+                                            style="width: 80px; height: 72px; object-fit: cover; margin-left: auto; margin-right: auto;"
+                                            th:src="${baseurl + '/products/img/blob?id=' + urlItem.getId()}" />
                                     </a>
                                 </li>
                             </div>
@@ -38,30 +51,43 @@
                         <form action="/product/add-to-cart" method="post">
                             <div class="action mb-4">
                                 <input type="text" name="productid" th:value="${product.getId()}" readonly hidden>
-                                <div class="row mb-3 align-items-center">
-                                    <div class="col-md-3">
-                                        <div class="input-group">
-                                            <div class="form-floating">
-                                                <input type="number" class="form-control" name="count" min="1" th:attr="max=${product.getInventoryCount()}" value="1">
-                                                <label for="count">Count</label>
+                                <div th:if="${user != null}" th:remove="tag">
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-3">
+                                            <div class="input-group">
+                                                <div class="form-floating">
+                                                    <input type="number" class="form-control" name="count" min="1"
+                                                        th:attr="max=${product.getInventoryCount()}" value="1">
+                                                    <label for="count">Count</label>
+                                                </div>
                                             </div>
-                                        </div>        
-                                    </div>
-                                    <div class="col-md-6">
-                                        <span class="text-default" th:text="${product.getInventoryCount() + ' items available'}"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span class="text-default" th:text="${product.getInventoryCount() + ' items available'}"></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <button class="add-to-cart btn btn-default" type="submit">Add to cart</button>
-                                <!-- <button class="like btn btn-default" type="button"><i class="bi bi-heart"></i></button> -->
+                                <div th:unless="${user != null}" th:remove="tag">
+                                    <div class="my-2">
+                                        <span class="text-default" th:text="${product.getInventoryCount() + ' items available'}"></span>
+                                    </div>
+                                    <span class="fs-5">You need to login before add this product to cart</span>
+                                </div>
+                                <div th:if="${user != null}" th:remove="tag">
+                                    <button class="add-to-cart btn btn-default" type="submit">Add to cart</button>
+                                    <!-- <button class="like btn btn-default" type="button"><i class="bi bi-heart"></i></button> -->
+                                </div>
                             </div>
                         </form>
                         <div class="mb-1">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
                             <i class="bi bi-star"></i>
                             <i class="bi bi-star"></i>
-                            <span class="review-no" th:text="${(product.getComments().size() == 0 ? 'No' : product.getComments().size()) + ' review' + (product.getComments().size() == 1 ? '' : 's')}"></span>
+                            <i class="bi bi-star"></i>
+                            <i class="bi bi-star"></i>
+                            <i class="bi bi-star"></i>
+                            <span class="review-no" th:text="${rating}"></span><br>
+                            <span class="review-no"
+                                th:text="${(product.getComments().size() == 0 ? 'No' : product.getComments().size()) + ' review' + (product.getComments().size() == 1 ? '' : 's')}"></span>
                         </div>
                     </div>
                 </div>
@@ -71,23 +97,89 @@
             <ul class="nav nav-tabs nav-fill mb-3" id="ex2" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="ex2-tab-1" data-bs-toggle="tab" href="#ex2-tabs-1" role="tab"
-                        aria-controls="ex2-tabs-1" aria-selected="true">Specifications</a>
+                        aria-controls="ex2-tabs-1" aria-selected="true">Overview</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="ex2-tab-2" data-bs-toggle="tab" href="#ex2-tabs-2" role="tab" aria-controls="ex2-tabs-2"
-                        aria-selected="false">Rating & reviews</a>
+                    <a class="nav-link" id="ex2-tab-2" data-bs-toggle="tab" href="#ex2-tabs-2" role="tab"
+                        aria-controls="ex2-tabs-1" aria-selected="false">Specifications</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="ex2-tab-3" data-bs-toggle="tab" href="#ex2-tabs-3" role="tab"
+                        aria-controls="ex2-tabs-2" aria-selected="false">Rating & reviews</a>
                 </li>
             </ul>
             <div class="tab-content mb-5" id="ex2-content">
                 <div class="tab-pane fade show active" id="ex2-tabs-1" role="tabpanel" aria-labelledby="ex2-tab-1">
-                    Tab 1 content
+                    <div id="tab-content-overview">
+                        <textarea type="text" rows="4" id="articlecontent" placeholder="Content" class="form-control"
+                            form="article-form" autocomplete="off"
+                            th:text="${product.getArticle() == null ? '(no another information)' : product.getArticle()}"></textarea>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="ex2-tabs-2" role="tabpanel" aria-labelledby="ex2-tab-2">
-                    Tab 2 content
+                    <div id="tab-content-specification">
+                        <textarea type="text" rows="4" id="speccontent" placeholder="Content" class="form-control"
+                            form="article-form" autocomplete="off"
+                            th:text="${product.getSpecification() == null ? '(no another information)' : product.getSpecification()}"></textarea>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="ex2-tabs-3" role="tabpanel" aria-labelledby="ex2-tab-3">
+                    <div class="tab-content-rating justify-content-center"
+                        style="width: 95%; margin-left: auto; margin-right: auto;">
+                        <div mt-2>
+                            <div th:if="${loggedIn == false}" th:remove="tag">
+                                <div class="text-left bg-danger my-3 p-2 rounded-1"><span class="text-white">You need to log in before reviewing this product.</span></div>                        
+                            </div>
+                            <div th:if="${loggedIn == true && purchased == false}" th:remove="tag">
+                                <div class="text-left bg-danger my-3 p-2 rounded-1"><span class="text-white">You need purchase product before reviewing them.</span></div>                        
+                            </div>
+                            <div th:if="${loggedIn == true && purchased == true && alreadyCommented == false}" th:remove="tag">
+                                <form action="/product/add-review" method="post">
+                                    <div class="h5">Leave your review about this product here (note that you will attempt only one time)</div>
+                                    <input type="text" th:value="${product.getId()}" readonly hidden name="productid">
+                                    <div class="form-floating mx-0 mt-2">
+                                        <input class="form-control" type="number" min="1" max="5" name="rating" value="5">
+                                        <label for="comment">Rating</label>
+                                    </div>
+                                    <div class="form-floating mx-0 mt-2">
+                                        <textarea class="form-control" placeholder="Leave your review here" id="comment" name="comment"
+                                            style="height: 100px"></textarea>
+                                        <label for="comment">Leave your review here</label>
+                                    </div>
+                                    <div class="text-end mt-2">
+                                        <button type="submit" class="btn btn-success">Review</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div th:if="${loggedIn == true && purchased == true && alreadyCommented == true}" th:remove="tag">
+                                <div class="text-left bg-primary my-3 p-2 rounded-1"><span class="text-white">You have already reviewed this product.</span></div>                        
+                            </div>
+                        </div>
+                        <div class="h5 mt-2">All comments</div>
+                        <div class="row mx-0">
+                            <div class="card my-1" th:each="item: ${product.getComments()}">
+                                <div class="card-body">
+                                    <h5 th:if="${user == null ? false : (item.getUser().getId() == user.getId())}" class="text-decoration-underline">Your comment</h5>
+                                    <h5 class="card-title" th:text="${item.getUser().getName()}"></h5>
+                                    <h6 class="card-subtitle mb-3 text-body-secondary"
+                                        th:text="${'Rated this product: ' + item.getRating()}"></h6>
+                                    <p class="card-text" th:text="${item.getComment()}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div lang="en" th:replace="~{/global/fragments/footer :: footer}"></div>
+    <script>
+        var data = document.getElementById('articlecontent').textContent;
+        document.getElementById('tab-content-overview').innerHTML = marked.parse(data);
+
+        var data = document.getElementById('speccontent').textContent;
+        document.getElementById('tab-content-specification').innerHTML = marked.parse(data);
+    </script>
 </body>
+
 </html>

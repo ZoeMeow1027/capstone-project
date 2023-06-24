@@ -52,7 +52,7 @@
                                         <li th:unless="${adminuser}"><a class="dropdown-item" href="/account/delivery">All orders</a></li>
                                         <hr th:unless="${adminuser}" />
                                         <h6 th:if="${adminuser}" class="dropdown-header">Administrator area</h6>
-                                        <li th:if="${adminuser}"><a class="dropdown-item" href="/admin/dashboard">Go to admin dashboard</a></li>
+                                        <li th:if="${adminuser}"><a class="dropdown-item" href="/admin">Go to admin page</a></li>
                                         <hr th:if="${adminuser}" />
                                         <h6 class="dropdown-header">Your account settings</h6>
                                         <li><a class="dropdown-item" href="/account/profile">Profile</a></li>

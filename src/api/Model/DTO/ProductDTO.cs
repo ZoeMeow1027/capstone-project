@@ -22,6 +22,12 @@ namespace PhoneStoreManager.Model.DTO
         [JsonProperty("unit")]
         public string? Unit { get; set; }
 
+        [JsonProperty("article")]
+        public string? Article { get; set; }
+
+        [JsonProperty("specification")]
+        public string? Specification { get; set; }
+
         [JsonProperty("warrantymonth")]
         public int? WarrantyMonth { get; set; }
 

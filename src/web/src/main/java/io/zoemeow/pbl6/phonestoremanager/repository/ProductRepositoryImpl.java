@@ -148,6 +148,8 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         productAdd.addProperty("manufacturerid", product.getManufacturerId());
         productAdd.addProperty("inventorycount", product.getInventoryCount());
         productAdd.addProperty("unit", product.getUnit());
+        productAdd.addProperty("article", product.getArticle());
+        productAdd.addProperty("specification", product.getSpecification());
         productAdd.addProperty("warrantymonth", product.getWarrantyMonth());
         productAdd.addProperty("price", product.getPrice());
         productAdd.addProperty("showinpage", product.getShowInPage());
@@ -169,6 +171,8 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         productUpdate.addProperty("manufacturerid", product.getManufacturerId());
         productUpdate.addProperty("inventorycount", product.getInventoryCount());
         productUpdate.addProperty("unit", product.getUnit());
+        productUpdate.addProperty("article", product.getArticle());
+        productUpdate.addProperty("specification", product.getSpecification());
         productUpdate.addProperty("warrantymonth", product.getWarrantyMonth());
         productUpdate.addProperty("price", product.getPrice());
         productUpdate.addProperty("showinpage", product.getShowInPage());

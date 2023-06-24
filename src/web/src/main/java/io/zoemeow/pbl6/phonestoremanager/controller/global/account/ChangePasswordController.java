@@ -42,7 +42,7 @@ public class ChangePasswordController {
         try {
             User user = _AccountRepository.getUserInformation(header, null);
             view.addObject("user", user);
-            view.addObject("name", user == null ? "(Unknown)" : user.getName());
+            view.addObject("name", user == null ? null : user.getName());
             view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
             view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
             view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
