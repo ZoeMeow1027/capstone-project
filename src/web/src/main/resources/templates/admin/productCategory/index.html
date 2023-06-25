@@ -4,12 +4,12 @@
 <body>
     <div lang="en" th:replace="~{admin/fragments/sideNavBar :: sidenavbar(tab='products', user=${name})}"></div>
     <section id="admin-page-data" class="col-sm p-3 min-vh-100">
-        <a href="/admin/products"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
+        <a th:href="@{/admin/products}"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
         <h2>Products Cagetory</h2>
         <h4>Manage product categories</h4>
         <hr />
         <div class="w-100 pb-2 d-flex justify-content-end">
-            <a href="/admin/products/categories/add" class="ps-2"><button type="button" class="btn btn-success">Create new</button></a>
+            <a th:href="@{/admin/products/categories/add}" class="ps-2"><button type="button" class="btn btn-success">Create new</button></a>
         </div>
         <div class="table-responsive">
             <table class="table table-hover table-bordered border-primary">
@@ -23,7 +23,7 @@
                         <td class="text-center" th:text="${item.getId()}"></td>
                         <td class="text-center" th:text="${item.getName()}"></td>
                         <td class="text-center">
-                            <a th:href="${'/admin/products/categories/update?id=' + item.getId()}"><button type="button" class="btn btn-primary">Update</button></a>
+                            <a th:href="@{/admin/products/categories/update?id={id}(id=${item.getId()})}"><button type="button" class="btn btn-primary">Update</button></a>
                             <a href="#"><button type="button" class="btn btn-danger">Delete</button></a>
                         </td>
                     </tr>

@@ -7,7 +7,7 @@
     <div lang="en" th:replace="~{admin/fragments/sideNavBar :: sidenavbar(tab='products', user=${name})}"></div>
     <section id="admin-page-data" class="col-sm p-3 min-vh-100"
         th:with="condition=${action == null ? true : action.compareTo('edit') == 0 ? false : true}">
-        <a href="/admin/products"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
+        <a th:href="@{/admin/products}"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
         <div th:unless="${condition}">
             <h2>Product article</h2>
             <h4
@@ -19,19 +19,19 @@
             th:utext="${barMsg}"></div>
         <nav th:unless="${condition}" class="nav nav-pills nav-justified">
             <a class="nav-link mx-1 py-2" aria-current="page"
-                th:href="${'/admin/products/update?id=' + product.getId()}"
+                th:href="@{/admin/products/update?id={id}(id=${product.getId()})}"
                 th:classappend="${tab == 0 ? 'active' : ''}">Basic information</a>
             <a class="nav-link mx-1 py-2" aria-current="page"
-                th:href="${'/admin/products/article?id=' + product.getId()}"
+                th:href="@{/admin/products/article?id={id}(id=${product.getId()})}"
                 th:classappend="${tab == 1 ? 'active' : ''}">Article</a>
             <a class="nav-link mx-1 py-2" aria-current="page"
-                th:href="${'/admin/products/specifications?id=' + product.getId()}"
+                th:href="@{/admin/products/specifications?id={id}(id=${product.getId()})}"
                 th:classappend="${tab == 2 ? 'active' : ''}">Specifications</a>
             <a class="nav-link mx-1 py-2" aria-current="page"
-                th:href="${'/admin/products/images?id=' + product.getId()}"
+                th:href="@{/admin/products/images?id={id}(id=${product.getId()})}"
                 th:classappend="${tab == 3 ? 'active' : ''}">Images</a>
         </nav>
-        <form action="/admin/products/article" method="post" id="article-form">
+        <form th:action="@{/admin/products/article}" method="post" id="article-form">
             <input type="text" th:value="${product.getId()}" readonly hidden name="id">
             <div class="mt-3 text-end">
                 <span class="fs-5 me-3">Powered by <a

@@ -9,7 +9,7 @@
         <hr />
         <div class="w-100 pb-2 d-flex justify-content-end">
             <!-- <a href="#" class="ps-2"><button type="button" class="btn btn-primary">Refresh</button></a> -->
-            <a href="/admin/users/add" class="ps-2"><button type="button" class="btn btn-success">Add new</button></a>
+            <a th:href="@{/admin/users/add}" class="ps-2"><button type="button" class="btn btn-success">Add new</button></a>
         </div>
         <div class="table-responsive">
             <table class="table table-hover table-bordered border-primary">
@@ -49,12 +49,12 @@
                         </div>
                         
                         <td class="text-center">
-                            <a th:href="${'/admin/users/update?id=' + item.getId()}"><button type="button" class="btn btn-primary">Update</button></a>
+                            <a th:href="@{/admin/users/update?id={id}(id=${item.getId()})}"><button type="button" class="btn btn-primary">Update</button></a>
                             <div th:with="condition=${item.getIsEnabled()}" th:remove="tag">
-                                <a th:if="${condition}" th:href="${'/admin/users/toggle?enabled=0&id=' + item.getId()}">
+                                <a th:if="${condition}" th:href="@{/admin/users/toggle?enabled=0&id={id}(id=${item.getId()})}">
                                     <button type="button" class="btn btn-danger">Disable</button>
                                 </a>
-                                <a th:unless="${condition}" th:href="${'/admin/users/toggle?enabled=1&id=' + item.getId()}">
+                                <a th:unless="${condition}" th:href="@{/admin/users/toggle?enabled=1&id={id}(id=${item.getId()})}">
                                     <button type="button" class="btn btn-success">Enable</button>
                                 </a>
                             </div>

@@ -4,19 +4,19 @@
     <div th:fragment="header" th:remove="tag">
         <header class="sticky-top">
             <div class="announcement-bar text-white bg-danger" th:if="${adminuser}">
-                <span class="text-left mx-3">You are browing website as Administrator. Some features aren't available for you. <a class="text-white" href="/admin">Go to Adminisrator web</a></span>
+                <span class="text-left mx-3">You are browing website as Administrator. Some features aren't available for you. <a class="text-white" th:href="@{/admin}">Go to Adminisrator web</a></span>
             </div>
             <nav class="navbar navbar-expand-sm navbar-light navheader-bar">
                 <div class="container">
                     <!-- https://stackoverflow.com/questions/51083414/cant-load-image-with-spring-boot-thymeleaf -->
-                    <a class="navbar-brand" href="/"><img th:src="@{'/img/logo.jpg'}" class="rounded-1" style="width: 60px; height: 60px;" /></a>
+                    <a class="navbar-brand" th:href="@{/}"><img th:src="@{'/img/logo.jpg'}" class="rounded-1" style="width: 60px; height: 60px;" /></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                         aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                        <form class="input-group mx-5 my-1 px-3" action="/search" method="get">
+                        <form class="input-group mx-5 my-1 px-3" th:action="@{/search}" method="get">
                             <input type="text" class="form-control" id="search-query" name="q" placeholder="Search a product..." required th:value="${query == null ? '' : query}">
                             <div class="input-group-prepend">
                                 <div class="input-group-text btn-search"><button class="btn btn-transparent"><i class="bi bi-search text-black"></i></button></div>
@@ -29,7 +29,7 @@
                                         id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                                         aria-expanded="false">
                                         <div class="container d-flex align-items-center justify-content-center mx-2">
-                                            <img class="bi-person-circle rounded-circle me-2" src="/account/avatar" width="36" height="36">
+                                            <img class="bi-person-circle rounded-circle me-2" th:src="@{/account/avatar}" width="36" height="36">
                                             <div class="row">
                                                 <div class="col">
                                                     <span class="text-nowrap me-3" th:text="${name}"></span>
@@ -45,30 +45,30 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                         <h6 th:unless="${adminuser}" class="dropdown-header">Your cart</h6>
-                                        <li th:unless="${adminuser}"><a class="dropdown-item" href="/cart">View your cart</a></li>
+                                        <li th:unless="${adminuser}"><a class="dropdown-item" th:href="@{/cart}">View your cart</a></li>
                                         <hr th:unless="${adminuser}" />
                                         <h6 th:unless="${adminuser}" class="dropdown-header">Your delivery</h6>
-                                        <li th:unless="${adminuser}"><a class="dropdown-item" href="/account/delivery?activeonly=true">Active orders</a></li>
-                                        <li th:unless="${adminuser}"><a class="dropdown-item" href="/account/delivery">All orders</a></li>
+                                        <li th:unless="${adminuser}"><a class="dropdown-item" th:href="@{/account/delivery?activeonly=true}">Active orders</a></li>
+                                        <li th:unless="${adminuser}"><a class="dropdown-item" th:href="@{/account/delivery}">All orders</a></li>
                                         <hr th:unless="${adminuser}" />
                                         <h6 th:if="${adminuser}" class="dropdown-header">Administrator area</h6>
-                                        <li th:if="${adminuser}"><a class="dropdown-item" href="/admin">Go to admin page</a></li>
+                                        <li th:if="${adminuser}"><a class="dropdown-item" th:href="@{/admin}">Go to admin page</a></li>
                                         <hr th:if="${adminuser}" />
                                         <h6 class="dropdown-header">Your account settings</h6>
-                                        <li><a class="dropdown-item" href="/account/profile">Profile</a></li>
-                                        <li><a class="dropdown-item" href="/account/address">Delivery address</a></li>
-                                        <li><a class="dropdown-item" href="/account/change-password">Change password</a></li>
+                                        <li><a class="dropdown-item" th:href="@{/account/profile}">Profile</a></li>
+                                        <li><a class="dropdown-item" th:href="@{/account/address}">Delivery address</a></li>
+                                        <li><a class="dropdown-item" th:href="@{/account/change-password}">Change password</a></li>
                                         <hr />
                                         <h6 class="dropdown-header">Auth</h6>
-                                        <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+                                        <li><a class="dropdown-item" th:href="@{/auth/logout}">Logout</a></li>
                                     </ul>
                                 </li>
                                 <div th:unless="${conidtion}" th:remove="tag">
                                     <li class="nav-item navheader-item">
-                                        <a class="nav-link ms-2 px-3 auth" href="/auth/login">Login</a>
+                                        <a class="nav-link ms-2 px-3 auth" th:href="@{/auth/login}">Login</a>
                                     </li>
                                     <li class="nav-item navheader-item">
-                                        <a class="nav-link ms-2 px-3 auth" href="/auth/register">Register</a>
+                                        <a class="nav-link ms-2 px-3 auth" th:href="@{/auth/register}">Register</a>
                                     </li>
                                 </div>
                             </div>

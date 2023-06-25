@@ -25,7 +25,7 @@
                                     th:classappend="${iter.index == 0 ? 'show active' : ''}" role="tabpanel"
                                     th:attr="aria-labelledby=${'pic-' + iter.index}">
                                     <img style="object-fit: cover; margin-left: auto; margin-right: auto; width: 400px; height: 447px;"
-                                        th:src="${'/products/img/blob?id=' + urlItem.getId()}" />
+                                        th:src="@{/products/img/blob?id={id}(id=${urlItem.getId()})}" />
                                 </div>
                             </div>
                         </div>
@@ -34,11 +34,11 @@
                             <div th:each="urlItem,iter: ${product.getImages()}" th:remove="tag">
                                 <li class="nav-item item-preview-thumb mx-1 my-1 px-0 py-0" role="presentation">
                                     <a class="img-preview nav-link" th:classappend="${iter.index == 0 ? 'active' : ''}"
-                                        th:href="${'#pic-' + iter.index}" th:attr="data-target=${'pic-' + iter.index}"
+                                        th:href="@{#pic-{index}(index=${iter.index})}" th:attr="data-target=${'pic-' + iter.index}"
                                         data-bs-toggle="tab">
                                         <img class="rounded-1"
                                             style="width: 80px; height: 72px; object-fit: cover; margin-left: auto; margin-right: auto;"
-                                            th:src="${'/products/img/blob?id=' + urlItem.getId()}" />
+                                            th:src="@{/products/img/blob?id={id}(id=${urlItem.getId()})}" />
                                     </a>
                                 </li>
                             </div>
@@ -48,7 +48,7 @@
                         <h3 class="product-title mb-5px" th:text="${product.getName()}"></h3>
                         <h5 class="product-manufacturer mb-4" th:text="${product.getManufacturer().getName()}"></h5>
                         <h4 class="price"><span th:text="${'$' + product.getPrice()}"></span></h4>
-                        <form action="/product/add-to-cart" method="post">
+                        <form th:action="@{/product/add-to-cart}" method="post">
                             <div class="action mb-4">
                                 <input type="text" name="productid" th:value="${product.getId()}" readonly hidden>
                                 <div th:if="${user != null}" th:remove="tag">
@@ -134,7 +134,7 @@
                                 <div class="text-left bg-danger my-3 p-2 rounded-1"><span class="text-white">You need purchase product before reviewing them.</span></div>                        
                             </div>
                             <div th:if="${loggedIn == true && purchased == true && alreadyCommented == false}" th:remove="tag">
-                                <form action="/product/add-review" method="post">
+                                <form th:action="@{/product/add-review}" method="post">
                                     <div class="h5">Leave your review about this product here (note that you will attempt only one time)</div>
                                     <input type="text" th:value="${product.getId()}" readonly hidden name="productid">
                                     <div class="form-floating mx-0 mt-2">
