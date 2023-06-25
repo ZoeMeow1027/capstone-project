@@ -4,7 +4,7 @@
 <body>
     <div lang="en" th:replace="~{admin/fragments/sideNavBar :: sidenavbar(tab='products', user=${name})}"></div>
     <section id="admin-page-data" class="col-sm p-3 min-vh-100" th:with="condition=${action == null ? true : action.compareTo('edit') == 0 ? false : true}">
-        <a href="/admin/products/categories"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
+        <a th:href="@{/admin/products/categories}"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
         <div th:if="${condition}" th:remove="tag">
             <h2>Add product category</h2>
             <h4>Add a product category</h4>        
@@ -26,7 +26,7 @@
             </div>
             <button type="button" class="btn btn-success me-1 px-4 py-2" th:if="${condition}" onclick="addNewProductCategory()">Add</button>
             <button type="button" class="btn btn-success me-1 px-4 py-2" th:unless="${condition}" onclick="updateProductCategory()">Save Changes</button>
-            <a href="/admin/products/categories"><button type="button" class="btn btn-primary mx-1 px-4 py-2" data-bs-dismiss="modal">Cancel</button></a>
+            <a th:href="@{/admin/products/categories}"><button type="button" class="btn btn-primary mx-1 px-4 py-2" data-bs-dismiss="modal">Cancel</button></a>
         </form>
     </section>
 </body>

@@ -18,7 +18,7 @@
             <div id="modal-info-bar" th:if="${barMsg != null}"
                 class="text-left text-white bg-primary mb-3 p-2 rounded-1" th:utext="${barMsg}"></div>
             <div class="w-100 pb-2 d-flex justify-content-end">
-                <a href="/account/address/add" class="ps-2"><button type="button" class="btn btn-success">Create
+                <a th:href="@{/account/address/add}" class="ps-2"><button type="button" class="btn btn-success">Create
                         new</button></a>
             </div>
             <div class="container-fluid">
@@ -42,12 +42,12 @@
                                 </div>
                                 <div class="col-auto flexbox mx-1 my-2">
                                     <div class="col my-1">
-                                        <a th:href="${'/account/address/update?id=' + item.getId()}"><button
+                                        <a th:href="@{/account/address/update?id={id}(id=${item.getId()})}"><button
                                                 type="button"
                                                 class="btn btn-primary btn-action-account">Update</button></a>
                                     </div>
                                     <div class="col my-1">
-                                        <form action="/account/address/delete" method="post">
+                                        <form th:action="@{/account/address/delete}" method="post">
                                             <input type="text" name="id" th:value="${item.getId()}" readonly hidden>
                                             <button type="submit"
                                                 class="btn btn-danger btn-action-account">Delete</button>

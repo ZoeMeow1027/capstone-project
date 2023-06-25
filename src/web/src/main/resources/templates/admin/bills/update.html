@@ -4,12 +4,12 @@
 <body>
 <div lang="en" th:replace="~{admin/fragments/sideNavBar :: sidenavbar(tab='users', user=${name})}"></div>
 <div id="admin-page-data" class="col-sm p-3 min-vh-100">
-    <a href="/admin/bills"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
+    <a th:href="@{/admin/bills}"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
     <h2>Update order</h2>
     <h4 th:text="${'Order ID ' + billItem.getId() + ' by ' + billItem.getUser().getName()}"></h4>
     <hr/>
     <form class="modal-body"
-          th:action="${'/admin/bills/update?returnurl=' + (returnurl == null ? '' : returnurl)}"
+          th:action="@{/admin/bills/update?returnurl={url}(url=${returnurl == null ? '' : returnurl})}"
           method="post">
         <div id="modal-info-bar" class="text-left text-white mb-3 p-2 rounded-1" style="visibility: hidden;"></div>
         <div class="form-floating mb-3">
@@ -70,7 +70,7 @@
             <label for="floatingInput">Additional status</label>
         </div>
         <button type="submit" class="btn btn-primary me-1 px-4 py-2">Save Changes</button>
-        <a href="/admin/bills">
+        <a th:href="@{/admin/bills}">
             <button type="button" class="btn btn-danger mx-1 px-4 py-2" data-bs-dismiss="modal">Cancel</button>
         </a>
     </form>

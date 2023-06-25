@@ -19,9 +19,10 @@
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                 <div class="col-mb-5 d-flex justify-content-start text-left" th:each="item : ${newProduct}">
-                    <a class="text-decoration-none text-black" th:href="${'/product?id=' + item.getId()}">
+                    <a class="text-decoration-none text-black" th:href="@{/product?id={id}(id=${item.getId()})}">
                         <div class="card my-3" style="width: 18rem;">
-                            <img width="320" height="210" style="object-fit: cover;" th:src="${item.getImages().size() == 0 ? '#' : ('/products/img/blob?id=' + item.getImages().get(0).getId())}" class="card-img-top text-center" alt="...">
+                            <img width="320" height="210" style="object-fit: cover;" th:unless="${item.getImages().size() == 0}" th:src="@{/products/img/blob?id={id}(id=${item.getImages().get(0).getId()})}" class="card-img-top text-center" alt="...">
+                            <img width="320" height="210" style="object-fit: cover;" th:if="${item.getImages.size() == 0}" th:src="@{#}" class="card-img-top text-center" alt="...">
                             <div class="card-body text-center">
                                 <h5 class="card-title" th:text="${item.getName()}"></h5>
                                 <h6 class="card-title" th:text="${item.getManufacturer().getName()}"></h6>
@@ -45,9 +46,10 @@
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                 <div class="col-mb-5 d-flex justify-content-start text-left" th:each="item : ${mostView}">
-                    <a class="text-decoration-none text-black" th:href="${'/product?id=' + item.getId()}">
+                    <a class="text-decoration-none text-black" th:href="@{/product?id={id}(id=${item.getId()})}">
                         <div class="card my-3" style="width: 18rem;">
-                            <img width="320" height="210" style="object-fit: cover;" th:src="${item.getImages().size() == 0 ? '#' : ('/products/img/blob?id=' + item.getImages().get(0).getId())}" class="card-img-top text-center" alt="...">
+                            <img width="320" height="210" style="object-fit: cover;" th:unless="${item.getImages().size() == 0}" th:src="@{/products/img/blob?id={id}(id=${item.getImages().get(0).getId()})}" class="card-img-top text-center" alt="...">
+                            <img width="320" height="210" style="object-fit: cover;" th:if="${item.getImages.size() == 0}" th:src="@{#}" class="card-img-top text-center" alt="...">
                             <div class="card-body text-center">
                                 <h5 class="card-title" th:text="${item.getName()}"></h5>
                                 <h6 class="card-title" th:text="${item.getManufacturer().getName()}"></h6>

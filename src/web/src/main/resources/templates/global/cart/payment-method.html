@@ -86,12 +86,12 @@
             </div>
             <div class="my-3">
                 <a class="text-decoration-none me-2"
-                    th:href="${baseurl + '/account/delivery/detail?id=' + orderitem.getId()}">
+                    th:href="@{/account/delivery/detail?id={id}(id=${orderitem.getId()})}">
                     <button type="button" class="btn" th:classappend="${alreadydone ? 'btn-primary' : 'btn-danger'}"
                         th:text="${alreadydone ? 'Go to this delivery detail' : 'Suspend and return to delivery detail'}"></button>
                 </a>
                 <div th:if="${alreadydone}" th:remove="tag">
-                    <a class="text-decoration-none" href="/">
+                    <a class="text-decoration-none" th:href="@{/}">
                         <button type="button" class="btn btn-secondary">Go to home page</button>
                     </a>
                 </div>
@@ -99,7 +99,7 @@
         </div>
     </div>
     <div lang="en" th:replace="~{global/fragments/footer :: footer}"></div>
-    <script th:src="|@{https://www.paypal.com/sdk/js?client-id=}${payPalClientID}|"></script>
+    <script th:src="@{https://www.paypal.com/sdk/js?client-id={id}(id=${payPalClientID})}"></script>
     <script defer text="text/javascript">
         paypal.Buttons({
             createOrder: function (data, actions) {
@@ -133,12 +133,12 @@
                 return actions.order.capture().then(
                     function (details) {
                         var dataPost = {
-                            orderid: [[${ orderitem.getId() }]],
+                            orderid: '[[${orderitem.getId()}]]',
                             data: data
                         };
                         console.log(data);
                         console.log(details);
-                        fetch('/payment-method/paypal',
+                        fetch('[[@{/payment-method/paypal}]]',
                             {
                                 method: 'post',
                                 headers: {
@@ -164,7 +164,7 @@
             dataPost = {
                 orderid: orderid,
             };
-            fetch('/payment-method/cod',
+            fetch('[[@{/payment-method/cod}]]',
                 {
                     method: 'post',
                     headers: {

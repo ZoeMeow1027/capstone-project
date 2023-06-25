@@ -89,7 +89,7 @@
                                                     <div>
                                                         <div th:if="${item.getProduct().getImages().size() > 0}"
                                                             th:remove="tag">
-                                                            <img th:src="${'/products/img/blob?id=' + item.getProduct().getImages().get(0).getId()}"
+                                                            <img th:src="@{/products/img/blob?id={id}(id=${item.getProduct().getImages().get(0).getId()})}"
                                                                 class="img-fluid rounded-3" alt="Shopping item"
                                                                 style="width: 65px; height: 65px;">
                                                         </div>
@@ -106,7 +106,7 @@
                                                 </div>
                                                 <div class="d-flex flex-row align-items-center">
                                                     <div class="me-5 d-flex justify-content-center">
-                                                        <form action="/cart/update" method="post">
+                                                        <form th:action="@{/cart/update}" method="post">
                                                             <input type="text" name="id" th:value="${item.getId()}"
                                                                 readonly hidden>
                                                             <div class="input-group">
@@ -143,11 +143,11 @@
                                             class="btn btn-danger mx-1" data-bs-toggle="modal"
                                             data-bs-target="#cancelConfirmModal">Cancel order</button>
                                         <a th:if="${item.getDeliverStatus() == 0}" class="text-decoration-none"
-                                            th:href="${'/payment-method?id=' + item.getId()}">
+                                            th:href="@{/payment-method?id={id}(id=${item.getId()})}">
                                             <button class="btn btn-primary mx-1">Complete payment</button>
                                         </a>
                                         <a class="text-decoration-none"
-                                            th:href="${'/account/delivery/detail?id=' + item.getId()}">
+                                            th:href="@{/account/delivery/detail?id={id}(id=${item.getId()})}">
                                             <button class="btn btn-primary ms-1">View details</button>
                                         </a>
                                     </div>
@@ -161,7 +161,7 @@
     </div>
     <div class="modal fade" id="cancelConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="cancelConfirmModal" aria-hidden="true">
-        <form id="cancelConfirmForm" action="/account/delivery/cancel" method="post">
+        <form id="cancelConfirmForm" th:action="@{/account/delivery/cancel}" method="post">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">

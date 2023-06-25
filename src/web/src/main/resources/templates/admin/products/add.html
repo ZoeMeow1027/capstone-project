@@ -4,7 +4,7 @@
 <body>
     <div lang="en" th:replace="~{admin/fragments/sideNavBar :: sidenavbar(tab='products', user=${name})}"></div>
     <section id="admin-page-data" class="col-sm p-3 min-vh-100" th:with="condition=${action == null ? true : action.compareTo('edit') == 0 ? false : true}">
-        <a href="/admin/products"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
+        <a th:href="@{/admin/products}"><i class="bi bi-arrow-left-circle" style="font-size: 2rem;"></i></a>
         <div th:if="${condition}" th:remove="tag">
             <h2>Add product</h2>
             <h4>Add a product</h4>        
@@ -15,10 +15,18 @@
         </div>
         <hr />
         <nav th:unless="${condition}" class="nav nav-pills nav-justified">
-            <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/update?id=' + product.getId()}" th:classappend="${tab == 0 ? 'active' : ''}">Basic information</a>
-            <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/article?id=' + product.getId()}" th:classappend="${tab == 1 ? 'active' : ''}">Article</a>
-            <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/specifications?id=' + product.getId()}" th:classappend="${tab == 2 ? 'active' : ''}">Specifications</a>
-            <a class="nav-link mx-1 py-2" aria-current="page" th:href="${'/admin/products/images?id=' + product.getId()}" th:classappend="${tab == 3 ? 'active' : ''}">Images</a>
+            <a class="nav-link mx-1 py-2" aria-current="page"
+                th:href="@{/admin/products/update?id={id}(id=${product.getId()})}"
+                th:classappend="${tab == 0 ? 'active' : ''}">Basic information</a>
+            <a class="nav-link mx-1 py-2" aria-current="page"
+                th:href="@{/admin/products/article?id={id}(id=${product.getId()})}"
+                th:classappend="${tab == 1 ? 'active' : ''}">Article</a>
+            <a class="nav-link mx-1 py-2" aria-current="page"
+                th:href="@{/admin/products/specifications?id={id}(id=${product.getId()})}"
+                th:classappend="${tab == 2 ? 'active' : ''}">Specifications</a>
+            <a class="nav-link mx-1 py-2" aria-current="page"
+                th:href="@{/admin/products/images?id={id}(id=${product.getId()})}"
+                th:classappend="${tab == 3 ? 'active' : ''}">Images</a>
         </nav>
         <form class="modal-body" id="modal-product-modify">
             <div id="modal-info-bar" class="text-left text-white mb-3 p-2 rounded-1" style="visibility: hidden;"></div>
@@ -68,7 +76,7 @@
             </div>
             <button type="button" class="btn btn-success me-1 px-4 py-2" th:if="${condition}" onclick="addNewProduct()">Add</button>
             <button type="button" class="btn btn-success me-1 px-4 py-2" th:unless="${condition}" onclick="updateProduct()">Save Changes</button>
-            <a href="/admin/products"><button type="button" class="btn btn-primary mx-1 px-4 py-2" data-bs-dismiss="modal">Cancel</button></a>
+            <a th:href="@{/admin/products}"><button type="button" class="btn btn-primary mx-1 px-4 py-2" data-bs-dismiss="modal">Cancel</button></a>
         </form>
     </section>
 </body>

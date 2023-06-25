@@ -56,10 +56,10 @@
                             th:text="${item.getDateCompleted() == null ? '' : #calendars.format(new java.util.Date(item.getDateCompleted()), 'dd/MM/yyyy HH:mm:ss')}">
                         </td>
                         <td class="text-center">
-                            <a th:href="${'/admin/bills/detail?id=' + item.getId()}" class="text-decoration-none">
+                            <a th:href="@{/admin/bills/detail?id={id}(id=${item.getId()})}" class="text-decoration-none">
                                 <button type="button" class="btn btn-primary mx-1 my-1">Order detail</button>
                             </a>
-                            <a th:if="${item.getDeliverStatus() == 1 || item.getDeliverStatus() == 2 || item.getDeliverStatus() == 3}" th:href="${'/admin/bills/update?id=' + item.getId()}" class="text-decoration-none">
+                            <a th:if="${item.getDeliverStatus() == 1 || item.getDeliverStatus() == 2 || item.getDeliverStatus() == 3}" th:href="@{/admin/bills/update?id={id}(id=${item.getId()})}" class="text-decoration-none">
                                 <button type="button" class="btn btn-success mx-1 my-1">Update status</button>
                             </a>
                             <a th:if="${item.getDeliverStatus() == 0 || item.getDeliverStatus() == 1}"  href="#" class="text-decoration-none">
@@ -74,7 +74,7 @@
     </section>
     <div class="modal fade" id="cancelConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="cancelConfirmModal" aria-hidden="true">
-        <form id="cancelConfirmForm" action="/admin/bills/cancel" method="post">
+        <form id="cancelConfirmForm" th:action="@{/admin/bills/cancel}" method="post">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
