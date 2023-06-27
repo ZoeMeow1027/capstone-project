@@ -17,33 +17,35 @@
             <div class="card-body p-md-5 mx-md-4">
                 <form class="modal-body" th:action="@{/auth/register}" method="post" id="register-form">
                     <h4 class="text-center mb-4">Register</h4>
-                    <div id="modal-info-bar" class="text-left text-white mb-3 p-2 rounded-1" style="visibility: hidden;"></div>
+                    <div th:with="condition=${errMsg != null}" th:remove="tag">
+                        <div id="modal-info-bar" class="text-left text-white bg-danger mb-3 p-2 rounded-1" th:if="${condition}" th:text="${errMsg}"></div>
+                    </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="name" name="name" placeholder="Name">
-                        <label for="floatingInput">Name</label>
+                        <label for="name">Name</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="email" class="form-control" id="email" name="email" placeholder="Email">
-                        <label for="floatingInput">Email</label>
+                        <label for="email">Email</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone">
-                        <label for="floatingInput">Phone</label>
+                        <label for="phone">Phone</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="username" name="username" placeholder="Username">
-                        <label for="floatingInput">Username</label>
+                        <label for="username">Username</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                        <label for="floatingInput">Password</label>
+                        <label for="password">Password</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="password" class="form-control" id="rePassword" name="rePassword" placeholder="Re-enter Password">
-                        <label for="floatingInput">Re-enter Password</label>
+                        <label for="rePassword">Re-enter Password</label>
                     </div>
                     <div class="text-center pt-1 mb-3 pb-1">
-                        <button class="btn btn-outline-danger mb-3" type="button" onclick="register()" style="width: 100px;">Register</button>
+                        <button class="btn btn-outline-danger mb-3" type="submit" style="width: 100px;">Register</button>
                     </div>
                     <div class="d-flex align-items-center justify-content-center pb-4">
                         <p class="mb-0 me-2">Already have an account?</p>

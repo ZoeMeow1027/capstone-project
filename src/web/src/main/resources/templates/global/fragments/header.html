@@ -3,7 +3,7 @@
 <body>
     <div th:fragment="header" th:remove="tag">
         <header class="sticky-top">
-            <div class="announcement-bar text-white bg-danger" th:if="${adminuser}">
+            <div class="announcement-bar text-white bg-danger" th:if="${adminUser}">
                 <span class="text-left mx-3">You are browing website as Administrator. Some features aren't available for you. <a class="text-white" th:href="@{/admin}">Go to Adminisrator web</a></span>
             </div>
             <nav class="navbar navbar-expand-sm navbar-light navheader-bar">
@@ -34,7 +34,7 @@
                                                 <div class="col">
                                                     <span class="text-nowrap me-3" th:text="${name}"></span>
                                                 </div>
-                                                <div th:unless="${adminuser}" th:remove="tag">
+                                                <div th:unless="${adminUser}" th:remove="tag">
                                                     <div class="col">
                                                         <div class="w-100"></div>
                                                         <span class="text-nowrap"><i class="bi bi-cart me-2"></i><span class="text-nowrap" th:utext="${cartCount + ' item' + (cartCount == 1 ? '' : 's')}"></span></span>
@@ -44,16 +44,16 @@
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                        <h6 th:unless="${adminuser}" class="dropdown-header">Your cart</h6>
-                                        <li th:unless="${adminuser}"><a class="dropdown-item" th:href="@{/cart}">View your cart</a></li>
-                                        <hr th:unless="${adminuser}" />
-                                        <h6 th:unless="${adminuser}" class="dropdown-header">Your delivery</h6>
-                                        <li th:unless="${adminuser}"><a class="dropdown-item" th:href="@{/account/delivery?activeonly=true}">Active orders</a></li>
-                                        <li th:unless="${adminuser}"><a class="dropdown-item" th:href="@{/account/delivery}">All orders</a></li>
-                                        <hr th:unless="${adminuser}" />
-                                        <h6 th:if="${adminuser}" class="dropdown-header">Administrator area</h6>
-                                        <li th:if="${adminuser}"><a class="dropdown-item" th:href="@{/admin}">Go to admin page</a></li>
-                                        <hr th:if="${adminuser}" />
+                                        <h6 th:unless="${adminUser}" class="dropdown-header">Your cart</h6>
+                                        <li th:unless="${adminUser}"><a class="dropdown-item" th:href="@{/cart}">View your cart</a></li>
+                                        <hr th:unless="${adminUser}" />
+                                        <h6 th:unless="${adminUser}" class="dropdown-header">Your delivery</h6>
+                                        <li th:unless="${adminUser}"><a class="dropdown-item" th:href="@{/account/delivery?activeonly=true}">Active orders</a></li>
+                                        <li th:unless="${adminUser}"><a class="dropdown-item" th:href="@{/account/delivery}">All orders</a></li>
+                                        <hr th:unless="${adminUser}" />
+                                        <h6 th:if="${adminUser}" class="dropdown-header">Administrator area</h6>
+                                        <li th:if="${adminUser}"><a class="dropdown-item" th:href="@{/admin}">Go to admin page</a></li>
+                                        <hr th:if="${adminUser}" />
                                         <h6 class="dropdown-header">Your account settings</h6>
                                         <li><a class="dropdown-item" th:href="@{/account/profile}">Profile</a></li>
                                         <li><a class="dropdown-item" th:href="@{/account/address}">Delivery address</a></li>

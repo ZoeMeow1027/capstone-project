@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <div lang="en" th:replace="~{global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div lang="en" th:replace="~{global/fragments/header :: header(name=${name}, adminUser=${adminUser})}"></div>
     <div class="container w-100">
         <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left bg-primary my-3 p-2 rounded-1">
             <span class="text-white" th:utext="${barMsg}"></span>
@@ -121,7 +121,7 @@
                         <div class="form-floating mb-3">
                             <textarea type="text-area" class="form-control" id="message" name="message"
                                 form="checkout-form"></textarea>
-                            <label for="floatingInput">Message to seller</label>
+                            <label for="message">Message to seller</label>
                         </div>
                         <button type="submit" class="btn btn-primary btn-lg btn-block btn-place-order mb-2"
                             form="checkout-form">Place order</button>

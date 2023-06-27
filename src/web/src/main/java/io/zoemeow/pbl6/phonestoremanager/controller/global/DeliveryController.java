@@ -1,8 +1,11 @@
 package io.zoemeow.pbl6.phonestoremanager.controller.global;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import io.zoemeow.pbl6.phonestoremanager.controller.SessionController;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.UserCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-public class DeliveryController {
+public class DeliveryController extends SessionController {
     @Autowired
     AccountRepository _AccountRepository;
 
@@ -34,32 +37,31 @@ public class DeliveryController {
             HttpServletResponse response,
             @ModelAttribute("barMsg") String barMsg,
             Boolean activeonly) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
         ModelAndView view = new ModelAndView("global/delivery/delivery-list");
 
-        activeonly = activeonly == null ? false : activeonly;
-
         try {
-            User user = _AccountRepository.getUserInformation(header, null);
-            view.addObject("user", user);
-            view.addObject("name", user == null ? null : user.getName());
-            view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
-            view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
-            view.addObject("baseurl",
-                    String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
+            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
 
-            view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
-            view.addObject("activeonly", activeonly);
+            User user = getUserInformation(request, response);
+            view.addObject("user", user);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
+            view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
+
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
+
+            view.addObject("activeonly", activeonly == null ? false : activeonly);
             view.addObject(
                     "deliverylist",
                     activeonly
-                            ? _AccountRepository.getActiveBillSummaries(header)
-                            : _AccountRepository.getBillSummaries(header));
+                            ? _AccountRepository.getActiveBillSummaries(getCookieHeader(request))
+                            : _AccountRepository.getBillSummaries(getCookieHeader(request)));
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
-            view = new ModelAndView("redirect:/");
+            view.setViewName("redirect:/");
         } catch (Exception ex) {
             // TODO: 500 error code here!
             ex.printStackTrace();
@@ -74,29 +76,41 @@ public class DeliveryController {
             HttpServletResponse response,
             @ModelAttribute("barMsg") String barMsg,
             Integer id) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
         ModelAndView view = new ModelAndView("global/delivery/delivery-detail");
 
         try {
-            User user = _AccountRepository.getUserInformation(header, null);
+            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
+
+            User user = getUserInformation(request, response);
             view.addObject("user", user);
-            view.addObject("name", user == null ? null : user.getName());
-            view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
             view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
-            view.addObject("baseurl",
-                    String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
 
-            view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
+            if (user == null) {
+                throw new SessionExpiredException("Session has expired!");
+            }
 
-            var data = _AccountRepository.getBillSummaryById(header, id);
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
+
+            var data = _AccountRepository.getBillSummaryById(getCookieHeader(request), id);
             view.addObject("orderitem", data);
-            view.addObject("useraddress", String.format("%s\n%s, %s\n%s", data.getRecipient(), data.getRecipientAddress(), data.getRecipientCountryCode(),
-                    data.getRecipientPhone()));
+            view.addObject(
+                    "useraddress",
+                    String.format(
+                            "%s\n%s, %s\n%s",
+                            data.getRecipient(),
+                            data.getRecipientAddress(),
+                            data.getRecipientCountryCode(),
+                            data.getRecipientPhone()
+                    )
+            );
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
-            view = new ModelAndView("redirect:/");
+            view.setViewName("redirect:/");
         } catch (Exception ex) {
             // TODO: 500 error code here!
             ex.printStackTrace();
@@ -106,22 +120,20 @@ public class DeliveryController {
     }
 
     @PostMapping("/account/delivery/cancel")
-    public String actionCancelOrderAndReturn(
+    public ModelAndView actionCancelOrder(
             HttpServletRequest request,
             HttpServletResponse response,
             RedirectAttributes redirectAttributes,
             String returnurl,
             @RequestParam("orderid") Integer orderid) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
+        ModelAndView view = new ModelAndView("redirect:/account/delivery?activeonly=true");
 
         try {
-            var cancelOrder = _AccountRepository.cancelOrder(header, orderid);
+            var cancelOrder = _AccountRepository.cancelOrder(getCookieHeader(request), orderid);
             if (cancelOrder.getStatusCode() != 200) {
                 throw new Exception(cancelOrder.getMessage());
             }
             redirectAttributes.addFlashAttribute("barMsg", "Successfully cancelled order!");
-
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute(
                     "barMsg",
@@ -129,8 +141,8 @@ public class DeliveryController {
         }
 
         if (returnurl != null) {
-            return String.format("redirect:%s", returnurl);
+            view.setViewName(String.format("redirect:%s", returnurl));
         }
-        return String.format("redirect:/account/delivery?activeonly=true");
+        return view;
     }
 }

@@ -1,8 +1,11 @@
 package io.zoemeow.pbl6.phonestoremanager.controller.global;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import io.zoemeow.pbl6.phonestoremanager.controller.SessionController;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.UserCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-public class CheckoutController {
+public class CheckoutController extends SessionController {
     @Autowired
     AccountRepository _AccountRepository;
 
@@ -34,32 +37,32 @@ public class CheckoutController {
         HttpServletResponse response,
         @ModelAttribute("barMsg") String barMsg
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
-        
         ModelAndView view = new ModelAndView("global/cart/checkout");
 
         try {
-            User user = _AccountRepository.getUserInformation(header, null);
-            view.addObject("user", user);
-            view.addObject("name", user == null ? null : user.getName());
-            view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
-            view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
             view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
 
-            var cartList = _CartRepository.getAllItemsInCart(header, null, null);
-            view.addObject("cartCount", cartList.size());
+            User user = getUserInformation(request, response);
+            view.addObject("user", user);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
 
-            view.addObject("cartList", cartList);
-            view.addObject("cartTotal", cartList.stream().mapToDouble(o -> o.getProduct().getPrice() * o.getCount()).sum());
+            if (user == null) {
+                throw new SessionExpiredException("Session has expired!");
+            }
 
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
+
+            view.addObject("cartTotal", cart != null ? cart.stream().mapToDouble(o -> o.getProduct().getPrice() * o.getCount()).sum() : null);
             view.addObject("shippingPrice", 3.00);
-
-            view.addObject("userAddressList", _AccountRepository.getAllAddress(header));
+            view.addObject("userAddressList", _AccountRepository.getAllAddress(getCookieHeader(request)));
+            view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
-            view = new ModelAndView("redirect:/");
+            view.setViewName("redirect:/");
         } catch (Exception ex) {
             // TODO: 500 error code here!
         }
@@ -68,37 +71,41 @@ public class CheckoutController {
     }
 
     @PostMapping("/checkout")
-    public String actionCheckoutAndReturn(
+    public ModelAndView actionCheckout(
         HttpServletRequest request,
         HttpServletResponse response,
         RedirectAttributes redirectAttributes,
         @RequestParam("addressid") Integer addressId,
         @RequestParam("message") String message
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
+        ModelAndView view = new ModelAndView();
 
         try {
             if (message.length() == 0) message = null;
-            var checkout = _CartRepository.checkout(header, addressId, message);
+            var checkout = _CartRepository.checkout(getCookieHeader(request), addressId, message);
             if (checkout.getStatusCode() != 200) {
                 throw new Exception(checkout.getMessage());
             }
-            redirectAttributes.addFlashAttribute("barMsg", "Successfully placed order! Check your order in Your current order.");
-            String returnUrl = "redirect:/account/delivery?activeonly=true";
-            if (checkout.getData() != null) {
-                var data = checkout.getData().getAsJsonObject().get("data").getAsJsonObject();
-                if (data.get("orderid") != null) {
-                    returnUrl = String.format("redirect:/payment-method?id=%d", data.get("orderid").getAsInt());
-                }
+
+            if (checkout.getData() == null) {
+                view.setViewName("redirect:/account/delivery?activeonly=true");
             }
-            return returnUrl;
+            var data = checkout.getData().getAsJsonObject().get("data").getAsJsonObject();
+            if (data.get("orderid") != null) {
+                view.setViewName(String.format("redirect:/payment-method?id=%d", data.get("orderid").getAsInt()));
+            } else {
+                view.setViewName("redirect:/account/delivery?activeonly=true");
+            }
+
+            redirectAttributes.addFlashAttribute("barMsg", "Successfully placed order! Check your order in Your current order.");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute(
                 "barMsg",
                 String.format("We ran into a problem prevent placing order item for you! Message: %s", ex.getMessage())
             );
-            return String.format("redirect:/checkout");
+            view.setViewName("redirect:/checkout");
         }
+
+        return view;
     }
 }

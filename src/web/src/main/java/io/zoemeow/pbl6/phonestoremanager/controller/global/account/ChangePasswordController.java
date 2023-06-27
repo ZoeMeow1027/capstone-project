@@ -1,8 +1,15 @@
 package io.zoemeow.pbl6.phonestoremanager.controller.global.account;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import io.zoemeow.pbl6.phonestoremanager.controller.SessionController;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.UserCart;
+import io.zoemeow.pbl6.phonestoremanager.model.dto.ChangePasswordDTO;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
+import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.CartRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
-import io.zoemeow.pbl6.phonestoremanager.model.dto.ChangePasswordDTO;
-import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
-import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
-import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
-import io.zoemeow.pbl6.phonestoremanager.repository.CartRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
-public class ChangePasswordController {
+public class ChangePasswordController extends SessionController {
     @Autowired
     AccountRepository _AccountRepository;
 
@@ -35,21 +35,26 @@ public class ChangePasswordController {
         HttpServletResponse response,
         @ModelAttribute("barMsg") String barMsg
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
         ModelAndView view = new ModelAndView("global/account/change-password");
 
         try {
-            User user = _AccountRepository.getUserInformation(header, null);
+            User user = getUserInformation(request, response);
             view.addObject("user", user);
-            view.addObject("name", user == null ? null : user.getName());
-            view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
             view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
-            view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
+
+            if (user == null) {
+                throw new SessionExpiredException("Session has expired!");
+            }
+
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
-            view = new ModelAndView("redirect:/");
+            view.setViewName("redirect:/");
         } catch (Exception ex) {
             // TODO: 500 error code here!
         }
@@ -58,7 +63,7 @@ public class ChangePasswordController {
     }
 
     @PostMapping("/account/change-password")
-    public String actionChangePasswordAndReturn(
+    public ModelAndView actionChangePasswordAndReturn(
         HttpServletRequest request,
         HttpServletResponse response,
         RedirectAttributes redirectAttributes,
@@ -66,23 +71,23 @@ public class ChangePasswordController {
         @RequestParam("new-pass") String newPass,
         @RequestParam("re-new-pass") String reNewPass
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
+        ModelAndView view = new ModelAndView("redirect:/account/change-password");
 
         try {
-            _AccountRepository.getUserInformation(header, null);
+            _AccountRepository.getUserInformation(getCookieHeader(request), null);
             ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO();
             changePasswordDTO.setOldPass(oldPass);
             changePasswordDTO.setNewPass(newPass);
             changePasswordDTO.setReNewPass(reNewPass);
-            var result = _AccountRepository.changePassword(header, changePasswordDTO);
-            if (result.getStatusCode() != 200)
+            var result = _AccountRepository.changePassword(getCookieHeader(request), changePasswordDTO);
+            if (result.getStatusCode() != 200) {
                 throw new Exception(result.getMessage());
+            }
             redirectAttributes.addFlashAttribute("barMsg", "Successfully changed your password!");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", ex.getMessage());
         }
 
-        return "redirect:/account/change-password";
+        return view;
     }
 }

@@ -1,8 +1,13 @@
 package io.zoemeow.pbl6.phonestoremanager.controller.global;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import io.zoemeow.pbl6.phonestoremanager.controller.SessionController;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.UserCart;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
+import io.zoemeow.pbl6.phonestoremanager.repository.CartRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,19 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
-import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
-import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
-import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
-import io.zoemeow.pbl6.phonestoremanager.repository.CartRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
-public class CartController {
-    @Autowired
-    AccountRepository _AccountRepository;
-
+public class CartController extends SessionController {
     @Autowired
     CartRepository _CartRepository;
 
@@ -34,28 +30,30 @@ public class CartController {
         HttpServletResponse response,
         @ModelAttribute("barMsg") String barMsg
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
-        
         ModelAndView view = new ModelAndView("global/cart/cart");
 
         try {
-            User user = _AccountRepository.getUserInformation(header, null);
-            view.addObject("user", user);
-            view.addObject("name", user == null ? null : user.getName());
-            view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
-            view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
             view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
 
-            var cartList = _CartRepository.getAllItemsInCart(header, null, null);
-            view.addObject("cartCount", cartList.size());
+            User user = getUserInformation(request, response);
+            view.addObject("user", user);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
+            view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
 
-            view.addObject("cartList", cartList);
-            view.addObject("cartTotal", cartList.stream().mapToDouble(o -> o.getProduct().getPrice() * o.getCount()).sum());
+            if (user == null) {
+                throw new SessionExpiredException("Session has expired!");
+            }
+
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
+
+            view.addObject("cartTotal", cart != null ? cart.stream().mapToDouble(o -> o.getProduct().getPrice() * o.getCount()).sum() : null);
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
-            view = new ModelAndView("redirect:/");
+            view.setViewName("redirect:/");
         } catch (Exception ex) {
             // TODO: 500 error code here!
         }
@@ -64,62 +62,59 @@ public class CartController {
     }
 
     @PostMapping("/cart/update")
-    public String actionUpdateItemInCartAndReturn(
+    public ModelAndView actionUpdateItemInCart(
         HttpServletRequest request,
         HttpServletResponse response,
         RedirectAttributes redirectAttributes,
         @RequestParam("id") Integer cartId,
         @RequestParam("count") Integer count
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
+        ModelAndView view = new ModelAndView("redirect:/cart");
 
         try {
-            _CartRepository.updateItem(header, cartId, count);
+            _CartRepository.updateItem(getCookieHeader(request), cartId, count);
             redirectAttributes.addFlashAttribute("barMsg", "Successfully updated item in your cart!");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", "A problem prevent you to update item in your cart.");
         }
 
-        return String.format("redirect:/cart");
+        return view;
     }
 
     @PostMapping("/cart/remove")
-    public String actionRemoveItemInCartAndReturn(
+    public ModelAndView actionRemoveItemInCart(
         HttpServletRequest request,
         HttpServletResponse response,
         RedirectAttributes redirectAttributes,
         @RequestParam("id") Integer cartId
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
+        ModelAndView view = new ModelAndView("redirect:/cart");
 
         try {
-            _CartRepository.removeItem(header, cartId);
+            _CartRepository.removeItem(getCookieHeader(request), cartId);
             redirectAttributes.addFlashAttribute("barMsg", "Successfully updated item in your cart!");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", "A problem prevent you to update item in your cart.");
         }
 
-        return String.format("redirect:/cart");
+        return view;
     }
 
     @PostMapping("/cart/remove-all")
-    public String actionRemoveAllInCartAndReturn(
+    public ModelAndView actionRemoveAllInCart(
         HttpServletRequest request,
         HttpServletResponse response,
         RedirectAttributes redirectAttributes
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
+        ModelAndView view = new ModelAndView("redirect:/cart");
 
         try {
-            _CartRepository.removeAllItems(header);
+            _CartRepository.removeAllItems(getCookieHeader(request));
             redirectAttributes.addFlashAttribute("barMsg", "Successfully removed all items in your cart!");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", "A problem prevent you to empty your cart.");
         }
 
-        return String.format("redirect:/cart");
+        return view;
     }
 }

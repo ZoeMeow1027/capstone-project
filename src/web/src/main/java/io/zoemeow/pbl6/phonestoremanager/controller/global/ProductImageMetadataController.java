@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.zoemeow.pbl6.phonestoremanager.controller.SessionController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -18,10 +19,11 @@ import io.zoemeow.pbl6.phonestoremanager.repository.ProductRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class ProductImageMetadataController {
+public class ProductImageMetadataController extends SessionController {
     @Autowired
     ProductRepository _ProductRepository;
 
@@ -48,44 +50,41 @@ public class ProductImageMetadataController {
     }
 
     @PostMapping(value = "/products/img/delete")
-    public String actionDeleteProductImageAndReturn(
+    public ModelAndView actionDeleteProductImage(
             HttpServletRequest request,
             HttpServletResponse response,
             String returnurl,
             @RequestParam("id") Integer id
     ) throws IOException {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
+        ModelAndView view = new ModelAndView("redirect:/admin/products");
 
         try {
-            var deleteImage = _ProductRepository.deleteProductImage(header, id);
+            var deleteImage = _ProductRepository.deleteProductImage(getCookieHeader(request), id);
             if (returnurl.length() == 0) {
                 returnurl = null;
             }
             if (returnurl != null) {
-                return String.format("redirect:%s", returnurl);
+                view.setViewName(String.format("redirect:%s", returnurl));
             }
-
-            return "redirect:/admin/products";
         } catch (Exception ex) {
-            Resource resource = new ClassPathResource("static/img/person-circle.jpg");
-            return "redirect:/admin/products";
+
         }
+        return view;
     }
 
     @PostMapping(value = "/products/img/upload")
-    public String actionUploadProductImageAndReturn(
+    public ModelAndView actionUploadProductImage(
             HttpServletRequest request,
             HttpServletResponse response,
             RedirectAttributes redirectAttributes,
             String returnurl,
             @RequestParam("id") Integer id,
-            @RequestParam("file") MultipartFile file) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
+            @RequestParam("file") MultipartFile file
+    ) {
+        ModelAndView view = new ModelAndView("redirect:/account/profile");
 
         try {
-            var data = _ProductRepository.uploadImage(header, id, file.getResource());
+            var data = _ProductRepository.uploadImage(getCookieHeader(request), id, file.getResource());
             redirectAttributes.addFlashAttribute("barMsg", "Successfully uploaded product image!");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", "We ran into a problem prevent you uploading product image!");
@@ -95,8 +94,8 @@ public class ProductImageMetadataController {
             returnurl = null;
         }
         if (returnurl != null) {
-            return String.format("redirect:%s", returnurl);
+            view.setViewName(String.format("redirect:%s", returnurl));
         }
-        return "redirect:/account/profile";
+        return view;
     }
 }

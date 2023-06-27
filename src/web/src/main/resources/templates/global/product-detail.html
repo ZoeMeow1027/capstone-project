@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div lang="en" th:replace="~{global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div lang="en" th:replace="~{global/fragments/header :: header(name=${name}, adminUser=${adminUser})}"></div>
     <div class="container">
         <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left bg-primary my-3 p-2 rounded-1">
             <span class="text-white" th:utext="${barMsg}"></span>
