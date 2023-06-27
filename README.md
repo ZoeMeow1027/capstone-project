@@ -6,7 +6,7 @@
 # Used technologies
 
 - Database: SQLite
-- API: ASP.NET (based on .NET 6)
+- API: ASP.NET (based on .NET 7)
 - Web: Spring Boot (Java)
 
 # Used tools
@@ -26,7 +26,7 @@
 
 | Group         | Components    | Start date    | Updated       | Progress          |
 | -             | -             | -             | -             | -                 |
-| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/22    | ![https://progress-bar.dev/98/?scale=100&width=120](https://progress-bar.dev/98/?scale=100&width=120) |
+| [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/27    | ![https://progress-bar.dev/98/?scale=100&width=120](https://progress-bar.dev/98/?scale=100&width=120) |
 | [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/24    | ![https://progress-bar.dev/95/?scale=100&width=120](https://progress-bar.dev/95/?scale=100&width=120) |
 
 ## API

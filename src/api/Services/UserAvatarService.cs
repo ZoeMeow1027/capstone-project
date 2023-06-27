@@ -4,17 +4,14 @@ namespace PhoneStoreManager.Services
 {
     public class UserAvatarService : IUserAvatarService
     {
-        private readonly IVariableService _variableService;
-
-        public UserAvatarService(IVariableService variableService)
+        public UserAvatarService()
         {
-            _variableService = variableService;
-            _variableService.CreateAppDirIfNotExist();
+
         }
 
         public byte[]? GetAvatar(int userid)
         {
-            string PATH_FULLAVT = _variableService.GetAvatarFilePath(userid);
+            string PATH_FULLAVT = GlobalVariable.GetAvatarFilePath(userid);
 
             if (!File.Exists(PATH_FULLAVT))
                 return null;
@@ -29,7 +26,7 @@ namespace PhoneStoreManager.Services
 
         public void RemoveAvatar(int userid)
         {
-            string PATH_FULLAVT = _variableService.GetAvatarFilePath(userid);
+            string PATH_FULLAVT = GlobalVariable.GetAvatarFilePath(userid);
 
             try
             {
@@ -48,8 +45,8 @@ namespace PhoneStoreManager.Services
 
         public void SetAvatar(int userid, IFormFile avatar)
         {
-            string PATH_FULLAVT = _variableService.GetAvatarFilePath(userid);
-            string PATH_FULLAVT_BAK = _variableService.GetAvatarFilePath(userid, ".jpg.bak");
+            string PATH_FULLAVT = GlobalVariable.GetAvatarFilePath(userid);
+            string PATH_FULLAVT_BAK = GlobalVariable.GetAvatarFilePath(userid, ".jpg.bak");
 
             bool OVERWRITE_MODE = File.Exists(PATH_FULLAVT);
 

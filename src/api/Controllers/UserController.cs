@@ -434,6 +434,7 @@ namespace PhoneStoreManager.Controllers
             dataTemp.UserID = data.UserID ?? dataTemp.UserID;
             dataTemp.Name = data.Name ?? dataTemp.Name;
             dataTemp.Address = data.Address ?? dataTemp.Address;
+            dataTemp.CountryCode = data.CountryCode ?? dataTemp.CountryCode;
             dataTemp.Phone = data.Phone ?? dataTemp.Phone;
             userAddressService.UpdateUserAddress(dataTemp);
 
