@@ -12,18 +12,13 @@ namespace PhoneStoreManager.Controllers
     {
         private readonly IProductService _productService;
         private readonly IProductImageMetadataService _imageMetadataService;
-        private readonly IVariableService _variableService;
 
         public ProductImageMetadataController(
             IUserSessionService userSessionService,
             IProductImageMetadataService imageMetadataService,
-            IVariableService variableService,
             IProductService productService)
             : base(userSessionService)
         {
-            _variableService = variableService;
-            _variableService.CreateAppDirIfNotExist();
-
             _imageMetadataService = imageMetadataService;
             _productService = productService;
         }
@@ -69,7 +64,7 @@ namespace PhoneStoreManager.Controllers
                         );
 
                     fullPath = Path.Combine(
-                        _variableService.GetProductImageDirPath(),
+                        GlobalVariable.GetProductImageDirPath(),
                         fileName
                         );
                 }
@@ -117,7 +112,7 @@ namespace PhoneStoreManager.Controllers
             if (data == null)
                 return BadRequest(string.Format("Product image with ID {0} is not exist!", id));
 
-            string filePath = _variableService.GetProductImageFilePath(data.FilePath);
+            string filePath = GlobalVariable.GetProductImageFilePath(data.FilePath);
 
             if (!System.IO.File.Exists(filePath))
                 return BadRequest(string.Format("Product image with ID {0} is not exist!", id));
@@ -190,7 +185,7 @@ namespace PhoneStoreManager.Controllers
                         throw new BadHttpRequestException(string.Format("Image with ID {0} is not exist!", id));
                     _imageMetadataService.Delete(data);
 
-                    try { System.IO.File.Delete(_variableService.GetProductImageFilePath(data.FilePath)); }
+                    try { System.IO.File.Delete(GlobalVariable.GetProductImageFilePath(data.FilePath)); }
                     catch { }
 
                     result.StatusCode = 200;

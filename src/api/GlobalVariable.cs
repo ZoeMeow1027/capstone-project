@@ -1,21 +1,13 @@
-﻿namespace PhoneStoreManager.Services
+﻿namespace PhoneStoreManager
 {
-    public class VariableService : IVariableService
+    public static class GlobalVariable
     {
-        private readonly string PATH_BASE;
-        private readonly string PATH_PROJECTNAME;
-        private readonly string PATH_DIR_AVATARNAME;
-        private readonly string PATH_DIR_PRODUCTIMAGENAME;
+        private static readonly string PATH_BASE = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        private static readonly string PATH_PROJECTNAME = ".phonestore";
+        private static readonly string PATH_DIR_AVATARNAME = "img_useravt";
+        private static readonly string PATH_DIR_PRODUCTIMAGENAME = "img_product";
 
-        public VariableService()
-        {
-            PATH_BASE = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            PATH_PROJECTNAME = "PhoneStoreManager";
-            PATH_DIR_AVATARNAME = "img_useravt";
-            PATH_DIR_PRODUCTIMAGENAME = "img_product";
-        }
-
-        public void CreateAppDirIfNotExist()
+        public static void CreateAppDirIfNotExist()
         {
             if (!Directory.Exists(GetAppDirPath(true)))
             {
@@ -31,7 +23,7 @@
             }
         }
 
-        public string GetAppDirPath(bool fullPath = true)
+        public static string GetAppDirPath(bool fullPath = true)
         {
             if (!fullPath)
             {
@@ -51,7 +43,7 @@
             }
         }
 
-        public string GetAvatarDirPath(bool fullPath = true)
+        public static string GetAvatarDirPath(bool fullPath = true)
         {
             return Path.Combine(new string[]
             {
@@ -60,7 +52,7 @@
             });
         }
 
-        public string GetAvatarFilePath(int userId, string? extBak = null, bool fullPath = true)
+        public static string GetAvatarFilePath(int userId, string? extBak = null, bool fullPath = true)
         {
             return Path.Combine(new string[]
             {
@@ -69,7 +61,7 @@
             });
         }
 
-        public string GetProductImageDirPath(bool fullPath = true)
+        public static string GetProductImageDirPath(bool fullPath = true)
         {
             return Path.Combine(new string[]
             {
@@ -78,7 +70,7 @@
             });
         }
 
-        public string GetProductImageFilePath(string fileName, bool fullPath = true)
+        public static string GetProductImageFilePath(string fileName, bool fullPath = true)
         {
             return Path.Combine(new string[]
             {

@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PhoneStoreManager.Model;
 using PhoneStoreManager.Services;
-using System.Net;
 
 namespace PhoneStoreManager
 {
@@ -9,16 +8,36 @@ namespace PhoneStoreManager
     {
         public static void Main(string[] args)
         {
+            GlobalVariable.CreateAppDirIfNotExist();
+
+            string SQLITE_CSTRING = string.Format(
+                "Filename={0};Mode=ReadWriteCreate;",
+                Path.Combine(new string[] { GlobalVariable.GetAppDirPath(), "data.db" })
+                );
+
+            // Initialize Database and create admin account if not exist.
+#pragma warning disable CS8604 // Possible null reference argument.
+            bool isInit = true;
+            if (isInit)
+            {
+                Utils.InitialDbSqLite(SQLITE_CSTRING);
+                //if (builder.Configuration.GetConnectionString("Default") == null)
+                //{
+                //    throw new Exception("ConnectionString for connect to SQLite database hasn't been defined! Please config them in appsettings.json");
+                //}
+                //else
+                //{
+                //    // Utils.InitialDb(builder.Configuration.GetConnectionString("Default"));
+                //}
+            }
+#pragma warning restore CS8604 // Possible null reference argument.
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add MSSQL
             // builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
             // Add SqLite
-            string SQLITE_CSTRING = string.Format(
-                "Filename={0};Mode=ReadWriteCreate;",
-                System.IO.Path.Combine(new string[] { Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhoneStoreManager", "data.db" })
-                );
             builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(SQLITE_CSTRING));
 
             builder.Services.AddControllersWithViews()
@@ -26,33 +45,10 @@ namespace PhoneStoreManager
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
-            // Initialize Database and create admin account if not exist.
-#pragma warning disable CS8604 // Possible null reference argument.
-            bool isInit = true;
-            string folderPath = System.IO.Path.Combine(new string[] { Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhoneStoreManager" });
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-            if (isInit)
-            {
-                if (builder.Configuration.GetConnectionString("Default") == null)
-                {
-                    throw new Exception("ConnectionString for connect to SQL Server database hasn't been defined! Please config them in appsettings.json");
-                }
-                else
-                {
-                    // Utils.InitialDb(builder.Configuration.GetConnectionString("Default"));
-                    Utils.InitialDbSqLite(SQLITE_CSTRING);
-                }
-            }
-#pragma warning restore CS8604 // Possible null reference argument.
-
             // Add services to the container.
             builder.Services.AddControllers();
 
             // Add scopes
-            builder.Services.AddScoped<IVariableService, VariableService>();
             builder.Services.AddScoped<IProductManufacturerService, ProductManufacturerService>();
             builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
