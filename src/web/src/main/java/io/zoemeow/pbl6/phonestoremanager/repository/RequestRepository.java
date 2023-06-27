@@ -33,8 +33,9 @@ import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 
 public class RequestRepository {
     private final Boolean ignoreSSL = true;
-    
-    private String baseUrl = "http://localhost:5001";
+
+    private String baseUrl = "http://localhost:5000";
+    // private String baseUrl = "http://zoemeow-server.local/api";
 
     public RequestResult<JsonObject> getRequestWithResult(String uri, Map<String, String> parameters, Map<String, String> header) {
         RequestResult<JsonObject> result = new RequestResult<JsonObject>();

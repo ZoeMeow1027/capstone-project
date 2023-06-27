@@ -4,7 +4,7 @@
     <div th:replace="~{global/fragments/tag-head :: headtag(title=${'Your ' + (activeonly ? 'active ' : 'all ') + 'orders'})}"></div>
 </head>
 <body>
-    <div lang="en" th:replace="~{global/fragments/header :: header(name=${name}, adminuser=${adminuser})}"></div>
+    <div lang="en" th:replace="~{global/fragments/header :: header(name=${name}, adminUser=${adminUser})}"></div>
     <div class="row w-100 d-flex justify-content-center">
         <div lang="en" th:replace="~{global/fragments/sidebar-account :: sidebar(type=0, tab=${activeonly ? 0 : 1})}"
             th:remove="tag"></div>

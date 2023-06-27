@@ -3,8 +3,11 @@ package io.zoemeow.pbl6.phonestoremanager.controller.global.account;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import io.zoemeow.pbl6.phonestoremanager.controller.SessionController;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.UserCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -32,10 +35,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-public class ProfileController {
-    @Autowired
-    AuthRepository _AuthRepository;
-
+public class ProfileController extends SessionController {
     @Autowired
     AccountRepository _AccountRepository;
 
@@ -47,21 +47,28 @@ public class ProfileController {
             HttpServletRequest request,
             HttpServletResponse response,
             @ModelAttribute("barMsg") String barMsg) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
         ModelAndView view = new ModelAndView("global/account/profile");
 
         try {
-            User user = _AccountRepository.getUserInformation(header, null);
+            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
+
+            User user = getUserInformation(request, response);
             view.addObject("user", user);
-            view.addObject("name", user == null ? null : user.getName());
-            view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
             view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
-            view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
+
+            if (user == null) {
+                throw new SessionExpiredException("Session has expired!");
+            }
+
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
-            view = new ModelAndView("redirect:/");
+            view.setViewName("redirect:/");
         } catch (Exception ex) {
             // TODO: 500 error code here!
         }
@@ -70,7 +77,7 @@ public class ProfileController {
     }
 
     @PostMapping(value = "/account/profile")
-    public String actionUpdateUserProfile(
+    public ModelAndView actionUpdateUserProfile(
         HttpServletRequest request,
         HttpServletResponse response,
         RedirectAttributes redirectAttributes,
@@ -78,22 +85,21 @@ public class ProfileController {
         @RequestParam("email") String email,
         @RequestParam("phone") String phone
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
+        ModelAndView view = new ModelAndView("redirect:/account/profile");
 
         try {
-            _AccountRepository.getUserInformation(header, null);
+            _AccountRepository.getUserInformation(getCookieHeader(request), null);
             User user = new User();
             user.setName(name);
             user.setEmail(email);
             user.setPhone(phone);
-            _AccountRepository.setUserInformation(header, user);
+            _AccountRepository.setUserInformation(getCookieHeader(request), user);
             redirectAttributes.addFlashAttribute("barMsg", "Successfully set your profile.");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", "A problem prevent you to save your profile information.");
         }
 
-        return "redirect:/account/profile";
+        return view;
     }
 
     @GetMapping(value = "/account/avatar", produces = "image/jpeg")
@@ -101,11 +107,8 @@ public class ProfileController {
     public Object actionGetAvatar(
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
-
         try {
-            var data = _AccountRepository.getAvatar(header);
+            var data = _AccountRepository.getAvatar(getCookieHeader(request));
             if (data == null)
                 throw new Exception("No image here");
 
@@ -122,14 +125,12 @@ public class ProfileController {
     public Object actionSetAvatar(
             HttpServletRequest request,
             HttpServletResponse response,
-            @RequestParam("file") MultipartFile file) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
-
+            @RequestParam("file") MultipartFile file
+    ) {
         RequestResult<JsonObject> reqResult;
         try {
-            _AccountRepository.getUserInformation(header, null);
-            reqResult = _AccountRepository.setAvatar(header, file.getResource());
+            _AccountRepository.getUserInformation(getCookieHeader(request), null);
+            reqResult = _AccountRepository.setAvatar(getCookieHeader(request), file.getResource());
         } catch (Exception ex) {
             reqResult = new RequestResult<JsonObject>(false, null, null, ex.getMessage());
         }
@@ -138,22 +139,21 @@ public class ProfileController {
     }
 
     @PostMapping(value = "/account/avatar/upload")
-    public String actionSetAvatarAndReturnView(
+    public ModelAndView actionSetAvatar(
             HttpServletRequest request,
             HttpServletResponse response,
             RedirectAttributes redirectAttributes,
-            @RequestParam("file") MultipartFile file) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
-
+            @RequestParam("file") MultipartFile file
+    ) {
+        ModelAndView view = new ModelAndView("redirect:/account/profile");
         try {
-            _AccountRepository.getUserInformation(header, null);
-            _AccountRepository.setAvatar(header, file.getResource());
+            _AccountRepository.getUserInformation(getCookieHeader(request), null);
+            _AccountRepository.setAvatar(getCookieHeader(request), file.getResource());
             redirectAttributes.addFlashAttribute("barMsg", "Successfully set your avatar.");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", "A problem prevent you to set your avatar.");
         }
 
-        return "redirect:/account/profile";
+        return view;
     }
 }

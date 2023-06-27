@@ -1,29 +1,28 @@
 package io.zoemeow.pbl6.phonestoremanager.controller;
 
+import io.zoemeow.pbl6.phonestoremanager.model.bean.UserCart;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
-import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.CartRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.FeaturedRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.ProductRepository;
-import io.zoemeow.pbl6.phonestoremanager.utils.RequestAndResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.List;
+
 @Controller
-public class IndexController {
+public class IndexController extends SessionController {
     @Autowired
     FeaturedRepository _FeaturedRepository;
 
     @Autowired
-    AccountRepository _AccountRepository;
-
-    @Autowired
-    ProductRepository _AdminProductRepository;
+    ProductRepository _ProductRepository;
 
     @Autowired
     CartRepository _CartRepository;
@@ -33,26 +32,24 @@ public class IndexController {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        var header = RequestAndResponse.getCookieHeader(request);
         ModelAndView view = new ModelAndView("global/index");
 
         try {
-            User user = null;
-            try {
-                user = _AccountRepository.getUserInformation(header, null);
-                view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
-                view.addObject("name", user == null ? null : user.getName());
-                view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
-            } catch (Exception ex) {
-                RequestAndResponse.clearCookieHeader(response);
-            }
-
             view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
-            
-            var data1 = _FeaturedRepository.getNewProduct(header, null, null);
-            var data2 = _FeaturedRepository.getMostedViewProduct(header, null);
-            view.addObject("newProduct", data1);
-            view.addObject("mostView", data2);
+
+            User user = getUserInformation(request, response);
+            view.addObject("user", user);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
+
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
+
+            view.addObject("newProduct", _FeaturedRepository.getNewProduct(getCookieHeader(request), null, null));
+            view.addObject("mostView", _FeaturedRepository.getMostedViewProduct(getCookieHeader(request), null));
+        } catch (NoInternetException niEx) {
+
         } catch (Exception ex) {
             // TODO: 500 error code here!
         }
@@ -66,27 +63,26 @@ public class IndexController {
         HttpServletResponse response,
         String q
     ) {
-        var header = RequestAndResponse.getCookieHeader(request);
         ModelAndView view = new ModelAndView("global/search");
+        view.addObject("query", q);
 
         try {
-            User user = null;
-            try {
-                user = _AccountRepository.getUserInformation(header, null);
-                view.addObject("name", user == null ? null : user.getName());
-                view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
-                view.addObject("cartCount", user == null ? null : _CartRepository.getAllItemsInCart(header, null, null).size());
-            } catch (Exception ex) {
-                RequestAndResponse.clearCookieHeader(response);
-            }
-            
             view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
-            view.addObject("productFilter", _AdminProductRepository.getProducts(header, q, false));
+
+            User user = getUserInformation(request, response);
+            view.addObject("user", user);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
+
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
+
+            view.addObject("productFilter", _ProductRepository.getProducts(getCookieHeader(request), q, false));
         } catch (Exception ex) {
             // TODO: 500 error code here!
         }
 
-        view.addObject("query", q);
         return view;
     }
 
@@ -95,19 +91,19 @@ public class IndexController {
         HttpServletRequest request,
         HttpServletResponse response
     ) {
-        var header = RequestAndResponse.getCookieHeader(request);
         ModelAndView view = new ModelAndView("global/about");
 
         try {
-            User user = null;
-            try {
-                user = _AccountRepository.getUserInformation(header, null);
-                view.addObject("name", user == null ? null : user.getName());
-                view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
-                view.addObject("cartCount", user == null ? null : _CartRepository.getAllItemsInCart(header, null, null).size());
-            } catch (Exception ex) {
-                RequestAndResponse.clearCookieHeader(response);
-            }
+            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
+
+            User user = getUserInformation(request, response);
+            view.addObject("user", user);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
+
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
         } catch (Exception ex) {
             // TODO: 500 error code here!
         }

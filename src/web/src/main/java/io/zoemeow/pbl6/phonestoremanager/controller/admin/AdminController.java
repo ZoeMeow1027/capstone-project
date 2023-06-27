@@ -39,7 +39,7 @@ public class AdminController {
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (NoPermissionException npEx) {
-            view = new ModelAndView("redirect:/");
+            view.setViewName("redirect:/");
         } catch (SessionExpiredException seEx) {
             Cookie cookie = new Cookie("token", "");
             cookie.setPath("/");

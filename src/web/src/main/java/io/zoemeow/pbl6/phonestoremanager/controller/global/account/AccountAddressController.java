@@ -1,9 +1,15 @@
 package io.zoemeow.pbl6.phonestoremanager.controller.global.account;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import io.zoemeow.pbl6.phonestoremanager.controller.SessionController;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.UserAddress;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.UserCart;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
+import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
+import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.CartRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,18 +17,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
-import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
-import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
-import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
-import io.zoemeow.pbl6.phonestoremanager.repository.CartRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
-public class AccountAddressController {
+public class AccountAddressController extends SessionController {
     @Autowired
     AccountRepository _AccountRepository;
 
@@ -35,24 +35,29 @@ public class AccountAddressController {
         HttpServletResponse response,
         @ModelAttribute("barMsg") String barMsg
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
         ModelAndView view = new ModelAndView("global/account/address");
 
         try {
-            User user = _AccountRepository.getUserInformation(header, null);
-            var userAddress = _AccountRepository.getAllAddress(header);
-            // _AccountRepository.getAddressById(header, id);
+            User user = getUserInformation(request, response);
             view.addObject("user", user);
-            view.addObject("name", user == null ? null : user.getName());
-            view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
             view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
-            view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
+
+            if (user == null) {
+                throw new SessionExpiredException("Session has expired!");
+            }
+
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
+
+            var userAddress = _AccountRepository.getAllAddress(getCookieHeader(request));
             view.addObject("userAddress", userAddress);
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
-            view = new ModelAndView("redirect:/");
+            view.setViewName("redirect:/");
         } catch (Exception ex) {
             // TODO: 500 error code here!
         }
@@ -65,24 +70,27 @@ public class AccountAddressController {
         HttpServletRequest request,
         HttpServletResponse response
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
         ModelAndView view = new ModelAndView("global/account/address-modify");
 
         try {
-            User user = _AccountRepository.getUserInformation(header, null);
+            User user = getUserInformation(request, response);
             view.addObject("user", user);
-            view.addObject("name", user == null ? null : user.getName());
-            view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
 
-            view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
+            if (user == null) {
+                throw new SessionExpiredException("Session has expired!");
+            }
 
-            // _AccountRepository.getAddressById(header, id);
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
+
             view.addObject("action", "add");
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
-            view = new ModelAndView("redirect:/");
+            view.setViewName("redirect:/");
         } catch (Exception ex) {
             // TODO: 500 error code here!
         }
@@ -91,7 +99,7 @@ public class AccountAddressController {
     }
 
     @PostMapping("/account/address/add")
-    public String actionAddressAdd(
+    public ModelAndView actionAddressAdd(
             HttpServletRequest request,
             HttpServletResponse response,
             RedirectAttributes redirectAttributes,
@@ -100,25 +108,24 @@ public class AccountAddressController {
             @RequestParam("address") String address,
             @RequestParam("countrycode") String countryCode
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
-
+        ModelAndView view = new ModelAndView("redirect:/account/address");
         try {
-            _AccountRepository.getUserInformation(header, null);
+            _AccountRepository.getUserInformation(getCookieHeader(request), null);
             UserAddress userAddress = new UserAddress();
             userAddress.setName(name);
             userAddress.setPhone(phone);
             userAddress.setAddress(address);
             userAddress.setCountryCode(countryCode);
-            var result = _AccountRepository.addAddress(header, userAddress);
-            if (result.getStatusCode() != 200)
+            var result = _AccountRepository.addAddress(getCookieHeader(request), userAddress);
+            if (result.getStatusCode() != 200) {
                 throw new Exception(result.getMessage());
+            }
             redirectAttributes.addFlashAttribute("barMsg", "Successfully added your address!");
-            return "redirect:/account/address";
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", ex.getMessage());
-            return "redirect:/account/address/add";
+            view.setViewName("redirect:/account/address/add");
         }
+        return view;
     }
 
     @GetMapping("/account/address/update")
@@ -127,21 +134,25 @@ public class AccountAddressController {
             HttpServletResponse response,
             Integer id
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
         ModelAndView view = new ModelAndView("global/account/address-modify");
 
         try {
-            User user = _AccountRepository.getUserInformation(header, null);
+            User user = getUserInformation(request, response);
             view.addObject("user", user);
-            view.addObject("name", user == null ? null : user.getName());
-            view.addObject("adminuser", user == null ? false : user.getUserType() != 0);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
 
-            view.addObject("cartCount", _CartRepository.getAllItemsInCart(header, null, null).size());
+            if (user == null) {
+                throw new SessionExpiredException("Session has expired!");
+            }
+
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
 
             // _AccountRepository.getAddressById(header, id);
             view.addObject("action", "update");
-            var userAddress = _AccountRepository.getAddressById(header, id);
+            var userAddress = _AccountRepository.getAddressById(getCookieHeader(request), id);
             if (userAddress == null) {
                 throw new Exception();
             }
@@ -149,16 +160,16 @@ public class AccountAddressController {
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
-            view = new ModelAndView("redirect:/");
+            view.setViewName("redirect:/");
         } catch (Exception ex) {
-            view = new ModelAndView("redirect:/account/address");
+            view.setViewName("redirect:/account/address");
         }
 
         return view;
     }
 
     @PostMapping("/account/address/update")
-    public String actionAddressUpdate(
+    public ModelAndView actionAddressUpdate(
             HttpServletRequest request,
             HttpServletResponse response,
             RedirectAttributes redirectAttributes,
@@ -168,50 +179,47 @@ public class AccountAddressController {
             @RequestParam("address") String address,
             @RequestParam("countrycode") String countryCode
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
-
+        ModelAndView view = new ModelAndView("redirect:/account/address");
         try {
-            _AccountRepository.getUserInformation(header, null);
+            _AccountRepository.getUserInformation(getCookieHeader(request), null);
             UserAddress userAddress = new UserAddress();
             userAddress.setId(id);
             userAddress.setName(name);
             userAddress.setPhone(phone);
             userAddress.setAddress(address);
             userAddress.setCountryCode(countryCode);
-            var result = _AccountRepository.updateAddress(header, userAddress);
-            if (result.getStatusCode() != 200)
+            var result = _AccountRepository.updateAddress(getCookieHeader(request), userAddress);
+            if (result.getStatusCode() != 200) {
                 throw new Exception(result.getMessage());
+            }
             redirectAttributes.addFlashAttribute("barMsg", "Successfully updated your address!");
-            return "redirect:/account/address";
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", "We ran into a problem prevent you updating your address!");
-            return String.format("redirect:/account/address/update?id=%d", id);
+            view.setViewName(String.format("redirect:/account/address/update?id=%d", id));
         }
+        return view;
     }
 
     @PostMapping("/account/address/delete")
-    public String actionAddressDelete(
+    public ModelAndView actionAddressDelete(
             HttpServletRequest request,
             HttpServletResponse response,
             RedirectAttributes redirectAttributes,
             @RequestParam("id") Integer id
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
-
+        ModelAndView view = new ModelAndView("redirect:/account/address");
         try {
-            _AccountRepository.getUserInformation(header, null);
+            _AccountRepository.getUserInformation(getCookieHeader(request), null);
             UserAddress userAddress = new UserAddress();
             userAddress.setId(id);
-            var result = _AccountRepository.deleteAddress(header, userAddress);
+            var result = _AccountRepository.deleteAddress(getCookieHeader(request), userAddress);
             if (result.getStatusCode() != 200)
                 throw new Exception(result.getMessage());
             redirectAttributes.addFlashAttribute("barMsg", "Successfully deleted your address!");
-            return "redirect:/account/address";
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", "We ran into a problem prevent you deleting your address!");
-            return "redirect:/account/address";
         }
+
+        return view;
     }
 }

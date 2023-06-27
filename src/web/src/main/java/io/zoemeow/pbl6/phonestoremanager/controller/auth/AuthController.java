@@ -1,193 +1,188 @@
 package io.zoemeow.pbl6.phonestoremanager.controller.auth;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.google.gson.JsonObject;
+import io.zoemeow.pbl6.phonestoremanager.controller.SessionController;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
+import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
+import io.zoemeow.pbl6.phonestoremanager.model.dto.RegisterDTO;
+import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
-import io.zoemeow.pbl6.phonestoremanager.model.dto.RegisterDTO;
-import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
-import io.zoemeow.pbl6.phonestoremanager.repository.RequestRepository;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class AuthController extends RequestRepository {
+public class AuthController extends SessionController {
+    @Autowired
+    AccountRepository _AccountRepository;
+
     @Autowired
     AuthRepository _AuthRepository;
 
     @GetMapping("/auth/login")
     public ModelAndView pageLogin(
             HttpServletRequest request,
-            HttpServletResponse response) {
-        String uriRedirect = "auth/login";
+            HttpServletResponse response,
+            @ModelAttribute("barMsg") String barMsg,
+            @ModelAttribute("username") String username,
+            @ModelAttribute("password") String password) {
+        ModelAndView view = new ModelAndView("auth/login");
+        view.addObject("username", username);
+        view.addObject("password", password);
+        view.addObject("barMsg", barMsg);
 
         try {
-            Map<String, String> header = new HashMap<String, String>();
-            header.put("cookie", request.getHeader("cookie"));
-
-            RequestResult<JsonObject> reqResult = getRequestWithResult("/account/my", null, header);
-            if (!reqResult.getIsSuccessfulRequest()) {
-                // TODO: Check if not successful request here!
-            }
-            if (reqResult.getStatusCode() != 200) {
-                throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
-            }
-            switch (reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt()) {
-                case 2:
-                    uriRedirect = "redirect:/admin";
-                    break;
-                case 1:
-                    // TODO: Return staff page here
-                    uriRedirect = "redirect:/admin";
-                    break;
-                default:
-                    uriRedirect = "redirect:/";
-                    break;
+            User user = _AccountRepository.getUserInformation(getCookieHeader(request), null);
+            if (user != null) {
+                switch (user.getUserType()) {
+                    case 2:
+                        view.setViewName("redirect:/admin");
+                        break;
+                    case 1:
+                        // TODO: Return staff page here
+                        view.setViewName("redirect:/admin");
+                        break;
+                    default:
+                        view.setViewName("redirect:/");
+                        break;
+                }
             }
         } catch (Exception ex) {
-            uriRedirect = "auth/login";
+            view.setViewName("auth/login");
         }
 
-        ModelAndView view = new ModelAndView(uriRedirect);
         return view;
     }
 
     @PostMapping("/auth/login")
-    public ModelAndView actionLogin(HttpServletRequest request, HttpServletResponse response, String username,
-            String password) {
-        ModelAndView modelAndView;
+    public ModelAndView actionLogin(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            RedirectAttributes redirectAttributes,
+            String username,
+            String password
+    ) {
+        ModelAndView view = new ModelAndView("auth/login");
 
         try {
-            Map<String, String> header = new HashMap<String, String>();
-            header.put("content-type", "application/json; charset=UTF-8");
-            header.put("cookie", request.getHeader("cookie"));
-
             JsonObject auth = new JsonObject();
             auth.addProperty("username", username);
             auth.addProperty("password", password);
 
-            RequestResult<JsonObject> reqResult = _AuthRepository.login(header, username, password);
+            RequestResult<JsonObject> reqResult = _AuthRepository.login(getCookieHeader(request), username, password);
 
-            Cookie cookie = new Cookie("token",
-                    reqResult.getData().get("data").getAsJsonObject().get("token").getAsString());
-            cookie.setPath("/");
-            // 1-year
-            cookie.setMaxAge(365 * 24 * 60 * 60);
-            response.addCookie(cookie);
+            setCookieHeader(response, reqResult.getData().get("data").getAsJsonObject().get("token").getAsString());
 
-            String urlRedirect;
             switch (reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt()) {
                 case 2:
-                    urlRedirect = "redirect:/admin";
+                    view.setViewName("redirect:/admin");
                     break;
                 case 1:
                     // TODO: Return staff page here
-                    urlRedirect = "redirect:/admin";
+                    view.setViewName("redirect:/admin");
                     break;
                 default:
-                    urlRedirect = "redirect:/";
+                    view.setViewName("redirect:/");
                     break;
             }
-            modelAndView = new ModelAndView(urlRedirect);
         } catch (Exception ex) {
-            modelAndView = new ModelAndView("auth/login");
-            modelAndView.addObject("errMsg", ex.getMessage());
+            view.setViewName("redirect:/auth/login");
+            redirectAttributes.addFlashAttribute("errMsg", ex.getMessage());
+            redirectAttributes.addFlashAttribute("username", username);
+            redirectAttributes.addFlashAttribute("password", password);
         }
 
-        return modelAndView;
+        return view;
     }
 
     @GetMapping("/auth/register")
-    public ModelAndView pageRegister(HttpServletRequest request, HttpServletResponse response) {
-        String uriRedirect = "auth/register";
+    public ModelAndView pageRegister(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @ModelAttribute("barMsg") String barMsg
+    ) {
+        ModelAndView view = new ModelAndView("auth/register");
+        view.addObject("barMsg", barMsg);
 
         try {
-            Map<String, String> header = new HashMap<String, String>();
-            header.put("cookie", request.getHeader("cookie"));
-
-            RequestResult<JsonObject> reqResult = getRequestWithResult("/account/my", null, header);
-            if (!reqResult.getIsSuccessfulRequest()) {
-                // TODO: Check if not successful request here!
-            }
-            if (reqResult.getStatusCode() != 200) {
-                throw new Exception(String.format("API was returned with code %d.", reqResult.getStatusCode()));
-            }
-            switch (reqResult.getData().get("data").getAsJsonObject().get("usertype").getAsInt()) {
-                case 2:
-                    uriRedirect = "redirect:/admin";
-                    break;
-                case 1:
-                    // TODO: Return staff page here
-                    uriRedirect = "redirect:/admin";
-                    break;
-                default:
-                    uriRedirect = "redirect:/";
-                    break;
+            User user = _AccountRepository.getUserInformation(getCookieHeader(request), null);
+            if (user != null) {
+                switch (user.getUserType()) {
+                    case 2:
+                        view.setViewName("redirect:/admin");
+                        break;
+                    case 1:
+                        // TODO: Return staff page here
+                        view.setViewName("redirect:/admin");
+                        break;
+                    default:
+                        view.setViewName("redirect:/");
+                        break;
+                }
             }
         } catch (Exception ex) {
-            uriRedirect = "auth/register";
+            view.setViewName("auth/register");
         }
 
-        ModelAndView view = new ModelAndView(uriRedirect);
         return view;
     }
 
     @PostMapping(value = "/auth/register")
-    @ResponseBody
-    public Object actionRegister(
+    public ModelAndView actionRegister(
         HttpServletRequest request,
         HttpServletResponse response,
-        @RequestBody RegisterDTO registerDTO
+        RedirectAttributes redirectAttributes,
+        @RequestParam("name") String name,
+        @RequestParam("email") String email,
+        @RequestParam("phone") String phone,
+        @RequestParam("username") String username,
+        @RequestParam("password") String password,
+        @RequestParam("rePassword") String rePassword
     ) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
+        ModelAndView view = new ModelAndView("auth/register");
 
         RequestResult<JsonObject> reqResult;
         try {
-            reqResult = _AuthRepository.register(header, registerDTO);
+            RegisterDTO registerDTO = new RegisterDTO();
+            registerDTO.setName(name);
+            registerDTO.setEmail(email);
+            registerDTO.setPhone(phone);
+            registerDTO.setUsername(username);
+            registerDTO.setPassword(password);
+            registerDTO.setReEnterPassword(rePassword);
 
-            Cookie cookie = new Cookie("token",
-                    reqResult.getData().get("data").getAsJsonObject().get("token").getAsString());
-            cookie.setPath("/");
-            // 1-year
-            cookie.setMaxAge(365 * 24 * 60 * 60);
-            response.addCookie(cookie);
+            reqResult = _AuthRepository.register(getCookieHeader(request), registerDTO);
 
+            setCookieHeader(response, reqResult.getData().get("data").getAsJsonObject().get("token").getAsString());
+
+            view.setViewName("redirect:/");
         } catch (Exception ex) {
-            reqResult = new RequestResult<JsonObject>(false, null, null, ex.getMessage());
+            view.setViewName("auth/register");
+            redirectAttributes.addFlashAttribute("errMsg", ex.getMessage());
         }
 
-        return (new Gson().toJson(reqResult));
+        return view;
     }
 
     @GetMapping("/auth/logout")
     public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put("cookie", request.getHeader("cookie"));
+        ModelAndView view = new ModelAndView("redirect:/");
+
         try {
-            _AuthRepository.logout(header);
+            _AuthRepository.logout(getCookieHeader(request));
         } catch (Exception ex) {
 
         } finally {
-            Cookie cookie = new Cookie("token", "");
-            cookie.setPath("/");
-            cookie.setMaxAge(0);
-            response.addCookie(cookie);
+            clearCookieHeader(response);
         }
 
-        ModelAndView view = new ModelAndView("redirect:/");
         return view;
     }
 }
