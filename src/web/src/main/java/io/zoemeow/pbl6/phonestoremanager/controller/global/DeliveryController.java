@@ -1,9 +1,6 @@
 package io.zoemeow.pbl6.phonestoremanager.controller.global;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import io.zoemeow.pbl6.phonestoremanager.controller.SessionController;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.UserCart;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +37,6 @@ public class DeliveryController extends SessionController {
         ModelAndView view = new ModelAndView("global/delivery/delivery-list");
 
         try {
-            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
-
             User user = getUserInformation(request, response);
             view.addObject("user", user);
             view.addObject("name", user != null ? user.getName() : null);
@@ -79,8 +74,6 @@ public class DeliveryController extends SessionController {
         ModelAndView view = new ModelAndView("global/delivery/delivery-detail");
 
         try {
-            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
-
             User user = getUserInformation(request, response);
             view.addObject("user", user);
             view.addObject("name", user != null ? user.getName() : null);

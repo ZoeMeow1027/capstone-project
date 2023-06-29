@@ -2,10 +2,7 @@ package io.zoemeow.pbl6.phonestoremanager.controller.global.account;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import io.zoemeow.pbl6.phonestoremanager.controller.SessionController;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.UserCart;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +26,6 @@ import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.SessionExpiredException;
 import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
-import io.zoemeow.pbl6.phonestoremanager.repository.AuthRepository;
 import io.zoemeow.pbl6.phonestoremanager.repository.CartRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -50,8 +46,6 @@ public class ProfileController extends SessionController {
         ModelAndView view = new ModelAndView("global/account/profile");
 
         try {
-            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
-
             User user = getUserInformation(request, response);
             view.addObject("user", user);
             view.addObject("name", user != null ? user.getName() : null);

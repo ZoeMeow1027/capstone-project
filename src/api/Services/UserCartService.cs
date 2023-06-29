@@ -79,15 +79,15 @@ namespace PhoneStoreManager.Services
             return GetAllItems(user.ID);
         }
 
-        public void RemoveItem(int userId, int cartId)
+        public void RemoveItem(int userId, int productId)
         {
             var dataToDel = _context.UserCarts
-                .Where(p => p.UserID == userId && p.ID == p.ID)
+                .Where(p => p.UserID == userId && p.ProductID == productId)
                 .FirstOrDefault();
 
             if (dataToDel == null)
             {
-                throw new ArgumentException(string.Format("Cart item with ID {0} is not exist or you don't have permission with this cart!", cartId));
+                throw new ArgumentException(string.Format("Cart item with Product ID {0} is not exist!", productId));
             }
 
             _context.UserCarts.Remove(dataToDel);
@@ -99,9 +99,9 @@ namespace PhoneStoreManager.Services
             ClearItemZeroCount();
         }
 
-        public void RemoveItem(User user, int cartId)
+        public void RemoveItem(User user, int productId)
         {
-            RemoveItem(user.ID, cartId);
+            RemoveItem(user.ID, productId);
         }
 
         public void ClearItemZeroCount()
@@ -145,15 +145,15 @@ namespace PhoneStoreManager.Services
             ClearCart(user.ID);
         }
 
-        public void UpdateItem(int userid, int id, int count)
+        public void UpdateItem(int userid, int productId, int count)
         {
             var item = _context.UserCarts
                 .Include(p => p.Product)
-                .Where(p => p.UserID == userid && p.ID == id)
+                .Where(p => p.UserID == userid && p.ProductID == productId)
                 .FirstOrDefault();
             if (item == null)
             {
-                throw new ArgumentException(string.Format("Cart item with ID {0} is not exist or you don't have permission with this cart!", id));
+                throw new ArgumentException(string.Format("Cart item with Product ID {0} is not exist!", productId));
             }
             if (count <= 0)
             {
@@ -175,9 +175,9 @@ namespace PhoneStoreManager.Services
             ClearItemZeroCount();
         }
 
-        public void UpdateItem(User user, int id, int count)
+        public void UpdateItem(User user, int productId, int count)
         {
-            UpdateItem(user.ID, id, count);
+            UpdateItem(user.ID, productId, count);
         }
     }
 }

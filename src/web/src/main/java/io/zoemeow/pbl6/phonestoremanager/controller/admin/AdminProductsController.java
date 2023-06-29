@@ -60,8 +60,6 @@ public class AdminProductsController {
             view.addObject("name", user == null ? null : user.getName());
 
             view.addObject("productList", _AdminProductRepository.getProducts(header, query, includehidden == null ? false : includehidden));
-            view.addObject("baseurl",
-                    String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {
@@ -264,8 +262,6 @@ public class AdminProductsController {
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
-            view.addObject("baseurl",
-                    String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
 
             view.addObject("product", _AdminProductRepository.getProductById(header, id));
             view.addObject("tab", TAB_IMAGE);

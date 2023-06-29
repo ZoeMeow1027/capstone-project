@@ -60,6 +60,10 @@ public class ProductImageMetadataController extends SessionController {
 
         try {
             var deleteImage = _ProductRepository.deleteProductImage(getCookieHeader(request), id);
+            if (deleteImage.getStatusCode() != 200) {
+                throw new Exception(deleteImage.getMessage());
+            }
+
             if (returnurl.length() == 0) {
                 returnurl = null;
             }
@@ -85,6 +89,9 @@ public class ProductImageMetadataController extends SessionController {
 
         try {
             var data = _ProductRepository.uploadImage(getCookieHeader(request), id, file.getResource());
+            if (data.getStatusCode() != 200) {
+                throw new Exception(data.getMessage());
+            }
             redirectAttributes.addFlashAttribute("barMsg", "Successfully uploaded product image!");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", "We ran into a problem prevent you uploading product image!");

@@ -13,9 +13,9 @@ public interface CartRepository {
 
     public RequestResult<JsonObject> addItem(Map<String, String> header, Integer productId, Integer count) throws Exception;
 
-    public RequestResult<JsonObject> updateItem(Map<String, String> header, Integer cartId, Integer count) throws Exception;
+    public RequestResult<JsonObject> updateItem(Map<String, String> header, Integer productId, Integer count) throws Exception;
 
-    public RequestResult<JsonObject> removeItem(Map<String, String> header, Integer cartId) throws Exception;
+    public RequestResult<JsonObject> removeItem(Map<String, String> header, Integer productId) throws Exception;
 
     public RequestResult<JsonObject> removeAllItems(Map<String, String> header) throws Exception;
 

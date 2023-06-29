@@ -33,8 +33,6 @@ public class CartController extends SessionController {
         ModelAndView view = new ModelAndView("global/cart/cart");
 
         try {
-            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
-
             User user = getUserInformation(request, response);
             view.addObject("user", user);
             view.addObject("name", user != null ? user.getName() : null);
@@ -66,13 +64,13 @@ public class CartController extends SessionController {
         HttpServletRequest request,
         HttpServletResponse response,
         RedirectAttributes redirectAttributes,
-        @RequestParam("id") Integer cartId,
+        @RequestParam("productid") Integer productId,
         @RequestParam("count") Integer count
     ) {
         ModelAndView view = new ModelAndView("redirect:/cart");
 
         try {
-            _CartRepository.updateItem(getCookieHeader(request), cartId, count);
+            _CartRepository.updateItem(getCookieHeader(request), productId, count);
             redirectAttributes.addFlashAttribute("barMsg", "Successfully updated item in your cart!");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", "A problem prevent you to update item in your cart.");
@@ -86,12 +84,12 @@ public class CartController extends SessionController {
         HttpServletRequest request,
         HttpServletResponse response,
         RedirectAttributes redirectAttributes,
-        @RequestParam("id") Integer cartId
+        @RequestParam("productid") Integer productId
     ) {
         ModelAndView view = new ModelAndView("redirect:/cart");
 
         try {
-            _CartRepository.removeItem(getCookieHeader(request), cartId);
+            _CartRepository.removeItem(getCookieHeader(request), productId);
             redirectAttributes.addFlashAttribute("barMsg", "Successfully updated item in your cart!");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("barMsg", "A problem prevent you to update item in your cart.");

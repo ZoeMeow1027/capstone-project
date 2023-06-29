@@ -34,14 +34,18 @@ import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 public class RequestRepository {
     private final Boolean ignoreSSL = true;
 
-    private String baseUrl = "http://localhost:5000";
-    // private String baseUrl = "http://zoemeow-server.local/api";
+    private String getBaseURL() {
+        final String defaultBaseUrl = "http://localhost:5000";
+
+        String baseUrl = System.getenv("API_BASEURL");
+        return (baseUrl != null) ? baseUrl : defaultBaseUrl;
+    }
 
     public RequestResult<JsonObject> getRequestWithResult(String uri, Map<String, String> parameters, Map<String, String> header) {
         RequestResult<JsonObject> result = new RequestResult<JsonObject>();
 
         try {
-            URIBuilder uriBuilder = new URIBuilder(baseUrl + uri);
+            URIBuilder uriBuilder = new URIBuilder(getBaseURL() + uri);
             if (parameters != null) {
                 for (String parItem : parameters.keySet()) {
                     uriBuilder.addParameter(parItem, parameters.get(parItem));
@@ -142,7 +146,7 @@ public class RequestRepository {
         RequestResult<JsonObject> result = new RequestResult<JsonObject>();
 
         try {
-            URIBuilder uriBuilder = new URIBuilder(baseUrl + uri);
+            URIBuilder uriBuilder = new URIBuilder(getBaseURL() + uri);
             if (parameters != null) {
                 for (String parItem : parameters.keySet()) {
                     uriBuilder.addParameter(parItem, parameters.get(parItem));
@@ -197,7 +201,7 @@ public class RequestRepository {
     }
 
     public byte[] getRequestToImage(String url, Map<String, String> parameters, Map<String, String> header) throws Exception {
-        URIBuilder uriBuilder = new URIBuilder(baseUrl + url);
+        URIBuilder uriBuilder = new URIBuilder(getBaseURL() + url);
         if (parameters != null) {
             for (String parItem : parameters.keySet()) {
                 uriBuilder.addParameter(parItem, parameters.get(parItem));
@@ -228,7 +232,7 @@ public class RequestRepository {
         RequestResult<JsonObject> result = new RequestResult<JsonObject>();
 
         try {
-            URIBuilder uriBuilder = new URIBuilder(baseUrl + url);
+            URIBuilder uriBuilder = new URIBuilder(getBaseURL() + url);
             if (parameters != null) {
                 for (String parItem : parameters.keySet()) {
                     uriBuilder.addParameter(parItem, parameters.get(parItem));
@@ -265,8 +269,8 @@ public class RequestRepository {
                 result.setData(jObject);
             } catch (Exception ex) {
                 result.setData(null);
-                // TODO: Remove in stable
-                result.setMessage(ex.getMessage());
+                // Remove in stable
+                // result.setMessage(ex.getMessage());
             }
 
             if (httpResponse.getCode() != 200)

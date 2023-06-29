@@ -38,8 +38,6 @@ public class PaymentMethodController extends SessionController {
         ModelAndView view = new ModelAndView("global/cart/payment-method");
 
         try {
-            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
-
             User user = getUserInformation(request, response);
             view.addObject("user", user);
             view.addObject("name", user != null ? user.getName() : null);
@@ -63,7 +61,8 @@ public class PaymentMethodController extends SessionController {
             view.addObject("useraddress", String.format("%s\n%s, %s\n%s", data.getRecipient(), data.getRecipientAddress(), data.getRecipientCountryCode(),
                     data.getRecipientPhone()));
 
-            view.addObject("payPalClientID", "AQS-DvkZZ9oc9Y8NpVoKMoSIogGLmQd6yDuW9igJr0O_-cgcW1HmDkkcFzYRtp7SIHIDYo_7jYJWw3rp");
+            view.addObject("paypalClientIDSandbox", System.getenv("PAYPAL_CLIENTID_SANDBOX"));
+            view.addObject("paypalClientIDLive", System.getenv("PAYPAL_CLIENTID_LIVE"));
         } catch (NoInternetException niEx) {
 
         } catch (SessionExpiredException seEx) {
