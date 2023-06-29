@@ -60,13 +60,13 @@
                                     <div class="d-flex flex-row align-items-center">
                                         <div class="me-5 d-flex justify-content-center">
                                             <form th:action="@{/cart/update}" method="post">
-                                                <input type="text" name="id" th:value="${item.getId()}" readonly hidden>
+                                                <input type="text" name="productid" th:value="${item.getId()}" readonly hidden>
                                                 <div class="input-group">
                                                     <div class="form-floating">
-                                                        <input type="number" class="form-control" name="count" min="1"
+                                                        <input id="product-count" type="number" class="form-control" name="count" min="1"
                                                             th:attr="max=${item.getProduct().getInventoryCount()}"
                                                             th:value="${item.getCount() == null ? 0 : item.getCount()}">
-                                                        <label for="count">Count</label>
+                                                        <label for="product-count">Count</label>
                                                     </div>
                                                     <button type="submit" class="btn btn-primary text-white"><i
                                                             class="bi bi-check-lg"></i></button>
@@ -80,7 +80,7 @@
                                         </div>
                                         <div class="me-1">
                                             <form th:action="@{/cart/remove}" method="post">
-                                                <input type="text" name="id" th:value="${item.getId()}" readonly hidden>
+                                                <input type="text" name="productid" th:value="${item.getId()}" readonly hidden>
                                                 <button type="submit" class="btn btn-danger text-white">
                                                     <i class="bi bi-trash fs-5"></i>
                                                 </button>

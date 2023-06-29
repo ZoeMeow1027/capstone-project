@@ -113,13 +113,13 @@ namespace PhoneStoreManager.Controllers
                         }
                         Utils.CheckRequiredArguments(
                             requestDTO.Data,
-                            new List<string>() { "id", "count" }
+                            new List<string>() { "productid", "count" }
                             );
 
                         // TODO: Check if product has limit exceed.
                         _cartService.UpdateItem(
                             user,
-                            int.Parse(requestDTO.Data["id"].ToString()),
+                            int.Parse(requestDTO.Data["productid"].ToString()),
                             int.Parse(requestDTO.Data["count"].ToString())
                             );
                         break;
@@ -130,12 +130,12 @@ namespace PhoneStoreManager.Controllers
                         }
                         Utils.CheckRequiredArguments(
                             requestDTO.Data,
-                            new List<string>() { "id" }
+                            new List<string>() { "productid" }
                             );
 
                         _cartService.RemoveItem(
                             user,
-                            int.Parse(requestDTO.Data["id"].ToString())
+                            int.Parse(requestDTO.Data["productid"].ToString())
                             );
                         break;
                     case "removeall":

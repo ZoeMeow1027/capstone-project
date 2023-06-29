@@ -57,10 +57,10 @@ public class CartRepositoryImpl extends RequestRepository implements CartReposit
     }
 
     @Override
-    public RequestResult<JsonObject> removeItem(Map<String, String> header, Integer cartId)
+    public RequestResult<JsonObject> removeItem(Map<String, String> header, Integer productId)
             throws Exception {
         JsonObject productAdd = new JsonObject();
-        productAdd.addProperty("id", cartId);
+        productAdd.addProperty("productid", productId);
         JsonObject bodyRoot = new JsonObject();
         bodyRoot.addProperty("action", "remove");
         bodyRoot.add("data", productAdd);
@@ -79,10 +79,10 @@ public class CartRepositoryImpl extends RequestRepository implements CartReposit
     }
 
     @Override
-    public RequestResult<JsonObject> updateItem(Map<String, String> header, Integer cartId, Integer count)
+    public RequestResult<JsonObject> updateItem(Map<String, String> header, Integer productId, Integer count)
             throws Exception {
         JsonObject productAdd = new JsonObject();
-        productAdd.addProperty("id", cartId);
+        productAdd.addProperty("productid", productId);
         productAdd.addProperty("count", count);
         JsonObject bodyRoot = new JsonObject();
         bodyRoot.addProperty("action", "update");

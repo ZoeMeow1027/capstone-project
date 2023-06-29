@@ -35,8 +35,6 @@ public class IndexController extends SessionController {
         ModelAndView view = new ModelAndView("global/index");
 
         try {
-            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
-
             User user = getUserInformation(request, response);
             view.addObject("user", user);
             view.addObject("name", user != null ? user.getName() : null);
@@ -67,8 +65,6 @@ public class IndexController extends SessionController {
         view.addObject("query", q);
 
         try {
-            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
-
             User user = getUserInformation(request, response);
             view.addObject("user", user);
             view.addObject("name", user != null ? user.getName() : null);
@@ -94,8 +90,6 @@ public class IndexController extends SessionController {
         ModelAndView view = new ModelAndView("global/about");
 
         try {
-            view.addObject("baseurl", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
-
             User user = getUserInformation(request, response);
             view.addObject("user", user);
             view.addObject("name", user != null ? user.getName() : null);

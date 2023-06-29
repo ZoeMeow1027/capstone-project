@@ -70,8 +70,6 @@ public class AdminBillsController {
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
-            view.addObject("baseurl",
-                    String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
 
             var data = _BillRepository.getBillSummaryById(header, id);
             view.addObject("billItem", data);
@@ -102,8 +100,6 @@ public class AdminBillsController {
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
-            view.addObject("baseurl",
-                    String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
             view.addObject("returnurl", returnurl);
 
             var data = _BillRepository.getBillSummaryById(header, id);

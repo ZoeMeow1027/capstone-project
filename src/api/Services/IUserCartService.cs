@@ -16,13 +16,13 @@ namespace PhoneStoreManager.Services
 
         void AddItem(User user, Product product, int count);
 
-        void UpdateItem(int userid, int id, int count);
+        void UpdateItem(int userid, int productId, int count);
 
-        void UpdateItem(User user, int id, int count);
+        void UpdateItem(User user, int productId, int count);
 
-        void RemoveItem(int userid, int cartId);
+        void RemoveItem(int userid, int productId);
 
-        void RemoveItem(User user, int cartId);
+        void RemoveItem(User user, int productId);
 
         void ClearCart(int userId);
 
