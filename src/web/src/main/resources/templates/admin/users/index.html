@@ -7,9 +7,16 @@
         <h2>Users</h2>
         <h4>Manage user accounts</h4>
         <hr />
-        <div class="w-100 pb-2 d-flex justify-content-end">
-            <!-- <a href="#" class="ps-2"><button type="button" class="btn btn-primary">Refresh</button></a> -->
-            <a th:href="@{/admin/users/add}" class="ps-2"><button type="button" class="btn btn-success">Add new</button></a>
+        <div class="row">
+            <div class="col-md-6 pb-2 d-flex justify-content-start">
+                <form class="input-group" style="width: 400px;" th:action="@{/admin/users}" method="get">
+                    <input type="text" class="form-control" id="q" name="q" th:value="${query == null ? '' : query}">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>    
+                </form>
+            </div>
+            <div class="col-md-6 pb-2 d-flex justify-content-end">
+                <a th:href="@{/admin/users/add}" class="ps-2"><button type="button" class="btn btn-success">Add new</button></a>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="table table-hover table-bordered border-primary">

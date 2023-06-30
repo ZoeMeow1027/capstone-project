@@ -23,11 +23,10 @@ import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 public class ProductRepositoryImpl extends RequestRepository implements ProductRepository {
 
     @Override
-    public List<Product> getProducts(Map<String, String> header, String query, Boolean includehidden)
-            throws NoInternetException, RequestException {
+    public List<Product> getProducts(Map<String, String> header, String query, Boolean includehidden) throws Exception {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("type", "product");
-        parameters.put("includehidden", includehidden.toString());
+        parameters.put("includehidden", includehidden == null ? "false" : includehidden.toString());
         if (query != null) {
             parameters.put("query", query);
         }
@@ -53,11 +52,10 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
     }
 
     @Override
-    public List<ProductCategory> getProductCategories(Map<String, String> header, String query, Boolean includehidden)
-            throws NoInternetException, RequestException {
+    public List<ProductCategory> getProductCategories(Map<String, String> header, String query, Boolean includehidden) throws Exception {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("type", "category");
-        parameters.put("includehidden", includehidden.toString());
+        parameters.put("includehidden", includehidden == null ? "false" : includehidden.toString());
         if (query != null) {
             parameters.put("query", query);
         }
@@ -84,10 +82,10 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
 
     @Override
     public List<ProductManufacturer> getProductManufacturers(Map<String, String> header, String query,
-            Boolean includehidden) throws NoInternetException, RequestException {
+            Boolean includehidden) throws Exception {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("type", "manufacturer");
-        parameters.put("includehidden", includehidden.toString());
+        parameters.put("includehidden", includehidden == null ? "false" : includehidden.toString());
         if (query != null) {
             parameters.put("query", query);
         }
@@ -113,7 +111,7 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
     }
 
     @Override
-    public Product getProductById(Map<String, String> header, Integer id) throws NoInternetException, RequestException {
+    public Product getProductById(Map<String, String> header, Integer id) throws Exception {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("type", "product");
         parameters.put("includehidden", "true");
@@ -186,6 +184,19 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
     }
 
     @Override
+    public RequestResult<JsonObject> deleteProduct(Map<String, String> header, Integer productId) {
+        JsonObject productUpdate = new JsonObject();
+        productUpdate.addProperty("id", productId);
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("type", "product");
+        bodyRoot.addProperty("action", "delete");
+        bodyRoot.add("data", productUpdate);
+
+        String postData = bodyRoot.toString();
+        return postRequestWithResult("/products/", null, header, postData);
+    }
+
+    @Override
     public RequestResult<JsonObject> addProductCategory(Map<String, String> header, ProductCategory productCategory) {
         JsonObject productUpdate = new JsonObject();
         productUpdate.addProperty("name", productCategory.getName());
@@ -200,7 +211,7 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
 
     @Override
     public ProductCategory getProductCategoryById(Map<String, String> header, Integer id)
-            throws NoInternetException, RequestException {
+            throws Exception {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("type", "category");
         parameters.put("id", id.toString());
@@ -242,6 +253,19 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
     }
 
     @Override
+    public RequestResult<JsonObject> deleteProductCategory(Map<String, String> header, Integer productId) {
+        JsonObject productUpdate = new JsonObject();
+        productUpdate.addProperty("id", productId);
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("type", "category");
+        bodyRoot.addProperty("action", "delete");
+        bodyRoot.add("data", productUpdate);
+
+        String postData = bodyRoot.toString();
+        return postRequestWithResult("/products/", null, header, postData);
+    }
+
+    @Override
     public RequestResult<JsonObject> addProductManufacturer(Map<String, String> header,
             ProductManufacturer productManufacturer) {
         JsonObject productUpdate = new JsonObject();
@@ -257,7 +281,7 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
 
     @Override
     public ProductManufacturer getProductManufacturerById(Map<String, String> header, Integer id)
-            throws NoInternetException, RequestException {
+            throws Exception {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("type", "manufacturer");
         parameters.put("id", id.toString());
@@ -292,6 +316,19 @@ public class ProductRepositoryImpl extends RequestRepository implements ProductR
         JsonObject bodyRoot = new JsonObject();
         bodyRoot.addProperty("type", "manufacturer");
         bodyRoot.addProperty("action", "update");
+        bodyRoot.add("data", productUpdate);
+
+        String postData = bodyRoot.toString();
+        return postRequestWithResult("/products/", null, header, postData);
+    }
+
+    @Override
+    public RequestResult<JsonObject> deleteProductManufacturer(Map<String, String> header, Integer productId) {
+        JsonObject productUpdate = new JsonObject();
+        productUpdate.addProperty("id", productId);
+        JsonObject bodyRoot = new JsonObject();
+        bodyRoot.addProperty("type", "manufacturer");
+        bodyRoot.addProperty("action", "delete");
         bodyRoot.add("data", productUpdate);
 
         String postData = bodyRoot.toString();

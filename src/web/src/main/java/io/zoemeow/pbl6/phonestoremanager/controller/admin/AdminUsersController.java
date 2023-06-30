@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -39,7 +40,9 @@ public class AdminUsersController extends RequestRepository {
     @GetMapping("/admin/users")
     public ModelAndView pageViewAllUsers(
             HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            @RequestParam(value = "q", required = false) String query,
+            Boolean includehidden) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
@@ -50,7 +53,8 @@ public class AdminUsersController extends RequestRepository {
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
 
-            view.addObject("userList", _AdminUserRepository.getAllUsers(header, false));
+            view.addObject("userList", _AdminUserRepository.getAllUsers(header, query, false));
+            view.addObject("query", query);
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {

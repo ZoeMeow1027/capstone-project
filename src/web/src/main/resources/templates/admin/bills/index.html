@@ -18,6 +18,10 @@
         <div id="modal-info-bar" th:if="${barMsg != null}" class="text-left bg-primary my-3 p-2 rounded-1">
             <span class="text-white" th:utext="${barMsg}"></span>
         </div>
+        <div class="pb-2 d-flex justify-content-end">
+            <a th:unless="${activeonly == true}" th:href="@{/admin/bills?activeonly=true}" class="ps-2"><button type="button" class="btn btn-success">Show active-only deliveries</button></a>
+            <a th:if="${activeonly == true}" th:href="@{/admin/bills}" class="ps-2"><button type="button" class="btn btn-success">Show all deliveries</button></a>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover table-bordered border-primary">
                 <thead>
