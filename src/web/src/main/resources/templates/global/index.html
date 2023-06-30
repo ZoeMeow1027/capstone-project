@@ -12,59 +12,64 @@
             </div>
         </div>
     </div>
-    <div class="container mt-3 mb px-4">
-        <span class="h4">New products within 7 days</span>
-    </div>
-    <section class="py-3">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                <div class="col-mb-5 d-flex justify-content-start text-left" th:each="item : ${newProduct}">
-                    <a class="text-decoration-none text-black" th:href="@{/product?id={id}(id=${item.getId()})}">
-                        <div class="card my-3" style="width: 18rem;">
-                            <img width="320" height="210" style="object-fit: cover;" th:unless="${item.getImages().size() == 0}" th:src="@{/products/img/blob?id={id}(id=${item.getImages().get(0).getId()})}" class="card-img-top text-center" alt="...">
-                            <img width="320" height="210" style="object-fit: cover;" th:if="${item.getImages.size() == 0}" th:src="@{#}" class="card-img-top text-center" alt="...">
-                            <div class="card-body text-center">
-                                <h5 class="card-title" th:text="${item.getName()}"></h5>
-                                <h6 class="card-title" th:text="${item.getManufacturer().getName()}"></h6>
-                                <!-- <p class="card-text">(Specifications here)</p> -->
+    <div th:if="${newProduct.size() != 0}" th:remove="tag">
+        <div class="container mt-3 mb px-4">
+            <span class="h4">New products within 7 days</span>
+        </div>
+        <section class="py-3">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                    <div class="col-mb-5 d-flex justify-content-start text-left" th:each="item : ${newProduct}">
+                        <a class="text-decoration-none text-black" th:href="@{/product?id={id}(id=${item.getId()})}">
+                            <div class="card my-3" style="width: 18rem;">
+                                <img width="320" height="210" style="object-fit: cover;" th:unless="${item.getImages().size() == 0}" th:src="@{/products/img/blob?id={id}(id=${item.getImages().get(0).getId()})}" class="card-img-top text-center" alt="...">
+                                <img width="320" height="210" style="object-fit: cover;" th:if="${item.getImages.size() == 0}" th:src="@{#}" class="card-img-top text-center" alt="...">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title" th:text="${item.getName()}"></h5>
+                                    <h6 class="card-title" th:text="${item.getManufacturer().getName()}"></h6>
+                                    <!-- <p class="card-text">(Specifications here)</p> -->
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item" th:text="${T(java.lang.String).format('Available: %d %s%s', item.getInventoryCount(), item.getUnit(), item.getInventoryCount() == 1 ? '' : 's')}"></li>
+                                    <li class="list-group-item" th:text="${'Price: $' + item.getPrice()}"></li>
+                                </ul>
                             </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item" th:text="${T(java.lang.String).format('Available: %d %s%s', item.getInventoryCount(), item.getUnit(), item.getInventoryCount() == 1 ? '' : 's')}"></li>
-                                <li class="list-group-item" th:text="${'Price: $' + item.getPrice()}"></li>
-                            </ul>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
-    <div class="container mt-3 mb px-4">
-        <span class="h4">Mosted-view products</span>
-    </div>
-    <section class="py-3">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                <div class="col-mb-5 d-flex justify-content-start text-left" th:each="item : ${mostView}">
-                    <a class="text-decoration-none text-black" th:href="@{/product?id={id}(id=${item.getId()})}">
-                        <div class="card my-3" style="width: 18rem;">
-                            <img width="320" height="210" style="object-fit: cover;" th:unless="${item.getImages().size() == 0}" th:src="@{/products/img/blob?id={id}(id=${item.getImages().get(0).getId()})}" class="card-img-top text-center" alt="...">
-                            <img width="320" height="210" style="object-fit: cover;" th:if="${item.getImages.size() == 0}" th:src="@{#}" class="card-img-top text-center" alt="...">
-                            <div class="card-body text-center">
-                                <h5 class="card-title" th:text="${item.getName()}"></h5>
-                                <h6 class="card-title" th:text="${item.getManufacturer().getName()}"></h6>
-                                <!-- <p class="card-text">(Specifications here)</p> -->
+    <div th:if="${mostView.size() != 0}" th:remove="tag">
+        <div class="container mt-3 mb px-4">
+            <span class="h4">Mosted-view products</span>
+        </div>
+        <section class="py-3">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                    <div class="col-mb-5 d-flex justify-content-start text-left" th:each="item : ${mostView}">
+                        <a class="text-decoration-none text-black" th:href="@{/product?id={id}(id=${item.getId()})}">
+                            <div class="card my-3" style="width: 18rem;">
+                                <img width="320" height="210" style="object-fit: cover;" th:unless="${item.getImages().size() == 0}" th:src="@{/products/img/blob?id={id}(id=${item.getImages().get(0).getId()})}" class="card-img-top text-center" alt="...">
+                                <img width="320" height="210" style="object-fit: cover;" th:if="${item.getImages.size() == 0}" th:src="@{#}" class="card-img-top text-center" alt="...">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title" th:text="${item.getName()}"></h5>
+                                    <h6 class="card-title" th:text="${item.getManufacturer().getName()}"></h6>
+                                    <!-- <p class="card-text">(Specifications here)</p> -->
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item" th:text="${T(java.lang.String).format('Available: %d %s%s', item.getInventoryCount(), item.getUnit(), item.getInventoryCount() == 1 ? '' : 's')}"></li>
+                                    <li class="list-group-item" th:text="${'Price: $' + item.getPrice()}"></li>
+                                </ul>
                             </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item" th:text="${T(java.lang.String).format('Available: %d %s%s', item.getInventoryCount(), item.getUnit(), item.getInventoryCount() == 1 ? '' : 's')}"></li>
-                                <li class="list-group-item" th:text="${'Price: $' + item.getPrice()}"></li>
-                            </ul>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
+
     <div lang="en" th:replace="~{global/fragments/footer :: footer}"></div>
 </body>
 </html>

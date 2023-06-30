@@ -22,11 +22,14 @@ import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 public class UserRepositoryImpl extends RequestRepository implements UserRepository {
 
     @Override
-    public List<User> getAllUsers(Map<String, String> header, Boolean includeHidden)
-            throws RequestException, NoInternetException {
+    public List<User> getAllUsers(Map<String, String> header, String query, Boolean includeHidden)
+            throws Exception {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("type", "user");
-        parameters.put("includedisabled", includeHidden.toString());
+        parameters.put("includedisabled", includeHidden == null ? "false" : includeHidden.toString());
+        if (query != null) {
+            parameters.put("query", query);
+        }
         
         RequestResult<JsonObject> reqResult = getRequestWithResult("/users", parameters, header);
                 if (!reqResult.getIsSuccessfulRequest()) {
@@ -50,7 +53,7 @@ public class UserRepositoryImpl extends RequestRepository implements UserReposit
     }
 
     @Override
-    public User getUser(Map<String, String> header, Integer id) throws NoInternetException, RequestException {
+    public User getUser(Map<String, String> header, Integer id) throws Exception {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("type", "user");
         parameters.put("includedisabled", "true");

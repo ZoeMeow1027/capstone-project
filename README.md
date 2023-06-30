@@ -27,7 +27,7 @@
 | Group         | Components    | Start date    | Updated       | Progress          |
 | -             | -             | -             | -             | -                 |
 | [API](#api)   | [Services](#services), [Controllers](#controllers) | 2023/04/18    | 2023/06/27    | ![https://progress-bar.dev/98/?scale=100&width=120](https://progress-bar.dev/98/?scale=100&width=120) |
-| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/24    | ![https://progress-bar.dev/95/?scale=100&width=120](https://progress-bar.dev/95/?scale=100&width=120) |
+| [Web](#web)   | [Admin Page](#admin-page), [Auth Page](#auth-page), [Main Page](#main-page) | 2023/05/16    | 2023/06/30    | ![https://progress-bar.dev/95/?scale=100&width=120](https://progress-bar.dev/95/?scale=100&width=120) |
 
 ## API
 
@@ -79,8 +79,8 @@ Start date: 2023/05/16
 
 | Group						          | Description															                              | Updated		    | Task (tick means completed)	|
 | -							            | -																		                                  | -				      | -								            |
-| Users                     | Manage user accounts.                                                 | 2023/05/24    | <ul><li>[x] View</li><li>[x] Add</li><li>[x] Update</li><li>[x] Disable/enable</li></ul> |
-| Products                  | Manage all imported products (include category and manufacturer).     | 2023/05/29    | <ul><li>[x] View</li><li>[x] Add</li><li>[x] Update</li><li>[ ] Hide/show/delete</li><li>[x] Images</li></ul> |
+| Users                     | Manage user accounts.                                                 | 2023/06/30    | <ul><li>[x] View</li><li>[x] Add</li><li>[x] Update</li><li>[x] Disable/enable</li></ul> |
+| Products                  | Manage all imported products (include category and manufacturer).     | 2023/06/30    | <ul><li>[x] View</li><li>[x] Add</li><li>[x] Update</li><li>[ ] Hide/show/delete</li><li>[x] Images</li></ul> |
 | Bills                     | Manage all bills created by user when done submitting information.    | 2023/06/19    | <ul><li>[x] View</li><li>[x] Mark as purchased</li><li>[x] Mark as delivered</li><li>[x] Update status</li></ul> |
 | Warranties                | Manage all warranties.                                                | ----/--/--    | <ul><li>[ ] View</li><li>[ ] Add</li><li>[ ] Update</li><li>[ ] Mark as disabled</li></ul> |
 | Statistics/Dashboard      | View all store states.                                                | ----/--/--    | <ul><li>[ ] View</li><li>[ ] List by date</li></ul> |

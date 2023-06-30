@@ -20,8 +20,10 @@ import io.zoemeow.pbl6.phonestoremanager.model.exceptions.RequestException;
 public class BillRepositoryImpl extends RequestRepository implements BillRepository {
 
     @Override
-    public List<BillSummary> getAllBillSummaries(Map<String, String> header) throws Exception {
-        RequestResult<JsonObject> reqResult = getRequestWithResult("/bills", null, header);
+    public List<BillSummary> getAllBillSummaries(Map<String, String> header, Boolean activeOnly) throws Exception {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("activeonly", activeOnly == null ? "false" : activeOnly.toString());
+        RequestResult<JsonObject> reqResult = getRequestWithResult("/bills", parameters, header);
         if (!reqResult.getIsSuccessfulRequest()) {
             throw new NoInternetException("Cannot fetch data from API. Wait a few minutes, and try again.");
         }

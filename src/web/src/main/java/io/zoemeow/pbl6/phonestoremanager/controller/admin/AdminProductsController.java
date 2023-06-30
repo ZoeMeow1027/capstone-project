@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -47,7 +48,8 @@ public class AdminProductsController {
     public ModelAndView pageProducts(
             HttpServletRequest request,
             HttpServletResponse response,
-            String query,
+            @ModelAttribute("barMsg") String barMsg,
+            @RequestParam(value = "q", required = false) String query,
             Boolean includehidden) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
@@ -60,11 +62,85 @@ public class AdminProductsController {
             view.addObject("name", user == null ? null : user.getName());
 
             view.addObject("productList", _AdminProductRepository.getProducts(header, query, includehidden == null ? false : includehidden));
+            view.addObject("query", query);
+            view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {
             view = new ModelAndView("redirect:/admin");
         }
+        return view;
+    }
+
+    @PostMapping("/admin/products/delete")
+    public ModelAndView actionDeleteProduct(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(value = "id") Integer id) {
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
+        ModelAndView view = new ModelAndView("redirect:/admin/products");
+
+        try {
+            RequestResult<JsonObject> reqResult = _AdminProductRepository.deleteProduct(header, id);
+            if (reqResult.getStatusCode() != 200) {
+                throw new Exception(reqResult.getMessage());
+            }
+            redirectAttributes.addFlashAttribute("barMsg", "Successfully deleted product!");
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("barMsg", String.format("Failed while deleting product! (%s)", ex.getMessage()));
+        }
+
+        return view;
+    }
+
+    @PostMapping("/admin/products/manufacturers/delete")
+    public ModelAndView actionDeleteProductManufacturer(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(value = "id") Integer id) {
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
+        ModelAndView view = new ModelAndView("redirect:/admin/products/manufacturers");
+
+        try {
+            RequestResult<JsonObject> reqResult = _AdminProductRepository.deleteProductManufacturer(header, id);
+            if (reqResult.getStatusCode() != 200) {
+                throw new Exception(reqResult.getMessage());
+            }
+            redirectAttributes.addFlashAttribute("barMsg", "Successfully deleted product manufacturer!");
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("barMsg", String.format("Failed while deleting product manufacturer! (%s)", ex.getMessage()));
+        }
+
+        return view;
+    }
+
+    @PostMapping("/admin/products/categories/delete")
+    public ModelAndView actionDeleteProductCategory(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(value = "id") Integer id) {
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("cookie", request.getHeader("cookie"));
+
+        ModelAndView view = new ModelAndView("redirect:/admin/products/categories");
+
+        try {
+            RequestResult<JsonObject> reqResult = _AdminProductRepository.deleteProductCategory(header, id);
+            if (reqResult.getStatusCode() != 200) {
+                throw new Exception(reqResult.getMessage());
+            }
+            redirectAttributes.addFlashAttribute("barMsg", "Successfully deleted product category!");
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("barMsg", String.format("Failed while deleting product category! (%s)", ex.getMessage()));
+        }
+
         return view;
     }
 
@@ -297,19 +373,20 @@ public class AdminProductsController {
     public ModelAndView pageProductCategories(
             HttpServletRequest request,
             HttpServletResponse response,
-            String query,
+            @RequestParam(value = "q", required = false) String query,
             Boolean includehidden) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("dmin/productCategory/index");
+            view = new ModelAndView("admin/productCategory/index");
 
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
 
-            view.addObject("productCategoryList", _AdminProductRepository.getProductCategories(header, null, false));
+            view.addObject("productCategoryList", _AdminProductRepository.getProductCategories(header, query, includehidden));
+            view.addObject("query", query);
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {
@@ -409,7 +486,8 @@ public class AdminProductsController {
     public ModelAndView pageProductManufacturers(
             HttpServletRequest request,
             HttpServletResponse response,
-            String query,
+            @ModelAttribute("barMsg") String barMsg,
+            @RequestParam(value = "q", required = false) String query,
             Boolean includehidden) {
         Map<String, String> header = new HashMap<String, String>();
         header.put("cookie", request.getHeader("cookie"));
@@ -421,7 +499,9 @@ public class AdminProductsController {
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
 
-            view.addObject("productManufacturerList", _AdminProductRepository.getProductManufacturers(header, null, false));
+            view.addObject("productManufacturerList", _AdminProductRepository.getProductManufacturers(header, query, includehidden));
+            view.addObject("query", query);
+            view.addObject("barMsg", barMsg.length() == 0 ? null : barMsg);
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {

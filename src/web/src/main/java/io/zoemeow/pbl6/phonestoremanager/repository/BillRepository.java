@@ -8,7 +8,7 @@ import io.zoemeow.pbl6.phonestoremanager.model.bean.BillSummary;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.RequestResult;
 
 public interface BillRepository {
-    public List<BillSummary> getAllBillSummaries(Map<String, String> headers) throws Exception;
+    public List<BillSummary> getAllBillSummaries(Map<String, String> headers, Boolean activeOnly) throws Exception;
 
     public BillSummary getBillSummaryById(Map<String, String> header, Integer id) throws Exception;
 
