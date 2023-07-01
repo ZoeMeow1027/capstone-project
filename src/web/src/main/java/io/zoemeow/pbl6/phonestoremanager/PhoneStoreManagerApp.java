@@ -19,8 +19,6 @@ public class PhoneStoreManagerApp extends SpringBootServletInitializer {
 
 	public static void main(String[] args) throws KeyManagementException, NoSuchAlgorithmException {
 		SSLOptions.turnOffSslChecking();
-		System.out.println(System.getenv("API_BASEURL"));
-		System.out.println(System.getenv("PAYPAL_CLIENTID_SANDBOX"));
 		SpringApplication.run(PhoneStoreManagerApp.class, args);
 	}
 }

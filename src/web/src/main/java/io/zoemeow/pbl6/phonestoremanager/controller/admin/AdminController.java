@@ -34,7 +34,7 @@ public class AdminController {
 
         ModelAndView view = null;
         try {
-            view = new ModelAndView("redirect:/admin/products");
+            view = new ModelAndView("redirect:/admin/dashboard");
             _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
