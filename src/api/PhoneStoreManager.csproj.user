@@ -2,6 +2,6 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ActiveDebugProfile>https</ActiveDebugProfile>
-    <NameOfLastUsedPublishProfile>E:\CodeWorkspaces\GitHub\ZoeMeow1027\capstone-project\src\api\Properties\PublishProfiles\LinuxARM64.pubxml</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>E:\CodeWorkspaces\GitHub\ZoeMeow1027\capstone-project\src\api\Properties\PublishProfiles\linux-x64.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

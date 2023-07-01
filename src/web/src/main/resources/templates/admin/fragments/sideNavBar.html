@@ -15,11 +15,11 @@
                         <i class="bi-box-arrow-left fs-2 align-middle me-2"></i><span class="nav-text align-middle">Homepage</span>
                     </a>
                 </li>
-<!--                <li>-->
-<!--                    <a href="/admin/dashboard" class="nav-link py-2 px-3 m-1" th:classappend="${tab} == 'dashboard' ? active : ''" title="Dashboard" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Dashboard">-->
-<!--                        <i class="bi-pie-chart fs-2 align-middle me-2"></i><span class="nav-text align-middle">Dashboard</span>-->
-<!--                    </a>-->
-<!--                </li>-->
+                <li>
+                    <a th:href="@{/admin/dashboard}" class="nav-link py-2 px-3 m-1" th:classappend="${tab} == 'dashboard' ? active : ''" title="Dashboard" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Dashboard">
+                        <i class="bi-pie-chart fs-2 align-middle me-2"></i><span class="nav-text align-middle">Dashboard</span>
+                    </a>
+                </li>
                 <li>
                     <a th:href="@{/admin/products}" class="nav-link py-2 px-3 m-1" th:classappend="${tab} == 'products' ? active : ''" title="Products" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Products">
                         <i class="bi-box fs-2 align-middle me-2"></i><span class="nav-text align-middle">Products</span>

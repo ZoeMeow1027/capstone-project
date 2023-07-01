@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import io.zoemeow.pbl6.phonestoremanager.model.bean.User;
 import io.zoemeow.pbl6.phonestoremanager.model.exceptions.NoInternetException;
 import io.zoemeow.pbl6.phonestoremanager.repository.AccountRepository;
+import io.zoemeow.pbl6.phonestoremanager.repository.StatisticsRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -20,6 +21,9 @@ import jakarta.servlet.http.HttpServletResponse;
 public class AdminDashboardController {
     @Autowired
     AccountRepository _AccountRepository;
+
+    @Autowired
+    StatisticsRepository _StatisticsRepository;
 
     @GetMapping("/admin/dashboard")
     public ModelAndView index(
@@ -33,6 +37,9 @@ public class AdminDashboardController {
             view = new ModelAndView("admin/dashboard");
             User user = _AccountRepository.getUserInformation(header, new ArrayList<Integer>(Arrays.asList(2)));
             view.addObject("name", user == null ? null : user.getName());
+
+            view.addObject("statistics", _StatisticsRepository.getStatisticsByMonth(header, null, null));
+            view.addObject("dashboard", _StatisticsRepository.getDashboard(header));
         } catch (NoInternetException niEx) {
             // TODO: No internet connection
         } catch (Exception ex) {
