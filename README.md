@@ -20,6 +20,9 @@
 - Others:
   - [Spring Initializr](https://start.spring.io/)
 
+# How to build and deploy?
+- [Navigate here](docs/HOW-TO-INSTALL.md) for installation.
+
 # Roadmap
 
 ## Progress
