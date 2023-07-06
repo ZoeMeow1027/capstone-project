@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{global/fragments/tag-head :: headtag(title=${'Contact support'})}"></div>
+    <style>
+        .contact-link {
+            text-decoration: none;
+        }
+
+        .contact-link:link {
+            color: dodgerblue;
+        }
+    </style>
+</head>
+<body>
+    <div lang="en" th:replace="~{global/fragments/header :: header(name=${name}, adminUser=${adminUser})}"></div>
+    <div class="bg-banner py-5">
+        <div class="container px-4 py-5 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">Contact support</h1>
+            </div>
+        </div>
+    </div>
+    <div class="container my-5">
+        <div class="my-3">
+            <span class="h4">You can contact us to support for delivery, page information or other information with any methods below:</span>
+        </div>
+        <div class="my-1">
+            <a class="h5 contact-link" href="tel:0987654321">Phone: 0987654321</a><br>
+        </div>
+        <div class="my-1">
+            <a class="h5 contact-link" href="mailto:template@email.com">Email: template@email.com</a>
+        </div>
+        <div class="mt-5 mb-3">
+            <span class="h4">You can also visit our social for more information and updates:</span>
+        </div>
+        <div class="my-1">
+            <a class="h5 contact-link" href="#!"><i class="bi bi-facebook me-3 w-25"></i>Facebook</a>
+        </div>
+        <div class="my-1">
+            <a class="h5 contact-link" href="#!"><i class="bi bi-instagram me-3 w-25"></i>Instagram</a>
+        </div>
+        <div class="my-1">
+            <a class="h5 contact-link" href="#!"><i class="bi bi-twitter me-3 w-25"></i>Twitter</a>
+        </div>
+        <div class="my-1">
+            <a class="h5 contact-link" href="#!"><i class="bi bi-youtube me-3 w-25"></i>YouTube</a>
+        </div>
+    </div>
+    <div lang="en" th:replace="~{global/fragments/footer :: footer}"></div>
+</body>
+</html>

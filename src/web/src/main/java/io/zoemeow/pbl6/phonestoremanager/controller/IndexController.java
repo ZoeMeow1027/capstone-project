@@ -104,4 +104,73 @@ public class IndexController extends SessionController {
 
         return view;
     }
+
+    @GetMapping("/terms-of-service")
+    public ModelAndView pageTermsOfService(
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) {
+        ModelAndView view = new ModelAndView("global/terms-of-service");
+
+        try {
+            User user = getUserInformation(request, response);
+            view.addObject("user", user);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
+
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
+        } catch (Exception ex) {
+            // TODO: 500 error code here!
+        }
+
+        return view;
+    }
+
+    @GetMapping("/privacy-notice")
+    public ModelAndView pagePrivacyNotice(
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) {
+        ModelAndView view = new ModelAndView("global/privacy-notice");
+
+        try {
+            User user = getUserInformation(request, response);
+            view.addObject("user", user);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
+
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
+        } catch (Exception ex) {
+            // TODO: 500 error code here!
+        }
+
+        return view;
+    }
+
+    @GetMapping("/contact-support")
+    public ModelAndView pageContactSupport(
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) {
+        ModelAndView view = new ModelAndView("global/contact-support");
+
+        try {
+            User user = getUserInformation(request, response);
+            view.addObject("user", user);
+            view.addObject("name", user != null ? user.getName() : null);
+            view.addObject("adminUser", user != null && (user.getUserType() != 0));
+
+            List<UserCart> cart = user != null ? _CartRepository.getAllItemsInCart(getCookieHeader(request), null, null) : null;
+            view.addObject("cartList", cart);
+            view.addObject("cartCount", cart != null ? cart.size() : null);
+        } catch (Exception ex) {
+            // TODO: 500 error code here!
+        }
+
+        return view;
+    }
 }
