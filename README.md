@@ -1,5 +1,7 @@
 # Capstone Project
 
+## UPDATED 2023/07/15: This project is being archived due to done my capstone project.
+
 - Everything about my final project in DUT.
 - Project name: **Phone store manager**.
 
